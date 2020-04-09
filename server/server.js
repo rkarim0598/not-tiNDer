@@ -1,10 +1,11 @@
-var express = require('express');
-var cors = require('cors');
-var graphqlHTTP = require('express-graphql');
-var { buildSchema } = require('graphql');
+require('dotenv').config();
+let express = require('express');
+let cors = require('cors');
+let graphqlHTTP = require('express-graphql');
+let { buildSchema } = require('graphql');
 
-//var whitelist = ['35.173.0.116:8121'];
-var corsOptions = {
+//let whitelist = ['35.173.0.116:8121'];
+let corsOptions = {
     origin: function(origin, callback) {
 	if (whitelist.indexOf(origin) !== -1) {
 	    callback(null, true);
@@ -15,20 +16,20 @@ var corsOptions = {
 }
 
 // Construct a schema, using GraphQL schema language
-var schema = buildSchema(`
+let schema = buildSchema(`
   type Query {
     hello: String
   }
 `);
 
 // The root provides a resolver function for each API endpoint
-var root = {
+let root = {
   hello: () => {
     return 'Hello world!';
   },
 };
 
-var app = express();
+let app = express();
 app.use(cors());
 
 app.use('/graphql', graphqlHTTP({
@@ -36,5 +37,5 @@ app.use('/graphql', graphqlHTTP({
   rootValue: root,
   graphiql: true,
 }));
-app.listen(process.env.SERVER);
-console.log(`Running a GraphQL API server at http://localhost:${process.env.SERVER}/graphql`);
+app.listen(process.env.PORT); // this should be your port number, set in .env file
+console.log(`Running a GraphQL API server at http://localhost:${process.env.PORT}/graphql`);
