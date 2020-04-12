@@ -8,12 +8,12 @@
 import gql from 'graphql-tag'
 
 export default {
-       name: 'HelloWorld',
-       apollo: {
-       	       hello: gql `query {
-	       	    hello
-	       }`,
-       }	  
+  name: 'HelloWorld',
+  apollo: {
+    hello: gql `query {
+      hello
+    }`,
+  }	  
 }
 </script>
 

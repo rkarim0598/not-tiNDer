@@ -1,0 +1,58 @@
+
+SQL*Loader: Release 11.2.0.2.0 - Production on Sun Apr 12 02:35:41 2020
+
+Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   users.ctl
+Data File:      allusers.csv
+  Bad File:     allusers.bad
+  Discard File:  none specified
+ 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table USERS, loaded from every logical record.
+Insert option in effect for this table: INSERT
+TRAILING NULLCOLS option in effect
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+USER_ID                             FIRST     *   ,  O(") CHARACTER            
+PASSWORD                             NEXT     *   ,  O(") CHARACTER            
+FIRST_NAME                           NEXT     *   ,  O(") CHARACTER            
+LAST_NAME                            NEXT     *   ,  O(") CHARACTER            
+GENDER_ID                            NEXT     *   ,  O(") CHARACTER            
+BIO                                  NEXT     *   ,  O(") CHARACTER            
+NICKNAME                             NEXT     *   ,  O(") CHARACTER            
+CONFIRMED_ACCOUNT                    NEXT     *   ,  O(") CHARACTER            
+RESET_TOKEN                          NEXT     *   ,  O(") CHARACTER            
+DORM                                 NEXT     *   ,  O(") CHARACTER            
+JOINED                               NEXT     *   ,  O(") CHARACTER            
+
+
+Table USERS:
+  8 Rows successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                 181632 bytes(64 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          0
+Total logical records read:             8
+Total logical records rejected:         0
+Total logical records discarded:        0
+
+Run began on Sun Apr 12 02:35:41 2020
+Run ended on Sun Apr 12 02:35:41 2020
+
+Elapsed time was:     00:00:00.10
+CPU time was:         00:00:00.00
