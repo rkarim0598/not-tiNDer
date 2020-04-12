@@ -1,12 +1,12 @@
 const oracledb = require('oracledb');
-const dbConfig = require('./dbconfig');
+const dbConfig = require('../dbconfig');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const util = require('util');
 
 const readFile = util.promisify(fs.readFile);
 
-async function run(query, bindList) {
+async function run(query, bindList = []) {
     let connection;
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -32,7 +32,7 @@ async function run(query, bindList) {
     }
 }
 
-async function load() {
+async function loadUsers() {
     let data = await readFile('../sql-funcs/allusers.csv', 'utf8');
     let userList = data.split('\n').map(datum => datum.split(','));
     for (let i in userList) {
@@ -45,6 +45,9 @@ async function load() {
         )
         console.log(results);
     }
+
+    let viewUsers = await run('select * from users');
+    console.log(viewUsers);
 }
 
-load();
+loadUsers();

@@ -1,2 +1,0 @@
-sqlplus -s guest/guest @crtusers
-sqlldr guest/guest control=users.ctl

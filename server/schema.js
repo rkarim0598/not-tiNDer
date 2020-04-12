@@ -15,12 +15,17 @@ let schema = buildSchema(`
         dorm: String,
         joined: String
     }
+    type ReturnStruct {
+        failure: Boolean,
+        message: String,
+        data: String
+    }
     type Query {
-        hello: String,
-        login(email: String, password: String): String
+        hello: ReturnStruct,
+        login(email: String, password: String): ReturnStruct
     }
     type Mutation {
-        createUser(input: NewUserInput): String
+        createUser(input: NewUserInput): ReturnStruct
     }
     input NewUserInput {
         user_id: String,
