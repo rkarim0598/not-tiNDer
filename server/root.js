@@ -105,7 +105,6 @@ let mutations = {
             'values (:id, :pw, :fn, :ln, null, null, null, null, null, null, null)',
             [input.user_id, hash, input.first_name, input.last_name]
         )
-
         return !results.error ?
             {
                 failure: false,
@@ -114,7 +113,10 @@ let mutations = {
             :
             {
                 failure: true,
-                message: results.error
+                message: results.error.errorNum === 1 ?
+                    'User already exists'
+                    :
+                    results.error.message
             }
     }
 }
