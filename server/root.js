@@ -59,16 +59,16 @@ let queries = {
             data: results.rows[0]['SALPERS_NAME']
         }
     },
-    login: async (args, context) => { // can access user info through context
+    login: async ({ email, password }, context) => { // can access user info through context
         let results = await run(
             'select password from users where user_id = :email',
-            [args.email]
+            [email]
         )
 
         if (results.rows.length === 1) { // indicates we have at least one user with given username
             // bcrypt's pwd hash contains the salt to has given password with, so can
             // just use bcrypt.compare to see if entered password is correct
-            const valid = await bcrypt.compare(args.password, results.rows[0]['PASSWORD']);
+            const valid = await bcrypt.compare(password, results.rows[0]['PASSWORD']);
 
             if (!valid) { // indicates password mismatch
                 return {
@@ -78,8 +78,8 @@ let queries = {
             }
 
             let token = jwt.sign({
-                id: args.email,
-                email: args.email,
+                id: email,
+                email: email,
             }, 'shouldchangethis', { expiresIn: 60 }) /// 60 is for 60 seconds, can enter 1w, 1y, 60 * 60, etc
             return {
                 failure: false,
