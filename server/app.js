@@ -14,19 +14,26 @@ var app = express();
 
 const jwtMW = exjwt({
   secret: 'shouldchangethis',
-  credentialsRequired: false // if set to true then EVERY query is authenticated
+  credentialsRequired: false, // if set to true then EVERY query is authenticated
+  getToken: function getTokenFromCookie(req) {
+    return req.cookies['jwtAuth'];
+  }
 });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use(cookieParser());
+
 app.use(jwtMW);
 app.use(cors());
-app.use('/graphql', graphqlHTTP(req => ({
+app.use('/graphql', graphqlHTTP((req, res) => ({
   schema: schema,
   rootValue: root,
   graphiql: true,
   context: { // theoretically should pass user info to server after logged in
+    req,
+    res,
     user: req.user
   }
 })));
