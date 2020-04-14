@@ -52,6 +52,9 @@ const defaultOptions = {
 
   // Client local data (see apollo-link-state)
   // clientState: { resolvers: { ... }, defaults: { ... } }
+  httpLinkOptions: {
+    credentials: 'include'
+  },
 }
 
 // Call this in the Vue app file

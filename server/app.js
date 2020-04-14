@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(jwtMW);
-app.use(cors());
+app.use(cors({origin: process.env.VUE_APP_DOMAIN, credentials: true}));
 app.use('/graphql', graphqlHTTP((req, res) => ({
   schema: schema,
   rootValue: root,

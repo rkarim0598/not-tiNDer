@@ -59,7 +59,7 @@ let queries = {
             data: results.rows[0]['SALPERS_NAME']
         }
     },
-    login: async ({ email, password }, { res }) => { // can access user info through context
+    login: async ({ email, password }, { req, res }) => { // can access user info through context
         let results = await run(
             'select password from users where user_id = :email',
             [email]
@@ -81,8 +81,8 @@ let queries = {
                 id: email,
                 email: email,
             }, 'shouldchangethis', { expiresIn: 3600000 }) /// 60 is for 60 seconds, can enter 1w, 1y, 60 * 60, etc
-            
-            res.cookie('jwtAuth', token, {maxAge: 3600000}); //TODO httpOnly: true secure: true
+
+            res.cookie('jwtAuth', token, {maxAge: 3600000, httpOnly: true}); //TODO secure: true
             
             return {
                 failure: false,
