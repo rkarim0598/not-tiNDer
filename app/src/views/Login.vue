@@ -52,6 +52,8 @@ export default {
 
 <style lang="scss" scoped>
 .login-container {
+  display: flex;
+  justify-content: center;
   background: linear-gradient( darkblue, black );
 }
 
