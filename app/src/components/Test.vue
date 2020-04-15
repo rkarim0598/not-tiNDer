@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div>hi</div>
+  <!-- <div>
     <div>
       <h1>Login</h1>
       <div class="container">
@@ -19,7 +20,7 @@
         <button @click="performSignup">Sign Up</button>
       </div>
     </div>
-  </div>
+  </div>-->
 </template>
 
 <script>
@@ -53,7 +54,8 @@ export default {
               message
               data
             }
-          }`,
+          }
+        `,
         variables: {
           email: username,
           password: password
@@ -62,25 +64,34 @@ export default {
       alert(res.data.login.message);
     },
     performSignup: async function() {
-      const { username, password, confirmedPassword, firstName, lastName } = this.signup;
+      const {
+        username,
+        password,
+        confirmedPassword,
+        firstName,
+        lastName
+      } = this.signup;
       // input checking
       if (password !== confirmedPassword) {
         alert("Passwords don't match");
         return;
-      } else if (Object.values(this.signup).filter(val => val.length === 0).length) {
+      } else if (
+        Object.values(this.signup).filter(val => val.length === 0).length
+      ) {
         alert("One or more empty fields");
         return;
       }
 
       let res = await this.$apollo.mutate({
         mutation: gql`
-          mutation ($input: NewUserInput) {
+          mutation($input: NewUserInput) {
             createUser(input: $input) {
               failure
               message
               data
             }
-          }`,
+          }
+        `,
         variables: {
           input: {
             user_id: username,
@@ -98,23 +109,37 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
+.home-page-container {
   padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+  height: 100%;
+  width: 100%;
 }
 
-.container {
+.image-container {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: space-evenly;
+  background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url(../assets/hand-holding.jpg);
+  background-size: 100% 100%;
+  text-align: center;
+
+  .text {
+    color: white;
+  }
+
+  span.text {
+    max-width: 80%;
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 25%;
+    width: 80%;
+  }
 }
 </style>
