@@ -5,6 +5,8 @@
 # local env files
 */.env.local
 */.env.*.local
+app/.env
+server/.env
 
 # Log files
 */npm-debug.log*
