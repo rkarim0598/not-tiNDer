@@ -12,6 +12,7 @@ server/.env
 */npm-debug.log*
 */yarn-debug.log*
 */yarn-error.log*
+server/sql-funcs/*.log
 
 # Editor directories and files
 .idea
