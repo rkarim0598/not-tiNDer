@@ -1,0 +1,4 @@
+sqlplus -s guest/guest @crtall
+sqlldr guest/guest control=dorms.ctl
+sqlldr guest/guest control=genders.ctl
+node loadUsers.js

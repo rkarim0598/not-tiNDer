@@ -1,0 +1,3 @@
+sqlplus -s guest/guest @crtgenders
+exit;
+sqlldr guest/guest control=genders.ctl
