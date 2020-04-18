@@ -37,6 +37,11 @@ Vue.use(VueRouter)
     path: '/main',
     name: 'Main',
     component: () => import('../views/Main.vue')
+  },
+  {
+    path: '/setup',
+    name: 'Profile Set Up',
+    component: () => import('../views/Setup.vue')
   }
 ]
 
