@@ -39,15 +39,12 @@ async function loadUsers() {
         let hash = bcrypt.hashSync(userList[i][1], 8);
         userList[i][1] = hash;
         let results = await run(
-            'insert into users (user_id,password,first_name,last_name,gender_id,bio,nickname,confirmed_account,reset_token,dorm_id,joined)' +
-            'values (:id, :pw, :fn, :ln, :gi, :b, :nn, :ca, :rt, :d, :j)',
+            'insert into users (user_id,password,first_name,last_name,gender_id,bio,nickname,confirmed_account,reset_token,dorm_id,joined,personality_results)' +
+            'values (:id, :pw, :fn, :ln, :gi, :b, :nn, :ca, :rt, :d, :j, :pr)',
             userList[i]
         )
         console.log(results);
     }
-
-    let viewUsers = await run('select * from users');
-    console.log(viewUsers);
 }
 
 loadUsers();

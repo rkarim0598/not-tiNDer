@@ -13,6 +13,7 @@ create table users
   reset_token varchar2(50),
   dorm_id number(2),
   joined char(1),
+  personality_results varchar2(500),
   foreign key(dorm_id) references dorms(dorm_id),
   foreign key(gender_id) references genders(gender_id)
   );

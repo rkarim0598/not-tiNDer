@@ -1,3 +1,0 @@
-sqlplus -s guest/guest @crtdorms
-exit;
-sqlldr guest/guest control=dorms.ctl
