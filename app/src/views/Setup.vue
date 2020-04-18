@@ -14,16 +14,25 @@
           <v-stepper-content step="1">
             <v-container fill-height fluid align-center justify-space-between>
               <v-row align="center" justify="center">
-                <v-text-field dark v-model="signup.firstName" label="Picture" required />
+                <v-file-input v-model="setup.profilePictures" accept="image/*" placeholder="Upload your pictures" label="Pictures" multiple prepend-icon="mdi-camera">
+                  <template v-slot:selection="{ file, text }">
+                    <!--{{ file }} -->
+                    <v-chip small label color="primary">
+                      {{ text }}
+                    </v-chip>
+                  </template>
+                </v-file-input>
               </v-row>
               <v-row align="center" justify="center">
-                <v-text-field dark v-model="signup.firstName" label="Dorm" required />
+                <v-select dark v-model="setup.dorm" :items="dorms" menu-props="auto" label="Dorm" hide-details prepend-icon="mdi-home" single-line></v-select>
               </v-row>
               <v-row align="center" justify="center">
-                <v-text-field dark v-model="signup.firstName" label="Autobiography" required />
+                <v-textarea dark outlined name="biography" label="Biography" v-model="setup.biography" ></v-textarea>
               </v-row>
               <v-row align="center" justify="center">
-                <v-btn outlined block dark @click="page++">Next</v-btn>
+                <v-col sm="6" offset-sm="6">
+                  <v-btn outlined block dark @click="page++">Next</v-btn>
+                </v-col>
               </v-row>
             </v-container>
           </v-stepper-content>
@@ -31,17 +40,33 @@
           <v-stepper-content step="2">
             <v-container fill-height fluid align-center justify-space-between>
               <v-row align="center" justify="center">
-                <v-text-field dark v-model="signup.firstName" label="Gender" required />
+                <v-select v-model="setup.gender" :items="genders" label="Your gender">
+                  <template v-slot:selection="{ item }">
+                    <v-chip>
+                      <span>{{ item }}</span>
+                    </v-chip>
+                  </template>
+                </v-select>
               </v-row>
               <v-row align="center" justify="center">
-                <v-text-field dark v-model="signup.firstName" label="Gender Preferences" required />
+                <v-select v-model="setup.desiredGenders" :items="genders" label="Genders interested in" multiple>
+                  <template v-slot:selection="{ item }">
+                    <v-chip>
+                      <span>{{ item }}</span>
+                    </v-chip>
+                  </template>
+                </v-select>
               </v-row>
               <v-row align="center" justify="center">
-                <v-text-field dark v-model="signup.firstName" label="Seriousness" required />
+                <v-select v-model="setup.seriousness" :items="seriousness" label="Desired seriousness" multiple></v-select>
               </v-row>
               <v-row align="center" justify="center">
-                <v-btn outlined block dark @click="page--">Back</v-btn>
-                <v-btn outlined block dark @click="page++">Next</v-btn>
+                <v-col sm="6">
+                  <v-btn outlined block dark @click="page--">Back</v-btn>
+                </v-col>
+                <v-col sm="6">
+                  <v-btn outlined block dark @click="page++">Next</v-btn>
+                </v-col>
               </v-row>
             </v-container>
           </v-stepper-content>
@@ -49,11 +74,15 @@
           <v-stepper-content step="3">
             <v-container fill-height fluid align-center justify-space-between>
               <v-row align="center" justify="center">
-                <v-text-field dark v-model="signup.firstName" label="Question 1" required />
+                <v-text-field dark v-model="setup.personality.first" label="Question 1" required />
               </v-row>
               <v-row align="center" justify="center">
-                <v-btn outlined block dark @click="page--">Back</v-btn>
-                <v-btn outlined block color="success" type="submit">Join</v-btn>
+                <v-col sm="6">
+                  <v-btn outlined block dark @click="page--">Back</v-btn>
+                </v-col>
+                <v-col sm="6">
+                  <v-btn outlined block color="success" type="submit">Join</v-btn>
+                </v-col>
               </v-row>
             </v-container>
           </v-stepper-content>
@@ -69,14 +98,18 @@ import gql from "graphql-tag";
 export default {
   name: "ProfileSetUp",
   data: function() {
-  return {
-    page: 1,
-    signup: {
-      firstName: "",
-      lastName: "",
-      username: "",
-      password: "",
-      confirmedPassword: ""
+    return {
+      page: 1,
+      setup: {
+        profilePictures: [],
+        dorm: "",
+        biography: "",
+        gender: "",
+        desiredGenders: [],
+        seriousness: 0,
+        personality: {
+
+        }
       }
     };
   },
