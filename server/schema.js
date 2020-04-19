@@ -91,6 +91,7 @@ let schema = buildSchema(`
         createMessage(input: MessageInput): Message,
         createMatch(input: MatchInput): Int,
         createBlock(input: MatchInput): Int
+        setupUser(input: SetupUserInput): ReturnStruct
     }
     input NewUserInput {
         user_id: String,
@@ -105,6 +106,12 @@ let schema = buildSchema(`
     input MatchInput {
         other_user_id: String!,
         event_id: Int,
+    }
+    input SetupUserInput {
+        user_id: String!,
+        gender_id: Int,
+        biography: String,
+        residence_id: Int
     }
 `);
 

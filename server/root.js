@@ -111,7 +111,7 @@ let mutations = {
         // hash password
         let hash = await hasher(input.password);
         let results = await run(
-            'insert into users (user_id,password,first_name,last_name,gender_id,bio,nickname,confirmed_account,reset_token,dorm,joined)' +
+            'insert into users (user_id,password,first_name,last_name,gender_id,biography,nickname,confirmed_account,reset_token,residence_id,joined)' +
             'values (:id, :pw, :fn, :ln, null, null, null, null, null, null, null)',
             [input.user_id, hash, input.first_name, input.last_name]
         )
@@ -138,6 +138,23 @@ let mutations = {
     },
     createBlock: async ({ input }, { user }) => {
         return await Block.create({ blockee: input.other_user_id, blocker: user });
+    },
+    setupUser: async ({ input }) => {
+        let results = await run(
+            'insert into users (user_id,gender_id,biography,residence_id)' +
+            'values (:id, :gender, :biography, :residence)',
+            [input.user_id, input.gender_id, input.biography, input.residence_id]
+        )
+        return !results.error ? {
+                failure: false,
+                message: `${input.user_id} has been updated`
+            } : {
+                failure: true,
+                message: results.error.errorNum === 1
+                    ? `${input.user_id} could not be updated`
+                    : results.error.message
+            }
+        ;
     }
 }
 

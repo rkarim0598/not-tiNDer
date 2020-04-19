@@ -14,20 +14,25 @@
           <v-stepper-content step="1">
             <v-container fill-height fluid align-center justify-space-between>
               <v-row align="center" justify="center">
-                <v-file-input v-model="setup.profilePictures" accept="image/*" placeholder="Upload your pictures" label="Pictures" multiple prepend-icon="mdi-camera">
-                  <template v-slot:selection="{ file, text }">
-                    <!--{{ file }} -->
+                <!-- TODO look nicer -->
+                <v-file-input v-model="setupForm.profilePictures" accept="image/*" placeholder="Upload your pictures" label="Pictures" multiple prepend-icon="mdi-camera">
+                  <template v-slot:selection="{ index, text }">
                     <v-chip small label color="primary">
-                      {{ text }}
+                      <div v-if="photoData[index]">
+                        <img :src="photoData[index]">
+                      </div>
+                      <div v-else>
+                        {{ text }}
+                      </div>
                     </v-chip>
                   </template>
                 </v-file-input>
               </v-row>
               <v-row align="center" justify="center">
-                <v-select dark v-model="setup.dorm" :items="dorms" menu-props="auto" label="Dorm" hide-details prepend-icon="mdi-home" single-line></v-select>
+                <v-select dark v-model="setupForm.residence" :items="residences" item-value="residence_id" item-text="name" menu-props="auto" label="Dorm" hide-details prepend-icon="mdi-home" single-line></v-select>
               </v-row>
               <v-row align="center" justify="center">
-                <v-textarea dark outlined name="biography" label="Biography" v-model="setup.biography" ></v-textarea>
+                <v-textarea dark outlined name="biography" label="Biography" v-model="setupForm.biography" ></v-textarea>
               </v-row>
               <v-row align="center" justify="center">
                 <v-col sm="6" offset-sm="6">
@@ -40,7 +45,16 @@
           <v-stepper-content step="2">
             <v-container fill-height fluid align-center justify-space-between>
               <v-row align="center" justify="center">
-                <v-select v-model="setup.gender" :items="genders" label="Your gender">
+                <v-combobox v-model="setupForm.gender" :items="genders" item-value="gender_id" item-text="name" label="Your gender">
+                  <template v-slot:selection="{ item }">
+                    <v-chip>
+                      <span>{{ item }}</span>
+                    </v-chip>
+                  </template>
+                </v-combobox>
+              </v-row>
+              <v-row align="center" justify="center">
+                <v-select v-model="setupForm.desiredGenders" :items="genders" item-value="gender_id" item-text="name" label="Genders interested in" multiple>
                   <template v-slot:selection="{ item }">
                     <v-chip>
                       <span>{{ item }}</span>
@@ -49,16 +63,8 @@
                 </v-select>
               </v-row>
               <v-row align="center" justify="center">
-                <v-select v-model="setup.desiredGenders" :items="genders" label="Genders interested in" multiple>
-                  <template v-slot:selection="{ item }">
-                    <v-chip>
-                      <span>{{ item }}</span>
-                    </v-chip>
-                  </template>
-                </v-select>
-              </v-row>
-              <v-row align="center" justify="center">
-                <v-select v-model="setup.seriousness" :items="seriousness" label="Desired seriousness" multiple></v-select>
+                <!-- TODO slider or selector -->
+                <v-slider v-model="setupForm.seriousness" label="Desired seriousness" min="1" max="5"></v-slider>
               </v-row>
               <v-row align="center" justify="center">
                 <v-col sm="6">
@@ -74,7 +80,7 @@
           <v-stepper-content step="3">
             <v-container fill-height fluid align-center justify-space-between>
               <v-row align="center" justify="center">
-                <v-text-field dark v-model="setup.personality.first" label="Question 1" required />
+                <v-text-field dark v-model="setupForm.personality.first" label="Question 1" required />
               </v-row>
               <v-row align="center" justify="center">
                 <v-col sm="6">
@@ -100,9 +106,12 @@ export default {
   data: function() {
     return {
       page: 1,
-      setup: {
+      residences: [],
+      genders: [],
+      seriousness: [],
+      setupForm: {
         profilePictures: [],
-        dorm: "",
+        residence: "",
         biography: "",
         gender: "",
         desiredGenders: [],
@@ -113,52 +122,79 @@ export default {
       }
     };
   },
+  // Is there a better way of doing this?
+  asyncComputed: {
+    photoData: async function () {
+      return Promise.all(this.setupForm.profilePictures.map(this.loadPicture));
+    }
+  },
+  apollo: {
+    residences: gql`query {
+      residences {
+        residence_id,
+        name
+      }
+    }`,
+    genders: gql`query {
+      genders {
+        gender_id,
+        name
+      }
+    }`,
+  },
   methods: {
-  performSetup: async function() {
-    const {
-    username,
-    password,
-    confirmedPassword,
-    firstName,
-    lastName
-    } = this.signup;
+    loadPicture: async function(file) {
+      //TODO caching
+      var fr = new FileReader();
+      fr.readAsDataURL(file);
+      return new Promise((resolve) => fr.onload = () => resolve(fr.result));
+    },
+    performSetup: async function() {
+      const {
+        profilePictures,
+        residence,
+        biography,
+        gender,
+        desiredGenders,
+        seriousness,
+        personality
+      } = this.setupForm;
+      // const photoData = this.photoData;
 
-    // input checking
-    if (password !== confirmedPassword) {
-    alert("Passwords don't match");
-    return;
-    } else if (
-    Object.values(this.signup).filter(val => val.length === 0).length
-    ) {
-    alert("One or more empty fields");
-    return;
-    }
+      // input checking
+      if (!profilePictures || !residence || !biography || !gender || !desiredGenders || !seriousness || !personality ){
+        alert("One or more empty fields");
+        return false;
+      }
 
-    let res = await this.$apollo.mutate({
-    mutation: gql`
-      mutation($input: NewUserInput) {
-      createUser(input: $input) {
-        failure
-        message
-        data
-      }
-      }
-    `,
-    variables: {
-      input: {
-      user_id: username,
-      password: password,
-      first_name: firstName,
-      last_name: lastName
+      let res = await this.$apollo.mutate({
+        mutation: gql`
+          mutation($input: SetupUserInput) {
+            setupUser(input: $input) {
+              failure
+              message
+              data
+            }
+          }
+        `,
+        variables: {
+          input: {
+            // profilePictures,
+            residence,
+            biography,
+            gender,
+            desiredGenders,
+            seriousness,
+            // personality
+          }
+        }
+      });
+      alert(res.data.createUser.message);
+      
+      if (!res.data.createUser.failure) {
+        this.$router.push('/login');
       }
     }
-    });
-    alert(res.data.createUser.message);
-    
-    if (!res.data.createUser.failure) {
-    this.$router.push('/login');
-    }
-  }
   }
 };
 </script>
