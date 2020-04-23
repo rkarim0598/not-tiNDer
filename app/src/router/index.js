@@ -27,6 +27,14 @@ Vue.use(VueRouter)
     path: '/messages/:matchId',
     name: 'Messages',
     component: () => import('../views/Messages.vue')
+    path: '/quiz',
+    name: 'Quiz',
+    component: () => import('../views/Quiz.vue')
+  },
+  {
+    path: '/main',
+    name: 'Main',
+    component: () => import('../views/Main.vue')
   }
 ]
 
