@@ -92,7 +92,8 @@ let schema = buildSchema(`
         createMessage(input: MessageInput): Message,
         createMatch(input: MatchInput): Int,
         createBlock(input: MatchInput): Int
-        setupUser(input: SetupUserInput): ReturnStruct
+        setupUser(input: SetupUserInput): ReturnStruct,
+        addPersonality(personality: String): ReturnStruct
     }
     input NewUserInput {
         user_id: String,

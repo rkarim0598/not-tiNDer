@@ -17,7 +17,7 @@
       </div>
       <div v-else>
         <div class="title text">Your result is</div>
-        <div class="display-3 text">{{ personalityType }}</div>
+        <div class="display-3 text">{{ type }}</div>
       </div>
       <v-btn
         v-if="current && current < questions.length"
@@ -33,6 +33,7 @@
 
 <script>
 import quiz from "../quiz";
+import gql from "graphql-tag";
 
 export default {
   name: "Quiz",
@@ -40,28 +41,27 @@ export default {
     return {
       questions: quiz,
       answers: [],
+      type: "",
       current: 0
     };
   },
   methods: {
-    increment: function(n) {
+    increment: async function(n) {
       this.answers[this.current] = n;
       this.current++;
+
+      if (this.current === this.questions.length) {
+        this.computePersonalityType();
+        let res = await this.sendResults();
+        
+        // perhaps some more robust handling to be done here
+        res.failure !== true && alert('Error submitting personality type');
+      }
     },
     decrement: function() {
       this.current--;
-    }
-  },
-  computed: {
-    percentComplete: function() {
-      return (this.current / this.questions.length) * 100;
     },
-    title: function() {
-      return this.current < this.questions.length
-        ? "Personality Quiz"
-        : "Results";
-    },
-    personalityType: function() {
+    computePersonalityType: function() {
       let results = {
         lists: {
           ie: [-2, -6, -10, 14, 18, 22, 26, 31],
@@ -90,7 +90,33 @@ export default {
           .reduce((a, b) => a + b);
         type += results.types[key][results.values[key] > 24 ? 0 : 1];
       }
-      return type;
+
+      this.type = type;
+    },
+    sendResults: async function() {
+      return await this.$apollo.mutate({
+        mutation: gql`
+          mutation($personality: String) {
+            addPersonality(personality: $personality) {
+              failure
+              message
+            }
+          }
+        `,
+        variables: {
+          personality: this.type
+        }
+      });
+    }
+  },
+  computed: {
+    percentComplete: function() {
+      return (this.current / this.questions.length) * 100;
+    },
+    title: function() {
+      return this.current < this.questions.length
+        ? "Personality Quiz"
+        : "Results";
     }
   }
 };

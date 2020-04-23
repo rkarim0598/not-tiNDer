@@ -164,6 +164,15 @@ let mutations = {
                     : results.error.message
             }
         ;
+    },
+    addPersonality: async ({ personality }, { user }) => {
+        console.log(personality);
+        console.log(user);
+        // TODO: handle actually inserting data
+        return {
+            failure: false,
+            message: 'You did it'
+        }
     }
 }
 
