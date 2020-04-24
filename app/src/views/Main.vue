@@ -1,11 +1,11 @@
 <template>
-  <v-container class="main-container" fill-height fluid align-center>
+  <v-container v-if="!matchMode" class="main-container" fill-height fluid align-center>
     <v-row dense>
       <v-col cols="12">
         <v-col>
           <div light class="headline white--text">Recommended for you</div>
         </v-col>
-        <v-card color="#385f73" dark @click="overlay = true">
+        <v-card color="#385f73" dark @click="matchMode = true">
           <div class="d-flex flex-no-wrap justify-space-between">
             <div>
               <v-card-title class="headline" v-text="'Rayyan Karim'"></v-card-title>
@@ -37,35 +37,23 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-overlay :value="overlay">
-      <v-container fill-height fluid align-center>
-        <v-row>
-          <v-col>
-            <v-layout justify-end>
-              <v-btn icon @click="overlay = false">
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </v-layout>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-card dark>
-              <v-card-title class="headline" v-text="'here be the text'"></v-card-title>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-overlay>
+  </v-container>
+  <v-container class="main-container" v-else fill-height fluid align-center>
+    <PeopleSwiper></PeopleSwiper>
   </v-container>
 </template>
 
 <script>
+import PeopleSwiper from "../components/PeopleSwiper";
+
 export default {
   name: "Main",
+  components: {
+    PeopleSwiper
+  },
   data: function() {
     return {
-      overlay: false
+      matchMode: false
     };
   }
 };
@@ -77,12 +65,5 @@ export default {
   justify-content: center;
   background: rgba(0, 0, 0, 0) linear-gradient(rgb(111, 0, 0), rgb(32, 1, 34))
     repeat scroll 0% 0%;
-
-  .overlay-div {
-    margin: auto auto;
-    height: 90%;
-    width: 90%;
-    background-color: black;
-  }
 }
 </style>
