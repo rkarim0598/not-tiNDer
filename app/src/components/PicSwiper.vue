@@ -11,7 +11,7 @@
     <swiper-slide>Slide 8</swiper-slide>
     <swiper-slide>Slide 9</swiper-slide>
     <swiper-slide>Slide 10</swiper-slide>
-    <div class="swiper-pagination" slot="pagination"></div>
+    <!-- <div class="swiper-pagination" slot="pagination"></div> -->
   </swiper>
 </template>
 
@@ -29,10 +29,11 @@ export default {
     return {
       swiperOption: {
         slidesPerView: 1,
-        pagination: {
-          el: ".swiper-pagination",
-          clickable: true
-        }
+        // pagination was working but putting this inside the people swiper broke it
+        // pagination: {
+          // pagination: ".swiper-pagination",
+          // clickable: true
+        // }
       }
     };
   },

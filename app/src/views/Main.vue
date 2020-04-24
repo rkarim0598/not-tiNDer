@@ -39,7 +39,7 @@
     </v-row>
   </v-container>
   <v-container class="main-container" v-else fill-height fluid align-center>
-    <PeopleSwiper></PeopleSwiper>
+    <PeopleSwiper @swiped="handleSwiped"></PeopleSwiper>
   </v-container>
 </template>
 
@@ -55,6 +55,13 @@ export default {
     return {
       matchMode: false
     };
+  },
+  methods: {
+    handleSwiped: function(val) {
+      // can send request to database for match/block here
+      // also need to update person being viewed
+      console.log(val);
+    }
   }
 };
 </script>
