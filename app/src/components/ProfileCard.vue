@@ -1,6 +1,6 @@
 
 <template>
-  <v-container fill-height align-center fluid>
+  <v-container fill-height align-center fluid class="card-container">
     <v-card dark class="pics-container">
       <PicSwiper></PicSwiper>
       <v-layout align-start justify-start column>
@@ -26,9 +26,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.card-container {
+  margin: 0 0;
+}
+
 .pics-container {
   height: 80%;
 	width: 100%;
+  margin: auto auto;
 	max-height: 800px;
 	max-width: 450px;
 }
