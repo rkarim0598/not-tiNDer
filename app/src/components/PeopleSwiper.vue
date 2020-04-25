@@ -5,11 +5,11 @@
       <div class="headline white--text">Liked!</div>
     </swiper-slide>
     <swiper-slide>
-      <v-layout column fill-height fill-width align-center class="profile-container">
-        <ProfileCard></ProfileCard>
-        <v-layout fill-width justify-space-evenly>
-          <v-btn @click="() => performLike(true)">Like</v-btn>
-          <v-btn @click="() => performLike(false)">Pass</v-btn>
+      <v-layout column fill-height align-center class="profile-container">
+        <ProfileCard :recId="recId" :rec="rec" ></ProfileCard>
+        <v-layout justify-space-around class="button-container">
+          <v-btn fab dark @click="() => performLike(true)"><v-icon large color="red">mdi-heart</v-icon></v-btn>
+          <v-btn fab dark @click="() => performLike(false)"><v-icon large color="blue">mdi-thumb-down</v-icon></v-btn>
         </v-layout>
       </v-layout>
     </swiper-slide>
@@ -30,6 +30,10 @@ export default {
     Swiper,
     SwiperSlide,
     ProfileCard
+  },
+  props: {
+    recId: String,
+    rec: Object
   },
   data() {
     return {
@@ -91,7 +95,7 @@ export default {
 
 <style lang="scss" scoped>
 .swiper {
-  height: 80%;
+  height: 95%;
   width: 100%;
 
   .swiper-slide {
@@ -101,11 +105,14 @@ export default {
     text-align: center;
     font-weight: bold;
     font-size: 30;
-    // background-color: blue;
   }
 }
 
 .profile-container {
   margin: 0 0;
+}
+
+.button-container {
+  width: 65%;
 }
 </style>
