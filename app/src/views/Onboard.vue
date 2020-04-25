@@ -29,9 +29,9 @@
                 </v-file-input>
               </v-row>
               <v-row align="center" justify="center">
-                <v-select dark v-model="setupForm.residence" :items="residences" item-value="residence_id" item-text="name" menu-props="auto" label="Dorm" hide-details prepend-icon="mdi-home" single-line></v-select>
+                <v-select dark v-model="setupForm.residence" :items="residences" item-value="residence_id" item-text="name" menu-props="auto" label="Residence" hide-details prepend-icon="mdi-home" single-line></v-select>
               </v-row>
-              <v-row align="center" justify="center">
+              <v-row align="center" justify="center" class="mt-10">
                 <v-textarea dark outlined name="biography" label="Biography" v-model="setupForm.biography" ></v-textarea>
               </v-row>
               <v-row align="center" justify="center">
@@ -71,23 +71,7 @@
                   <v-btn outlined block dark @click="page--">Back</v-btn>
                 </v-col>
                 <v-col sm="6">
-                  <v-btn outlined block dark @click="page++">Next</v-btn>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-stepper-content>
-
-          <v-stepper-content step="3">
-            <v-container fill-height fluid align-center justify-space-between>
-              <v-row align="center" justify="center">
-                <v-text-field dark v-model="setupForm.personality.first" label="Question 1" required />
-              </v-row>
-              <v-row align="center" justify="center">
-                <v-col sm="6">
-                  <v-btn outlined block dark @click="page--">Back</v-btn>
-                </v-col>
-                <v-col sm="6">
-                  <v-btn outlined block color="success" type="submit">Join</v-btn>
+                  <v-btn outlined block color="success" type="submit">Submit</v-btn>
                 </v-col>
               </v-row>
             </v-container>
@@ -130,13 +114,13 @@ export default {
   },
   apollo: {
     residences: gql`query {
-      residences {
+      residences: findResidences {
         residence_id,
         name
       }
     }`,
     genders: gql`query {
-      genders {
+      genders: findGenders {
         gender_id,
         name
       }
@@ -149,7 +133,8 @@ export default {
       fr.readAsDataURL(file);
       return new Promise((resolve) => fr.onload = () => resolve(fr.result));
     },
-    performSetup: async function() {
+    performSetup: async function(e) {
+      e.preventDefault();
       const {
         profilePictures,
         residence,
@@ -179,21 +164,16 @@ export default {
         `,
         variables: {
           input: {
-            // profilePictures,
+            profilePictures,
             residence,
             biography,
             gender,
             desiredGenders,
             seriousness,
-            // personality
           }
         }
       });
-      alert(res.data.createUser.message);
-      
-      if (!res.data.createUser.failure) {
-        this.$router.push('/login');
-      }
+      alert(res.data.setupUser.message);
     }
   }
 };

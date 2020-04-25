@@ -110,8 +110,10 @@ let schema = buildSchema(`
     input SetupUserInput {
         user_id: String!,
         gender_id: Int,
+        desiredGenders: [Int],
         biography: String,
-        residence_id: Int
+        residence_id: Int,
+        photos: [String]
     }
 `);
 
