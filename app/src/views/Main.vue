@@ -39,12 +39,18 @@
     </v-row>
   </v-container>
   <v-container class="main-container" v-else fill-height fluid align-center>
-    <PeopleSwiper @swiped="handleSwiped"></PeopleSwiper>
+    <PeopleSwiper :recId="'rkarim@nd.edu'" :rec="recs['rkarim@nd.edu']" @swiped="handleSwiped"></PeopleSwiper>
+    <v-layout class="back-container" align-end justify-end>
+      <a @click="matchMode = false" icon>
+        <v-icon color="blue">mdi-keyboard-backspace</v-icon>Back
+      </a>
+    </v-layout>
   </v-container>
 </template>
 
 <script>
 import PeopleSwiper from "../components/PeopleSwiper";
+import pic from "../assets/hand-holding.jpg";
 
 export default {
   name: "Main",
@@ -53,7 +59,24 @@ export default {
   },
   data: function() {
     return {
-      matchMode: false
+      matchMode: false,
+      recs: {
+        "rkarim@nd.edu": {
+          name: "Rayyan Karim",
+          personality: "ESFP",
+          nickname: "R-Sizzle",
+          residence: "Sorin College",
+          bio:
+            " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent id dolor id risus mattis hendrerit ac convallis ligula. Nulla non nisl elit. Mauris in neque nec dui porttitor sollicitudin vel at libero. Donec lobortis at mauris eget rutrum. Mauris sollicitudin, felis eget elementum facilisis, nulla ipsum tempor nisl, sed convallis eros diam sed elit. Sed in tempor leo. Quisque eget imperdiet in. ",
+          pics: [
+            { id: 0, pic },
+            { id: 1, pic },
+            { id: 2, pic },
+            { id: 3, pic },
+            { id: 4, pic }
+          ]
+        }
+      }
     };
   },
   methods: {
@@ -72,5 +95,9 @@ export default {
   justify-content: center;
   background: rgba(0, 0, 0, 0) linear-gradient(rgb(111, 0, 0), rgb(32, 1, 34))
     repeat scroll 0% 0%;
+}
+
+.back-container {
+  height: 1px !important;
 }
 </style>

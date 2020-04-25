@@ -2,10 +2,23 @@
 <template>
   <v-container fill-height align-center fluid class="card-container">
     <v-card dark class="pics-container">
-      <PicSwiper></PicSwiper>
-      <v-layout align-start justify-start column>
-        <v-card-title class="headline white--text" v-text="'Rayyan Karim'"></v-card-title>
-        <v-card-subtitle class="white--text" v-text="'Nickname'"></v-card-subtitle>
+      <PicSwiper :pics="rec.pics"></PicSwiper>
+      <v-layout class="bottom-card-container" align-start justify-start column>
+        <v-card-title class="all-text name-container headline white--text" v-text="rec.name"></v-card-title>
+        <v-card-text
+          v-if="rec.residence"
+          class="text-left gray--text font-italic font-weight-light"
+        >{{ rec.residence }}</v-card-text>
+        <div class="text-container column-setter">
+          <div class="column-setter bottom-padding" v-if="rec.nickname">
+            <span class="text-left all-text white--text font-weight-regular">Nickname</span>
+            <span
+              class="text-left all-text white--text bio-text font-weight-light"
+            >{{ rec.nickname }}</span>
+          </div>
+          <span class="text-left font-weight-regular">Bio</span>
+          <span class="bottom-padding text-left all-text white--text bio-text font-weight-light">{{ rec.bio }}</span>
+        </div>
       </v-layout>
     </v-card>
   </v-container>
@@ -19,6 +32,10 @@ export default {
   components: {
     PicSwiper
   },
+  props: {
+    recId: String,
+    rec: Object
+  },
   data() {
     return {};
   }
@@ -30,11 +47,45 @@ export default {
   margin: 0 0;
 }
 
-.pics-container {
-  height: 80%;
-	width: 100%;
-  margin: auto auto;
-	max-height: 800px;
-	max-width: 450px;
+.bottom-card-container {
+  height: 50%;
 }
+
+.all-text {
+  padding-bottom: 0px;
+}
+
+.no-top-padding {
+  padding-top: 0px;
+}
+
+.bottom-padding {
+  padding-bottom: 10px;
+}
+
+.pics-container {
+  height: 100%;
+  width: 80%;
+  margin: auto auto;
+  max-height: 600px;
+  max-width: 450px;
+}
+
+.text-container {
+  max-height: 18vh;
+  white-space: pre-line;
+  text-align: left;
+  overflow: auto;
+  padding-left: 16px;
+}
+
+.column-setter {
+  display: flex;
+  flex-direction: column;
+}
+
+// .bio-text {
+//   white-space: pre-line;
+//   text-align: left;
+// }
 </style>

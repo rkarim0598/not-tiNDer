@@ -1,17 +1,23 @@
 
 <template>
-  <swiper class="swiper" ref="swiper" :options="swiperOption">
-    <swiper-slide>Slide 1</swiper-slide>
-    <swiper-slide>Slide 2</swiper-slide>
-    <swiper-slide>Slide 3</swiper-slide>
-    <swiper-slide>Slide 4</swiper-slide>
-    <swiper-slide>Slide 5</swiper-slide>
-    <swiper-slide>Slide 6</swiper-slide>
-    <swiper-slide>Slide 7</swiper-slide>
-    <swiper-slide>Slide 8</swiper-slide>
-    <swiper-slide>Slide 9</swiper-slide>
-    <swiper-slide>Slide 10</swiper-slide>
-    <!-- <div class="swiper-pagination" slot="pagination"></div> -->
+  <div v-if="!pics.length" class="swiper">
+    <v-img
+      height="300"
+      width="270"
+      :src="'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'"
+    ></v-img>
+  </div>
+  <swiper v-else class="swiper" ref="swiper" :options="swiperOption">
+    <swiper-slide v-for="img in pics" :key="img.id">
+      <v-img
+        height="300"
+        width="270"
+        :src="img.pic"
+        :lazy-src="'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'"
+      ></v-img>
+    </swiper-slide>
+    <div class="swiper-button-prev" slot="button-prev"></div>
+    <div class="swiper-button-next" slot="button-next"></div>
   </swiper>
 </template>
 
@@ -25,15 +31,18 @@ export default {
     Swiper,
     SwiperSlide
   },
+  props: {
+    pics: Array
+  },
   data() {
     return {
       swiperOption: {
         slidesPerView: 1,
-        // pagination was working but putting this inside the people swiper broke it
-        // pagination: {
-          // pagination: ".swiper-pagination",
-          // clickable: true
-        // }
+        loop: true,
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev"
+        }
       }
     };
   },
@@ -47,7 +56,7 @@ export default {
 
 <style lang="scss" scoped>
 .swiper {
-  height: 60%;
+  height: 50%;
   width: 100%;
 
   .swiper-slide {
