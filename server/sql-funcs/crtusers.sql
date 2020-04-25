@@ -7,13 +7,13 @@ create table users
   first_name varchar2(30) not null,
   last_name varchar2(30) not null,
   gender_id number(1),
-  bio varchar2(200),
+  bio varchar2(400),
   nickname varchar2(30),
   confirmed_account char(1),
   reset_token varchar2(50),
-  dorm_id number(2),
+  residence_id number(2),
   joined char(1),
   personality_results varchar2(500),
-  foreign key(dorm_id) references dorms(dorm_id),
+  foreign key(residence_id) references residences(residence_id),
   foreign key(gender_id) references genders(gender_id)
   );
