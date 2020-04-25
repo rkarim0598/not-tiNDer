@@ -1,40 +1,9 @@
-const oracledb = require('oracledb');
-const dbConfig = require('./dbconfig');
+const run = require('./db-query');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
-oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
-
-/**
- * 
- * @param {String} query 
- * @param {String[]} bindList 
- */
-async function run(query, bindList = []) {
-    let connection;
-    try {
-        connection = await oracledb.getConnection(dbConfig);
-
-        const results = await connection.execute(
-            query,
-            bindList,
-            { autoCommit: true } // necessary for changes to actually store in the db, set to false if you don't want changes to persist in db
-        )
-
-        return results;
-    } catch (error) {
-        console.log(error);
-        return { error }
-    } finally {
-        if (connection) {
-            try {
-                await connection.close();
-            } catch (err) {
-                console.error(err);
-            }
-        }
-    }
-}
+const User = require('./models/user');
+const Gender = require('./models/gender');
+const Residence = require('./models/residence');
 
 /**
  * 
@@ -95,6 +64,15 @@ let queries = {
                 message: 'Invalid username or password'
             }
         }
+    },
+    findGenders: async () => {
+        return await Gender.findAll();
+    },
+    findResidences: async () => {
+        return await Residence.findAll();
+    },
+    findUserById: async ({id}) => {
+        return await User.findById(id);
     }
 }
 
