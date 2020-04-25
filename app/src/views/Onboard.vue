@@ -99,10 +99,7 @@ export default {
         biography: "",
         gender: "",
         desiredGenders: [],
-        seriousness: 0,
-        personality: {
-
-        }
+        seriousness: 0
       }
     };
   },
@@ -136,18 +133,18 @@ export default {
     performSetup: async function(e) {
       e.preventDefault();
       const {
-        profilePictures,
         residence,
         biography,
         gender,
         desiredGenders,
-        seriousness,
-        personality
+        seriousness
       } = this.setupForm;
-      // const photoData = this.photoData;
+      const photoData = this.photoData;
+
+      let user_id = 'rkarim@nd.edu';
 
       // input checking
-      if (!profilePictures || !residence || !biography || !gender || !desiredGenders || !seriousness || !personality ){
+      if (!photoData || !residence || !biography || !gender || !desiredGenders || !seriousness ){
         alert("One or more empty fields");
         return false;
       }
@@ -164,12 +161,13 @@ export default {
         `,
         variables: {
           input: {
-            profilePictures,
-            residence,
+            user_id,
+            // photos: photoData,
+            residence_id: Number(residence),
             biography,
-            gender,
-            desiredGenders,
-            seriousness,
+            gender_id: Number(gender),
+            desiredGenders: desiredGenders.map(Number),
+            seriousness: Number(seriousness),
           }
         }
       });

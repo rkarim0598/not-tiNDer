@@ -113,6 +113,7 @@ let schema = buildSchema(`
         desiredGenders: [Int],
         biography: String,
         residence_id: Int,
+        seriousness: Int,
         photos: [String]
     }
 `);

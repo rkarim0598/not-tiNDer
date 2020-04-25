@@ -141,9 +141,8 @@ let mutations = {
     },
     setupUser: async ({ input }) => {
         let results = await run(
-            'insert into users (user_id,gender_id,biography,residence_id)' +
-            'values (:id, :gender, :biography, :residence)',
-            [input.user_id, input.gender_id, input.biography, input.residence_id]
+            'update users set gender_id = :gender, biography = :biography, residence_id = :residence where user_id = :id',
+            [input.gender_id, input.biography, input.residence_id, input.user_id]
         )
         return !results.error ? {
                 failure: false,
