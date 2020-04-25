@@ -1,5 +1,7 @@
 const Gender = require('./gender');
 const Residence = require('./residence');
+const Photo = require('./photo');
+const Match = require('./match');
 
 const run = require('../db-query');
 
@@ -25,8 +27,6 @@ module.exports = class User {
             [id]
         );
 
-        console.log(results);
-
         return new User(results.rows[0]);
     }
 
@@ -42,5 +42,13 @@ module.exports = class User {
 
     async residence() {
         return await Residence.findById(this.residence_id);
+    }
+
+    async matches() {
+        return await Match.findAllByUserId(this.user_id);
+    }
+
+    async photos() {
+        return await Photo.findAllByUserId(this.user_id);
     }
   }

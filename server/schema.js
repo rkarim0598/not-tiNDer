@@ -15,15 +15,39 @@ let schema = buildSchema(`
         reset_token: String,
         residence: Residence,
         gender: Gender,
-        joined: String
+        joined: String,
+        matches: [Match!]!,
+        photos: [Photo!]!,
+        gender_interests: [Gender!],
+        blocks: [User!]
     }
     type Residence {
         residence_id: String!,
-        name: String!
+        name: String!,
+        on_campus: Int!,
+        lat: Float,
+        lng: Float
     }
     type Gender {
         gender_id: String!,
         name: String!
+    }
+    type Match {
+        match_id: Int!,
+        other_user: User!,
+        messages: [Message!]!
+    }
+    type Message {
+        message_id: Int!,
+        match_id: Int!,
+        message: String!,
+        timestamp: String!,
+        sender: User!
+    }
+    type Photo {
+        photo_id: Int!,
+        user_id: String!,
+        photo: String!
     }
     type ReturnStruct {
         failure: Boolean,
