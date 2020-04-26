@@ -6,7 +6,7 @@
     </swiper-slide>
     <swiper-slide>
       <v-layout column fill-height align-center class="profile-container">
-        <ProfileCard :recId="recId" :rec="rec" ></ProfileCard>
+        <ProfileCard :recId="rec.id" :rec="rec.data" ></ProfileCard>
         <v-layout justify-space-around class="button-container">
           <v-btn fab dark @click="() => performLike(true)"><v-icon large color="red">mdi-heart</v-icon></v-btn>
           <v-btn fab dark @click="() => performLike(false)"><v-icon large color="blue">mdi-thumb-down</v-icon></v-btn>
@@ -32,7 +32,6 @@ export default {
     ProfileCard
   },
   props: {
-    recId: String,
     rec: Object
   },
   data() {

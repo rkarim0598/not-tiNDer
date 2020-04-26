@@ -2,7 +2,7 @@
 <template>
   <v-container fill-height align-center fluid class="card-container">
     <v-card dark class="pics-container">
-      <PicSwiper :pics="rec.pics"></PicSwiper>
+      <PicSwiper :recId="recId" :pics="rec.pics"></PicSwiper>
       <v-layout class="bottom-card-container" align-start justify-start column>
         <v-card-title class="all-text name-container headline white--text" v-text="rec.name"></v-card-title>
         <v-card-text
@@ -37,7 +37,8 @@ export default {
     rec: Object
   },
   data() {
-    return {};
+    return {
+    };
   }
 };
 </script>
