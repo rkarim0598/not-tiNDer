@@ -1,12 +1,14 @@
 <template>
-  <div>
-    MatchId: {{$route.params.matchId}}
-    Is loading: {{this.$apollo.queries.match.loading}}
-    User:
-    <div v-if="user">
-      {{user.user_id}}
-    </div>
-  </div>
+  <v-container class="messages-container" fill-height fluid align-center>
+    <v-container fill-height fluid align-center justify-space-between>
+      MatchId: {{$route.params.matchId}}
+      Is loading: {{this.$apollo.queries.match.loading}}
+      User:
+      <div v-if="user">
+        {{user.user_id}}
+      </div>
+    </v-container>
+  </v-container>
 </template>
 
 <script>
@@ -21,7 +23,7 @@ export default {
     };
   },
   watch: {
-    $route: function(to, from) {
+    $route: function(to) {
       this.$apollo.queries.match.setVariables({
         id: Number(to.params.matchId)
       });
@@ -64,3 +66,18 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.messages-container {
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(darkblue, black);
+}
+.messages-container div {
+  background: white;
+}
+
+.v-form {
+  height: 80%;
+}
+</style>

@@ -41,7 +41,7 @@ let schema = buildSchema(`
         message_id: Int!,
         match_id: Int!,
         message: String!,
-        timestamp: String!,
+        timestamp: Int!,
         sender: User!
     }
     type Photo {
@@ -66,12 +66,17 @@ let schema = buildSchema(`
     }
     type Mutation {
         createUser(input: NewUserInput): ReturnStruct
+        createMessage(input: MessageInput): Message
     }
     input NewUserInput {
         user_id: String,
         password: String,
         first_name: String,
         last_name: String
+    }
+    input MessageInput {
+        match_id: Int!,
+        message: String!
     }
 `);
 

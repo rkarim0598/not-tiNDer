@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const User = require('./models/user');
 const Gender = require('./models/gender');
 const Match = require('./models/match');
+const Message = require('./models/message');
 const Residence = require('./models/residence');
 
 /**
@@ -49,6 +50,7 @@ let queries = {
 
             let token = jwt.sign({
                 id: email,
+                user_id: email,
                 email: email,
             }, 'shouldchangethis', { expiresIn: 3600000 }) /// 60 is for 60 seconds, can enter 1w, 1y, 60 * 60, etc
 
@@ -108,6 +110,9 @@ let mutations = {
                     :
                     results.error.message
             }
+    },
+    createMessage: async ({input}, {user}) => {
+        return await Message.create({...input, ...user});
     }
 }
 

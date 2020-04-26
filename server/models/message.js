@@ -27,6 +27,18 @@ module.exports = class Match {
         return results.rows.map(dbObj => new Message(dbObj));
     }
 
+    static async create({match_id, message, user_id}) {
+        let result = await run(
+            'insert into messages (match_id, message, timestamp, user_id)' +
+            'values (:match_id, :message, :timestamp, :user_id)',
+            [match_id, message, new Date().getTime(), user_id]
+        );
+        if(result.error) {
+            throw result.error;
+        }
+        return new Message(result.rows[0]);
+    }
+
     constructor(dbObj) {
         for(let field of Match.fields) {
             this[field] = dbObj[field.toUpperCase()];
