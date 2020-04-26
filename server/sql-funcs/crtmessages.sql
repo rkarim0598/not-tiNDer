@@ -10,3 +10,17 @@ create table messages
   foreign key(user_id) references users(user_id),
   foreign key(match_id) references matches(match_id)
   );
+
+drop sequence messages_id_sequence;
+create sequence messages_id_sequence start with 1;
+
+create or replace trigger messages_id_trigger 
+before insert on messages 
+for each row
+
+begin
+  select messages_id_sequence.NEXTVAL
+  into   :new.message_id
+  from   dual;
+end;
+/

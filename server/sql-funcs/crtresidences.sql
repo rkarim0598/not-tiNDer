@@ -8,3 +8,17 @@ create table residences
 	lat number(8, 6),
 	lng number(8, 6)
 );
+
+drop sequence residences_id_sequence;
+create sequence residences_id_sequence start with 1;
+
+create or replace trigger residences_id_trigger 
+before insert on residences 
+for each row
+
+begin
+  select residences_id_sequence.NEXTVAL
+  into   :new.residence_id
+  from   dual;
+end;
+/
