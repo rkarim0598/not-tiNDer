@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('./models/user');
 const Gender = require('./models/gender');
+const Match = require('./models/match');
 const Residence = require('./models/residence');
 
 /**
@@ -71,8 +72,17 @@ let queries = {
     findResidences: async () => {
         return await Residence.findAll();
     },
+    findUser: async ({}, {user}) => {
+        return await User.findById(user.id);
+    },
     findUserById: async ({id}) => {
         return await User.findById(id);
+    },
+    findMatches: async ({}, {user}) => {
+        return await Match.findAllByUserId(user.id);
+    },
+    findMatchById: async ({id}, {user}) => {
+        return await Match.findByMatchIdAndUser(id, user.id);
     }
 }
 

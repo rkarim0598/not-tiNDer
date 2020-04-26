@@ -3,13 +3,15 @@ const run = require('../db-query');
 module.exports = class Match {
     static fields = [
         'match_id',
-        'query_user_id',
-        'other_user_id'
+        'query_user',
+        'other_user'
     ];
 
-    static async findByIdAndUser(id, user) {
+    static async findByMatchIdAndUser(id, user) {
         let results = await run(
-            'select :query_user, second_user AS other_user, * from match_id where match_id = :id',
+            'select query_user, other_user, * from '
+            + '(select matches.*, first_user as query_user, second_user as other_user from matches union select matches.*, second_user as query_user, first_user as other_user from matches)'
+            + ' where match_id = :id and query_user = :user',
             [id, user]
         );
 
