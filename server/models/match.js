@@ -3,8 +3,8 @@ const run = require('../db-query');
 module.exports = class Match {
     static fields = [
         'match_id',
-        'query_user_id',
-        'other_user_id'
+        'query_user',
+        'other_user'
     ];
 
     static async findByMatchIdAndUser(id, user) {
