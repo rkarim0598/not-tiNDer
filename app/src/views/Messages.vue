@@ -1,7 +1,11 @@
 <template>
   <div>
-    {{$route.params.matchId}}
-    {{user.user_id}}
+    MatchId: {{$route.params.matchId}}
+    Is loading: {{this.$apollo.queries.match.loading}}
+    User:
+    <div v-if="user">
+      {{user.user_id}}
+    </div>
   </div>
 </template>
 
@@ -12,11 +16,16 @@ export default {
   name: "Messages",
   data: function() {
     return {
-      user: {
-        id: 'default'
-      },
-      matchId: Number(this.$route.params.matchId)
+      user: undefined,
+      match: undefined
     };
+  },
+  watch: {
+    $route: function(to, from) {
+      this.$apollo.queries.match.setVariables({
+        id: Number(to.params.matchId)
+      });
+    }
   },
   apollo: {
     user: gql`query {
@@ -45,8 +54,11 @@ export default {
       }`,
       variables: function(){
         return {
-          id: this.matchId
+          id: Number(this.$route.params.matchId)
         };
+      },
+      error: function(error) {
+        console.log(error);
       }
     }
   }
