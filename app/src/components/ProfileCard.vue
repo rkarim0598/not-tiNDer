@@ -2,13 +2,13 @@
 <template>
   <v-container fill-height align-center fluid class="card-container">
     <v-card dark class="pics-container">
-      <PicSwiper :recId="recId" :pics="rec.pics"></PicSwiper>
+      <PicSwiper :recId="rec.user_id" :pics="rec.pics || []"></PicSwiper>
       <v-layout class="bottom-card-container" align-start justify-start column>
-        <v-card-title class="all-text name-container headline white--text" v-text="rec.name"></v-card-title>
+        <v-card-title class="all-text name-container headline white--text" v-text="`${rec.first_name} ${rec.last_name}`"></v-card-title>
         <v-card-text
-          v-if="rec.residence"
+          v-if="rec.residence_name"
           class="text-left gray--text font-italic font-weight-light"
-        >{{ rec.residence }}</v-card-text>
+        >{{ rec.residence_name }}</v-card-text>
         <div class="text-container column-setter">
           <div class="column-setter bottom-padding" v-if="rec.nickname">
             <span class="text-left all-text white--text font-weight-regular">Nickname</span>
@@ -33,7 +33,6 @@ export default {
     PicSwiper
   },
   props: {
-    recId: String,
     rec: Object
   },
   data() {

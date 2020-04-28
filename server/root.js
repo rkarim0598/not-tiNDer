@@ -2,10 +2,12 @@ const run = require('./db-query');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('./models/user');
+const Block = require('./models/block');
 const Gender = require('./models/gender');
 const Match = require('./models/match');
 const Message = require('./models/message');
 const Residence = require('./models/residence');
+const Recommendation = require('./models/recommendation');
 
 /**
  * 
@@ -54,8 +56,8 @@ let queries = {
                 email: email,
             }, 'shouldchangethis', { expiresIn: 3600000 }) /// 60 is for 60 seconds, can enter 1w, 1y, 60 * 60, etc
 
-            res.cookie('jwtAuth', token, {maxAge: 3600000, httpOnly: true}); //TODO secure: true
-            
+            res.cookie('jwtAuth', token, { maxAge: 3600000, httpOnly: true }); //TODO secure: true
+
             return {
                 failure: false,
                 message: 'Successfully logged in'
@@ -74,17 +76,20 @@ let queries = {
     findResidences: async () => {
         return await Residence.findAll();
     },
-    findUser: async ({}, {user}) => {
+    findUser: async ({ }, { user }) => {
         return await User.findById(user.id);
     },
-    findUserById: async ({id}) => {
+    findUserById: async ({ id }) => {
         return await User.findById(id);
     },
-    findMatches: async ({}, {user}) => {
+    findMatches: async ({ }, { user }) => {
         return await Match.findAllByUserId(user.id);
     },
-    findMatchById: async ({id}, {user}) => {
+    findMatchById: async ({ id }, { user }) => {
         return await Match.findByMatchIdAndUser(id, user.id);
+    },
+    findRecommendations: async ({ id }) => {
+        return await Recommendation.findRecommendations(id);
     }
 }
 
@@ -111,8 +116,14 @@ let mutations = {
                     results.error.message
             }
     },
-    createMessage: async ({input}, {user}) => {
-        return await Message.create({...input, ...user});
+    createMessage: async ({ input }, { user }) => {
+        return await Message.create({ ...input, ...user });
+    },
+    createMatch: async ({ input }, { user }) => {
+        return await Match.create({ ...input, ...user });
+    },
+    createBlock: async ({ input }, { user }) => {
+        return await Block.create({ blocker: input.user_id, blockee: input.other_user_id, ...user });
     }
 }
 
