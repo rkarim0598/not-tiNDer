@@ -67,7 +67,8 @@ export default {
     return {
       matchMode: false,
       recs: [],
-      event_id: null
+      event_id: null,
+      user_id: 'hgorbu@nd.edu'
     };
   },
   mounted: async function() {
@@ -87,9 +88,11 @@ export default {
         }
       `,
       variables: {
-        id: 'rkarim@nd.edu', /* TODO change to get from cache */
+        id: this.user_id, /* TODO change to get from cache */
       }
     });
+
+    console.log(res.data.findRecommendations);
 
     this.recs = res.data.findRecommendations || [];
   },
@@ -106,7 +109,7 @@ export default {
           `,
           variables: {
             input: {
-              user_id: "rkarim@nd.edu",
+              user_id: this.user_id,
               other_user_id: this.recs[0].user_id,
               event_id: this.event_id
             }
@@ -121,7 +124,7 @@ export default {
           `,
           variables: {
             input: {
-              user_id: "rkarim@nd.edu",
+              user_id: this.user_id,
               other_user_id: this.recs[0].user_id,
               event_id: this.event_id
             }
