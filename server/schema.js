@@ -49,6 +49,16 @@ let schema = buildSchema(`
         user_id: String!,
         photo: String!
     }
+    type Recommendation {
+        user_id: String!,
+        first_name: String!,
+        last_name: String!,
+        gender_id: String,
+        bio: String,
+        nickname: String,
+        residence_name: String,
+        personality_results: String
+    }
     type ReturnStruct {
         failure: Boolean,
         message: String,
@@ -62,11 +72,14 @@ let schema = buildSchema(`
         findGenders: [Gender!]!,
         findResidences: [Residence!]!,
         findMatches: [Match!]!,
-        findMatchById(id: Int!): Match
+        findMatchById(id: Int!): Match,
+        findRecommendations(id: String): [Recommendation!]!
     }
     type Mutation {
         createUser(input: NewUserInput): ReturnStruct
-        createMessage(input: MessageInput): Message
+        createMessage(input: MessageInput): Message,
+        createMatch(input: MatchInput): Int,
+        createBlock(input: MatchInput): Int
     }
     input NewUserInput {
         user_id: String,
@@ -77,6 +90,11 @@ let schema = buildSchema(`
     input MessageInput {
         match_id: Int!,
         content: String!
+    }
+    input MatchInput {
+        other_user_id: String!,
+        event_id: Int,
+        user_id: String!
     }
 `);
 

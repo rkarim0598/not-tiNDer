@@ -1,4 +1,5 @@
 sqlplus -s guest/guest @crtall
 sqlldr guest/guest control=residences.ctl
 sqlldr guest/guest control=genders.ctl
+sqlplus -s guest/guest @plsqlFuncs
 node loadUsers.js

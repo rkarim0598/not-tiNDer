@@ -6,10 +6,17 @@
     </swiper-slide>
     <swiper-slide>
       <v-layout column fill-height align-center class="profile-container">
-        <ProfileCard :recId="rec.id" :rec="rec.data" ></ProfileCard>
+        <ProfileCard :rec="rec"></ProfileCard>
         <v-layout justify-space-around class="button-container">
-          <v-btn fab dark @click="() => performLike(true)"><v-icon large color="red">mdi-heart</v-icon></v-btn>
-          <v-btn fab dark @click="() => performLike(false)"><v-icon large color="blue">mdi-thumb-down</v-icon></v-btn>
+          <v-btn fab dark @click="() => performLike(true)">
+            <v-icon large color="red">mdi-heart</v-icon>
+          </v-btn>
+          <v-btn fab dark @click="() => performLike(null)">
+            <v-icon class="rotate" large color="#FDFDF0">mdi-thumb-down</v-icon>
+          </v-btn>
+          <v-btn fab dark @click="() => performLike(false)">
+            <v-icon large color="blue">mdi-thumb-down</v-icon>
+          </v-btn>
         </v-layout>
       </v-layout>
     </swiper-slide>
@@ -47,7 +54,7 @@ export default {
   mounted: function() {
     // start at second slide
     this.swiper.slideTo(1, 0, false);
-    
+
     // add listener for slide change
     let vue = this;
     this.swiper.eventsListeners.slideChangeTransitionEnd = [
@@ -74,14 +81,18 @@ export default {
       }, 300);
     },
     performLike: function(isLike) {
-      // slide to appropriate slide (0 for like, 2 for pass)
-      this.swiper.slideTo(isLike ? 0 : 2, 350, false);
+      if (isLike === null) { // just passing for now, not blocking
+        this.$emit("swiped", null);
+      } else {
+        // slide to appropriate slide (0 for like, 2 for pass)
+        this.swiper.slideTo(isLike ? 0 : 2, 350, false);
 
-      // emit to parent
-      const vue = this;
-      setTimeout(function() {
-        vue.onSwipe(isLike ? 0 : 2)
-      }, 500);
+        // emit to parent
+        const vue = this;
+        setTimeout(function() {
+          vue.onSwipe(isLike ? 0 : 2);
+        }, 500);
+      }
     }
   },
   computed: {
@@ -113,5 +124,24 @@ export default {
 
 .button-container {
   width: 65%;
+}
+
+.rotate {
+  transform: rotate(90deg);
+  /* Legacy vendor prefixes that you probably don't need... */
+  /* Safari */
+  -webkit-transform: rotate(90deg);
+
+  /* Firefox */
+  -moz-transform: rotate(90deg);
+
+  /* IE */
+  -ms-transform: rotate(90deg);
+
+  /* Opera */
+  -o-transform: rotate(90deg);
+
+  /* Internet Explorer */
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
 </style>

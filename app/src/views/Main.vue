@@ -1,11 +1,11 @@
 <template>
   <v-container v-if="!matchMode" class="main-container" fill-height fluid align-center>
-    <v-row v-if="noRecs" dense>
+    <v-row v-if="!recs.length" dense>
       <v-col>
         <p class="text-center headline white--text">Check back later for new recommendations!</p>
       </v-col>
     </v-row>
-    <v-row v-if="!noRecs" dense>
+    <v-row v-if="recs.length" dense>
       <v-col cols="12">
         <v-col>
           <div light class="headline white--text">Recommended for you</div>
@@ -13,9 +13,9 @@
         <v-card color="#385f73" dark @click="matchMode = true">
           <div class="d-flex flex-no-wrap justify-space-between">
             <div>
-              <v-card-title class="headline" v-text="'Rayyan Karim'"></v-card-title>
-              <v-card-text v-text="'Personality: ISFP'"></v-card-text>
-              <v-card-subtitle v-text="'Sorin College'"></v-card-subtitle>
+              <v-card-title class="headline" v-text="`${recs[0].first_name} ${recs[0].last_name}`"></v-card-title>
+              <v-card-text v-text="`Personality: ${recs[0].personality_results || 'None'}`"></v-card-text>
+              <v-card-subtitle v-text="recs[0].residence_name || 'Hobo'"></v-card-subtitle>
             </div>
             <v-avatar class="ma-3" size="125" tile>
               <v-img
@@ -26,7 +26,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-if="!noRecs">
+    <v-row v-if="recs.length">
       <v-col cols="12">
         <div light class="headline white--text">Events for you</div>
         <v-card color="#385f73" dark>
@@ -44,7 +44,7 @@
     </v-row>
   </v-container>
   <v-container class="main-container" v-else fill-height fluid align-center>
-    <PeopleSwiper v-if="!noRecs" :rec="currentRec" @swiped="handleSwiped"></PeopleSwiper>
+    <PeopleSwiper v-if="recs.length" :rec="recs[0]" @swiped="handleSwiped"></PeopleSwiper>
     <div v-else light class="no-more headline white--text">No more recs</div>
     <v-layout class="back-container" align-end justify-end>
       <a @click="matchMode = false" icon>
@@ -56,7 +56,7 @@
 
 <script>
 import PeopleSwiper from "../components/PeopleSwiper";
-import pic from "../assets/hand-holding.jpg";
+import gql from "graphql-tag";
 
 export default {
   name: "Main",
@@ -66,69 +66,74 @@ export default {
   data: function() {
     return {
       matchMode: false,
-      current: 0,
-      recs: {
-        "rkarim@nd.edu": {
-          name: "Rayyan Karim",
-          personality: "ESFP",
-          nickname: "R-Sizzle",
-          residence: "Sorin College",
-          bio:
-            " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent id dolor id risus mattis hendrerit ac convallis ligula. Nulla non nisl elit. Mauris in neque nec dui porttitor sollicitudin vel at libero. Donec lobortis at mauris eget rutrum. Mauris sollicitudin, felis eget elementum facilisis, nulla ipsum tempor nisl, sed convallis eros diam sed elit. Sed in tempor leo. Quisque eget imperdiet in. ",
-          pics: [
-            { id: 0, pic },
-            { id: 1, pic },
-            { id: 2, pic },
-            { id: 3, pic },
-            { id: 4, pic }
-          ]
-        },
-        "jmeyer5@nd.edu": {
-          name: "Jack Meyer",
-          personality: "IJTP",
-          nickname: "J-Dogg",
-          residence: "Dunne Hall",
-          bio:
-            " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent id dolor id risus mattis hendrerit ac convallis ligula. Nulla non nisl elit. Mauris in neque nec dui porttitor sollicitudin vel at libero. Donec lobortis at mauris eget rutrum. Mauris sollicitudin, felis eget elementum facilisis, nulla ipsum tempor nisl, sed convallis eros diam sed elit. Sed in tempor leo. Quisque eget imperdiet in. ",
-          pics: [
-            {
-              id: 0,
-              pic:
-                "https://media-exp1.licdn.com/dms/image/C4E03AQEHdtxsrh1bsA/profile-displayphoto-shrink_200_200/0?e=1593648000&v=beta&t=MD56mHp-S0lqSx9luJW4TEoyDxvCoSbQ5qwXi7VYaI8"
-            },
-            { id: 1, pic },
-            {
-              id: 2,
-              pic:
-                "https://media-exp1.licdn.com/dms/image/C4E03AQEHdtxsrh1bsA/profile-displayphoto-shrink_200_200/0?e=1593648000&v=beta&t=MD56mHp-S0lqSx9luJW4TEoyDxvCoSbQ5qwXi7VYaI8"
-            },
-            { id: 3, pic },
-            {
-              id: 4,
-              pic:
-                "https://media-exp1.licdn.com/dms/image/C4E03AQEHdtxsrh1bsA/profile-displayphoto-shrink_200_200/0?e=1593648000&v=beta&t=MD56mHp-S0lqSx9luJW4TEoyDxvCoSbQ5qwXi7VYaI8"
-            }
-          ]
-        }
-      }
+      recs: [],
+      event_id: null
     };
   },
-  methods: {
-    handleSwiped: function(val) {
-      // can send request to database for match/block here
-      // also need to update person being viewed
-      console.log(`Liked ${this.currentRec.id}: ${val}`);
-      this.current++;
-    }
-  },
-  computed: {
-    currentRec: function() {
-      let id = Object.keys(this.recs)[this.current];
+  mounted: async function() {
+    let res = await this.$apollo.query({
+      query: gql`
+        query findRecommendations($id: String) {
+          findRecommendations(id: $id) {
+            user_id
+            first_name
+            last_name
+            gender_id
+            bio
+            nickname
+            residence_name
+            personality_results
+          }
+        }
+      `,
+      variables: {
+        id: 'rkarim@nd.edu', /* TODO change to get from cache */
+      }
+    });
 
-      return { id, data: this.recs[id] };
-    },
-    noRecs: function() {
-      return this.current >= Object.keys(this.recs).length;
+    this.recs = res.data.findRecommendations || [];
+  },
+  methods: {
+    handleSwiped: async function(val) {
+      let res;
+
+      if (val === true) {
+        res = await this.$apollo.mutate({
+          mutation: gql`
+            mutation($input: MatchInput) {
+              createMatch(input: $input)
+            }
+          `,
+          variables: {
+            input: {
+              user_id: "rkarim@nd.edu",
+              other_user_id: this.recs[0].user_id,
+              event_id: this.event_id
+            }
+          }
+        });  
+      } else if (val === false) {
+        res = await this.$apollo.mutate({
+          mutation: gql`
+            mutation($input: MatchInput) {
+              createBlock(input: $input)
+            }
+          `,
+          variables: {
+            input: {
+              user_id: "rkarim@nd.edu",
+              other_user_id: this.recs[0].user_id,
+              event_id: this.event_id
+            }
+          }
+        }); 
+      } else {
+        console.log('just passing for now');
+      }
+
+      console.log(res);
+
+      this.recs.splice(0, 1);
     }
   }
 };

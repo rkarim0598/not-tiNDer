@@ -2,14 +2,14 @@
 <template>
   <div v-if="!pics.length" class="swiper">
     <v-img
-      height="300"
-      width="270"
+      height="100%"
+      width="100%"
       :src="'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'"
     ></v-img>
   </div>
   <swiper v-else class="swiper" ref="swiper" :options="swiperOption">
     <swiper-slide v-for="img in pics" :key="img.id">
-      <img :src="img.pic" height="300" width="270" />
+      <img :src="img.pic" height="100%" width="100%" />
     </swiper-slide>
     <div class="swiper-button-prev" slot="button-prev"></div>
     <div class="swiper-button-next" slot="button-next"></div>
@@ -54,8 +54,7 @@ export default {
     //   newId !== oldId && this.swiper && this.swiper.slideTo(0, 0, false);
     // },
     pics: function() {
-      console.log(this.pics[0]);
-      this.swiper && this.swiper.slideTo(0, 0, false);
+      this.swiper?.slideTo(0, 0, false);
     }
   }
 };

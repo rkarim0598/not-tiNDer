@@ -2,10 +2,12 @@ const run = require('./db-query');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('./models/user');
+const Block = require('./models/block');
 const Gender = require('./models/gender');
 const Match = require('./models/match');
 const Message = require('./models/message');
 const Residence = require('./models/residence');
+const Recommendation = require('./models/recommendation');
 
 /**
  * 
@@ -58,8 +60,8 @@ let queries = {
                 id: email
             }, 'shouldchangethis', { expiresIn: 3600000 }) /// 60 is for 60 seconds, can enter 1w, 1y, 60 * 60, etc
 
-            res.cookie('jwtAuth', token, {maxAge: 3600000, httpOnly: true}); //TODO secure: true
-            
+            res.cookie('jwtAuth', token, { maxAge: 3600000, httpOnly: true }); //TODO secure: true
+
             return {
                 failure: false,
                 message: 'Successfully logged in'
@@ -82,7 +84,7 @@ let queries = {
         checkUser(user);
         return await User.findById(user);
     },
-    findUserById: async ({id}) => {
+    findUserById: async ({ id }) => {
         return await User.findById(id);
     },
     findMatches: async ({}, {user}) => {
@@ -93,6 +95,9 @@ let queries = {
         await new Promise(r => setTimeout(r, 500));
         checkUser(user);
         return await Match.findByMatchIdAndUser(id, user);
+    },
+    findRecommendations: async ({ id }) => {
+        return await Recommendation.findRecommendations(id);
     }
 }
 
@@ -122,6 +127,12 @@ let mutations = {
     createMessage: async ({input}, {user}) => {
         checkUser(user);
         return await Message.create({...input, user_id: user});
+    },
+    createMatch: async ({ input }, { user }) => {
+        return await Match.create({ ...input, user_id: user });
+    },
+    createBlock: async ({ input }, { user }) => {
+        return await Block.create({ blocker: input.user_id, blockee: input.other_user_id, ...user });
     }
 }
 
