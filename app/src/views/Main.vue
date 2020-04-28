@@ -68,7 +68,7 @@ export default {
       matchMode: false,
       recs: [],
       event_id: null,
-      user_id: 'hgorbu@nd.edu'
+      user_id: 'mbuzar@nd.edu'
     };
   },
   mounted: async function() {
@@ -83,7 +83,7 @@ export default {
             bio
             nickname
             residence_name
-            personality_results
+            personality_id
           }
         }
       `,

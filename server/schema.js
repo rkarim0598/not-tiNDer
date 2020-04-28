@@ -19,7 +19,8 @@ let schema = buildSchema(`
         matches: [Match!]!,
         photos: [Photo!]!,
         gender_interests: [Gender!],
-        blocks: [User!]
+        blocks: [User!],
+        personality_id: String
     }
     type Residence {
         residence_id: String!,
@@ -57,7 +58,7 @@ let schema = buildSchema(`
         bio: String,
         nickname: String,
         residence_name: String,
-        personality_results: String
+        personality_id: String
     }
     type ReturnStruct {
         failure: Boolean,

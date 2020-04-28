@@ -18,7 +18,7 @@ module.exports = class User {
         'reset_token',
         'residence_id',
         'joined',
-        'personality_results'
+        'personality_id'
     ];
 
     static async findById(id) {
