@@ -1,5 +1,7 @@
 prompt *** Creating table RESIDENCES ***
 @crtresidences
+prompt *** Creating table PERSONALITIES ***
+@crtpersonalities
 prompt *** Creating table GENDERS ***
 @crtgenders
 prompt *** Creating table USERS ***
