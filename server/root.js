@@ -21,6 +21,12 @@ async function hasher(plaintext) {
     })
 }
 
+async function checkUser(user) {
+    if(!user) {
+        throw new Error('Not logged in');
+    }
+}
+
 let queries = {
     hello: async () => {
         let results = await run('select salpers_name from salesperson where salpers_name = \'Rodney Jones\'');
@@ -49,9 +55,7 @@ let queries = {
             }
 
             let token = jwt.sign({
-                id: email,
-                user_id: email,
-                email: email,
+                id: email
             }, 'shouldchangethis', { expiresIn: 3600000 }) /// 60 is for 60 seconds, can enter 1w, 1y, 60 * 60, etc
 
             res.cookie('jwtAuth', token, {maxAge: 3600000, httpOnly: true}); //TODO secure: true
@@ -75,16 +79,19 @@ let queries = {
         return await Residence.findAll();
     },
     findUser: async ({}, {user}) => {
-        return await User.findById(user.id);
+        checkUser(user);
+        return await User.findById(user);
     },
     findUserById: async ({id}) => {
         return await User.findById(id);
     },
     findMatches: async ({}, {user}) => {
-        return await Match.findAllByUserId(user.id);
+        checkUser(user);
+        return await Match.findAllByUserId(user);
     },
     findMatchById: async ({id}, {user}) => {
-        return await Match.findByMatchIdAndUser(id, user.id);
+        checkUser(user);
+        return await Match.findByMatchIdAndUser(id, user);
     }
 }
 

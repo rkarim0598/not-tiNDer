@@ -1,8 +1,3 @@
-const Gender = require('./gender');
-const Residence = require('./residence');
-const Photo = require('./photo');
-const Match = require('./match');
-
 const run = require('../db-query');
 
 module.exports = class User {
@@ -37,18 +32,22 @@ module.exports = class User {
     }
   
     async gender() {
+        const Gender = require('./gender');
         return await Gender.findById(this.gender_id);
     }
 
     async residence() {
+        const Residence = require('./residence');
         return await Residence.findById(this.residence_id);
     }
 
     async matches() {
+        const Match = require('./match');
         return await Match.findAllByUserId(this.user_id);
     }
 
     async photos() {
+        const Photo = require('./photo');
         return await Photo.findAllByUserId(this.user_id);
     }
   }

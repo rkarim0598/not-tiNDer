@@ -1,6 +1,6 @@
 const run = require('../db-query');
 
-module.exports = class Match {
+module.exports = class Message {
     static fields = [
         'message_id',
         'match_id',
@@ -40,12 +40,13 @@ module.exports = class Match {
     }
 
     constructor(dbObj) {
-        for(let field of Match.fields) {
+        for(let field of Message.fields) {
             this[field] = dbObj[field.toUpperCase()];
         }
     }
 
     async sender() {
+        const User = require('./user');
         return await User.findById(this.user_id);
     }
 }

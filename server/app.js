@@ -34,7 +34,7 @@ app.use('/graphql', graphqlHTTP((req, res) => ({
   context: { // theoretically should pass user info to server after logged in
     req,
     res,
-    user: req.user
+    user: req != null ? req.user != null ? req.user.id : null : null
   }
 })));
 

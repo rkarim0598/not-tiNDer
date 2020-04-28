@@ -58,11 +58,11 @@ let schema = buildSchema(`
         hello: ReturnStruct,
         login(email: String, password: String): ReturnStruct,
         findUser: User,
-        findUserById(id: String): User,
+        findUserById(id: String!): User,
         findGenders: [Gender!]!,
         findResidences: [Residence!]!,
         findMatches: [Match!]!,
-        findMatchById(id: Int): Match
+        findMatchById(id: Int!): Match
     }
     type Mutation {
         createUser(input: NewUserInput): ReturnStruct

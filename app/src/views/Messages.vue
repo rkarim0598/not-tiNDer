@@ -7,6 +7,18 @@
       <div v-if="user">
         {{user.user_id}}
       </div>
+      <v-container style="max-height: 400px" class="overflow-y-auto">
+        <div  v-if="match">
+          <div v-for="message in match.messages" :key="message.message_id">
+            {{message}}
+          </div>
+        </div>
+      </v-container>
+      <v-container>
+        <v-input outline append-icon="mdi-send" @click:prepend="sendMessage">
+          Enter Message
+        </v-input>
+      </v-container>
     </v-container>
   </v-container>
 </template>
@@ -21,6 +33,11 @@ export default {
       user: undefined,
       match: undefined
     };
+  },
+  methods: {
+    sendMessage: function() {
+
+    }
   },
   watch: {
     $route: function(to) {
@@ -46,6 +63,7 @@ export default {
             last_name
           },
           messages {
+            message_id,
             message,
             timestamp,
             sender {
