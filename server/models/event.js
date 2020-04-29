@@ -3,11 +3,11 @@ const run = require('../db-query');
 module.exports = class Event {
     static fields = [
         'event_id',
-        'event_name',
+        'name',
         'user_id',
         'location',
         'sdate',
-        'event_description',
+        'description',
         'photo'
     ];
 
