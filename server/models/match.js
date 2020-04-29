@@ -1,10 +1,12 @@
 const run = require('../db-query');
+const oracledb = require('oracledb');
 
 module.exports = class Match {
     static fields = [
         'match_id',
-        'query_user_id',
-        'other_user_id'
+        'query_user',
+        'other_user',
+        'event_id'
     ];
 
     static async findByMatchIdAndUser(id, user) {
@@ -30,8 +32,39 @@ module.exports = class Match {
             + 'select second_user as query_user_id, first_user AS other_user_id, * from matches where second_user = :id',
             [id, id]
         );
-        
+
         return results.rows.map(dbObj => new User(dbObj));
+    }
+
+    static async create({ other_user_id, event_id = null, user_id }) {
+
+        let result = event_id ?
+            await run(
+                `begin
+                    :ret := insert_return_match_for_event(:first_user, :second_user, :event_id);
+                end;`,
+            { 
+                'first_user': user_id, 
+                'second_user': other_user_id,
+                'event_id': event_id,
+                ret: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
+            }
+            ) :
+            await run(
+                `begin
+                    :ret := insert_return_match(:first_user, :second_user);
+                end;`,
+                { 
+                    'first_user': user_id, 
+                    'second_user': other_user_id,
+                    ret: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
+                }
+            )
+        if (result.error) {
+            throw result.error;
+        }
+
+        return result.outBinds.ret;
     }
 
     constructor(dbObj) {

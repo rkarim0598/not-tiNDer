@@ -19,7 +19,8 @@ let schema = buildSchema(`
         matches: [Match!]!,
         photos: [Photo!]!,
         gender_interests: [Gender!],
-        blocks: [User!]
+        blocks: [User!],
+        personality_id: String
     }
     type Residence {
         residence_id: String!,
@@ -49,6 +50,25 @@ let schema = buildSchema(`
         user_id: String!,
         photo: String!
     }
+    type Recommendation {
+        user_id: String!,
+        first_name: String!,
+        last_name: String!,
+        gender_id: String,
+        bio: String,
+        nickname: String,
+        residence_name: String,
+        personality_id: String
+    }
+    type Event {
+        event_id: Int!,
+        event_name: String!,
+        user_id: String!,
+        location: String!,
+        sdate: String!,
+        event_description: String!,
+        photo: String
+    }
     type ReturnStruct {
         failure: Boolean,
         message: String,
@@ -62,11 +82,15 @@ let schema = buildSchema(`
         findGenders: [Gender!]!,
         findResidences: [Residence!]!,
         findMatches: [Match!]!,
-        findMatchById(id: Int!): Match
+        findMatchById(id: Int!): Match,
+        findRecommendations(event_id: Int): [Recommendation!]!,
+        findEvents: [Event!]!
     }
     type Mutation {
         createUser(input: NewUserInput): ReturnStruct
-        createMessage(input: MessageInput): Message
+        createMessage(input: MessageInput): Message,
+        createMatch(input: MatchInput): Int,
+        createBlock(input: MatchInput): Int
     }
     input NewUserInput {
         user_id: String,
@@ -77,6 +101,10 @@ let schema = buildSchema(`
     input MessageInput {
         match_id: Int!,
         content: String!
+    }
+    input MatchInput {
+        other_user_id: String!,
+        event_id: Int,
     }
 `);
 
