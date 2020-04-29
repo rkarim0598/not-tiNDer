@@ -52,11 +52,6 @@ export default {
     };
   },
   mounted: function() {
-    function sayHi() {
-      alert("Hello");
-    }
-
-    setTimeout(sayHi, 1000);
     // start at second slide
     this.swiper.slideTo(1, 0, false);
 
@@ -83,11 +78,8 @@ export default {
       let vue = this;
       setTimeout(function() {
         vue.swiper.slideTo(1, 450, false);
-        console.log("should have slid");
       }, 300);
 
-      // temp solution:
-      // this.swiper.slideTo(1, 450, false);
     },
     performLike: function(isLike) {
       if (isLike === null) {
@@ -100,12 +92,8 @@ export default {
         // emit to parent by calling onSwipe
         let vue = this;
         setTimeout(function() {
-          console.log("bout to do");
           vue.onSwipe(isLike ? 0 : 2);
         }, 500);
-
-        // temp solution
-        // this.onSwipe(isLike ? 0 : 2);
       }
     }
   },

@@ -31,7 +31,6 @@ module.exports = class Match {
     }
 
     static async create({ blockee, blocker }) {
-        console.log(blockee, blocker);
         let result = await run(
             `begin
                 :ret := insert_return_block(:blocker, :blockee);

@@ -182,12 +182,19 @@ export default {
             event_id: eid
           }
         });
-
+        console.log(res);
         return res.data.findRecommendations || [];
       } catch (error) {
         console.log(error);
-        alert("Something went wrong, please refresh and try again");
-        return [];
+        if (
+          error["networkError"]["result"]["errors"][0].message ===
+          "Not logged in"
+        ) {
+          this.$router.push("login");
+        } else {
+          alert("Something went wrong, please refresh and try again");
+          return [];
+        }
       }
     },
     getEvents: async function() {
@@ -216,7 +223,7 @@ export default {
     handleSwiped: async function(val) {
       let res;
       let eid = this.event_id === "default" ? null : this.event_id;
-      console.log(val);
+      
       if (val === true) {
         try {
           res = await this.$apollo.mutate({
