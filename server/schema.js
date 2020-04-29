@@ -83,7 +83,7 @@ let schema = buildSchema(`
         findResidences: [Residence!]!,
         findMatches: [Match!]!,
         findMatchById(id: Int!): Match,
-        findRecommendations(id: String, event_id: Int): [Recommendation!]!,
+        findRecommendations(event_id: Int): [Recommendation!]!,
         findEvents: [Event!]!
     }
     type Mutation {
@@ -105,7 +105,6 @@ let schema = buildSchema(`
     input MatchInput {
         other_user_id: String!,
         event_id: Int,
-        user_id: String!
     }
 `);
 

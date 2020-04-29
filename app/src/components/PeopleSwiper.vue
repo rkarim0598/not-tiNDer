@@ -52,14 +52,18 @@ export default {
     };
   },
   mounted: function() {
+    function sayHi() {
+      alert("Hello");
+    }
+
+    setTimeout(sayHi, 1000);
     // start at second slide
     this.swiper.slideTo(1, 0, false);
 
     // add listener for slide change
-    let vue = this;
     this.swiper.eventsListeners.slideChangeTransitionEnd = [
-      function bindSwiperEvents() {
-        vue.onSwipe(vue.swiper.realIndex);
+      () => {
+        this.onSwipe(this.swiper.realIndex);
       }
     ];
   },
@@ -75,23 +79,33 @@ export default {
       }
 
       // slide back to first person slide
-      const vue = this;
+      // this and all other timeouts not getting triggered at all
+      let vue = this;
       setTimeout(function() {
         vue.swiper.slideTo(1, 450, false);
+        console.log("should have slid");
       }, 300);
+
+      // temp solution:
+      // this.swiper.slideTo(1, 450, false);
     },
     performLike: function(isLike) {
-      if (isLike === null) { // just passing for now, not blocking
+      if (isLike === null) {
+        // just passing for now, not blocking
         this.$emit("swiped", null);
       } else {
         // slide to appropriate slide (0 for like, 2 for pass)
         this.swiper.slideTo(isLike ? 0 : 2, 350, false);
 
-        // emit to parent
-        const vue = this;
+        // emit to parent by calling onSwipe
+        let vue = this;
         setTimeout(function() {
+          console.log("bout to do");
           vue.onSwipe(isLike ? 0 : 2);
         }, 500);
+
+        // temp solution
+        // this.onSwipe(isLike ? 0 : 2);
       }
     }
   },

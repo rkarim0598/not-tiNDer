@@ -1,14 +1,14 @@
 
 <template>
-  <div v-if="!pics.length" class="swiper">
-    <v-img
-      height="100%"
-      width="100%"
-      :src="'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'"
-    ></v-img>
-  </div>
-  <swiper v-else class="swiper" ref="swiper" :options="swiperOption">
-    <swiper-slide v-for="img in pics" :key="img.id">
+  <swiper class="swiper" ref="swiper" :options="swiperOption">
+    <swiper-slide v-if="!pics.length">
+      <v-img
+        height="100%"
+        width="100%"
+        :src="'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'"
+      ></v-img>
+    </swiper-slide>
+    <swiper-slide v-else v-for="img in pics" :key="img.id">
       <img :src="img.pic" height="100%" width="100%" />
     </swiper-slide>
     <div class="swiper-button-prev" slot="button-prev"></div>

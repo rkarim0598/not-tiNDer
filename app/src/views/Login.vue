@@ -28,23 +28,37 @@ export default {
     };
   },
   methods: {
+    handleFailure: function(message) {
+      this.username = "";
+      this.password = "";
+      alert(message);
+    },
     performLogin: async function() {
-      let res = await this.$apollo.query({
-        query: gql`
-          query login($email: String, $password: String) {
-            login(email: $email, password: $password) {
-              failure
-              message
-              data
+      try {
+        let res = await this.$apollo.query({
+          query: gql`
+            query login($email: String, $password: String) {
+              login(email: $email, password: $password) {
+                failure
+                message
+                data
+              }
             }
+          `,
+          variables: {
+            email: this.username,
+            password: this.password
           }
-        `,
-        variables: {
-          email: this.username,
-          password: this.password
+        });
+
+        if (res.data.login.failure) {
+          this.handleFailure(res.data.login.message);
+        } else {
+          this.$router.push('main');
         }
-      });
-      alert(res.data.login.message);
+      } catch (error) {
+        this.handleFailure(error);
+      }
     }
   }
 };
@@ -54,7 +68,7 @@ export default {
 .login-container {
   display: flex;
   justify-content: center;
-  background: linear-gradient( darkblue, black );
+  background: linear-gradient(darkblue, black);
 }
 
 .v-form {

@@ -19,8 +19,8 @@ module.exports = class Recommendation {
         }
     }
 
-    static async findRecommendations(id, event_id) {
-        let personality = await User.findById(id);
+    static async findRecommendations({ event_id, user_id }) {
+        let personality = await User.findById(user_id);
         personality = personality.personality_id;
 
         let results = await run(
@@ -67,7 +67,7 @@ module.exports = class Recommendation {
                     else 4
                 end
             `,
-            [id, id, id, id, id, id, event_id, id, event_id, id, personality, personality, personality]
+            [user_id, user_id, user_id, user_id, user_id, user_id, event_id, user_id, event_id, user_id, personality, personality, personality]
         )
 
         /*

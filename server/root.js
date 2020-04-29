@@ -97,8 +97,9 @@ let queries = {
         checkUser(user);
         return await Match.findByMatchIdAndUser(id, user);
     },
-    findRecommendations: async ({ id, event_id }) => {
-        return await Recommendation.findRecommendations(id, event_id);
+    findRecommendations: async ({ event_id }, {user}) => {
+        checkUser(user);
+        return await Recommendation.findRecommendations({ event_id, user_id: user });
     },
     findEvents: async() => {
         return await Event.findAll();
@@ -136,7 +137,7 @@ let mutations = {
         return await Match.create({ ...input, user_id: user });
     },
     createBlock: async ({ input }, { user }) => {
-        return await Block.create({ blocker: input.user_id, blockee: input.other_user_id, ...user });
+        return await Block.create({ blockee: input.other_user_id, blocker: user });
     }
 }
 

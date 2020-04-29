@@ -124,7 +124,6 @@ export default {
       recs: { default: [] },
       event_id: "default",
       events: [],
-      user_id: "mbuzar@nd.edu",
       eventIndex: 0,
       loading: false,
       defaultLoading: true
@@ -163,86 +162,104 @@ export default {
     getRecommendations: async function(event_id) {
       let eid = event_id === "default" ? null : event_id;
 
-      let res = await this.$apollo.query({
-        query: gql`
-          query findRecommendations($id: String, $event_id: Int) {
-            findRecommendations(id: $id, event_id: $event_id) {
-              user_id
-              first_name
-              last_name
-              gender_id
-              bio
-              nickname
-              residence_name
-              personality_id
+      try {
+        let res = await this.$apollo.query({
+          query: gql`
+            query findRecommendations($event_id: Int) {
+              findRecommendations(event_id: $event_id) {
+                user_id
+                first_name
+                last_name
+                gender_id
+                bio
+                nickname
+                residence_name
+                personality_id
+              }
             }
+          `,
+          variables: {
+            event_id: eid
           }
-        `,
-        variables: {
-          id: this.user_id /* TODO change to get from cache */,
-          event_id: eid
-        }
-      });
+        });
 
-      return res.data.findRecommendations || [];
+        return res.data.findRecommendations || [];
+      } catch (error) {
+        console.log(error);
+        alert("Something went wrong, please refresh and try again");
+        return [];
+      }
     },
     getEvents: async function() {
-      let res = await this.$apollo.query({
-        query: gql`
-          query findEvents {
-            findEvents {
-              event_id
-              event_name
-              user_id
-              location
-              sdate
-              event_description
+      try {
+        let res = await this.$apollo.query({
+          query: gql`
+            query findEvents {
+              findEvents {
+                event_id
+                event_name
+                user_id
+                location
+                sdate
+                event_description
+              }
             }
-          }
-        `
-      });
-
-      return res.data.findEvents || [];
+          `
+        });
+        return res.data.findEvents || [];
+      } catch (error) {
+        console.log(error);
+        alert("Something went wrong, please refresh and try again.");
+        return [];
+      }
     },
     handleSwiped: async function(val) {
       let res;
       let eid = this.event_id === "default" ? null : this.event_id;
-
+      console.log(val);
       if (val === true) {
-        res = await this.$apollo.mutate({
-          mutation: gql`
-            mutation($input: MatchInput) {
-              createMatch(input: $input)
+        try {
+          res = await this.$apollo.mutate({
+            mutation: gql`
+              mutation($input: MatchInput) {
+                createMatch(input: $input)
+              }
+            `,
+            variables: {
+              input: {
+                other_user_id: this.recs[this.event_id][0].user_id,
+                event_id: eid
+              }
             }
-          `,
-          variables: {
-            input: {
-              user_id: this.user_id,
-              other_user_id: this.recs[this.event_id][0].user_id,
-              event_id: eid
-            }
-          }
-        });
+          });
+          console.log(res);
+        } catch (error) {
+          console.log("error");
+          alert("Something went wrong, please refresh");
+        }
       } else if (val === false) {
-        res = await this.$apollo.mutate({
-          mutation: gql`
-            mutation($input: MatchInput) {
-              createBlock(input: $input)
+        try {
+          res = await this.$apollo.mutate({
+            mutation: gql`
+              mutation($input: MatchInput) {
+                createBlock(input: $input)
+              }
+            `,
+            variables: {
+              input: {
+                other_user_id: this.recs[this.event_id][0].user_id,
+                event_id: eid
+              }
             }
-          `,
-          variables: {
-            input: {
-              user_id: this.user_id,
-              other_user_id: this.recs[this.event_id][0].user_id,
-              event_id: eid
-            }
-          }
-        });
+          });
+          console.log(res);
+        } catch (error) {
+          console.log(error);
+          alert("Something went wrong, please refresh");
+        }
       } else {
         console.log("just passing for now");
       }
-
-      console.log(res);
 
       this.recs[this.event_id].splice(0, 1);
     }
