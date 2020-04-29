@@ -2,21 +2,36 @@
   <v-container class="messages-container" fill-height fluid align-center>
     <v-container fill-height fluid align-center justify-space-between>
       <!-- Is loading: {{this.$apollo.queries.match.loading}} -->
-      <v-container dark style="max-height: 400px" class="overflow-y-auto">
+      <v-container dark style="max-height: 80vh" class="overflow-y-auto">
         <div v-if="match">
-          <div v-for="message in match.messages" :key="message.message_id">
-            <v-card outline>
-              <v-card-text>
-                {{message.content}}
-                {{new Date(Number(message.timestamp))}}
-              </v-card-text>
-            </v-card>
-            <br>
+          <div v-for="(message, index) of match.messages" :key="message.message_id">
+            <p class="caption text-center mb-0">
+              {{formatDate(index)}}
+            </p>
+            <v-row class="d-flex align-center">
+              <v-col xs="2" sm="1">
+                <v-avatar color="indigo" v-if="message.sender.user_id != user.user_id">
+                  <v-icon dark>mdi-account-circle</v-icon>
+                </v-avatar>
+              </v-col>
+              <v-col xs="8" sm="10" class="py-1">
+                <v-card outlined :color="message.sender.user_id != user.user_id ? 'indigo' : undefined">
+                  <v-card-text>
+                    <pre class="body-2">{{message.content}}</pre>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+              <v-col xs="2" sm="1">
+                <v-avatar color="grey" v-if="message.sender.user_id == user.user_id">
+                  <v-icon dark>mdi-account-circle</v-icon>
+                </v-avatar>
+              </v-col>
+            </v-row>
           </div>
         </div>
       </v-container>
       <v-container>
-        <v-textarea v-model="draftMessage" @keypress="handleKeypress" :append-icon="draftMessage ? 'mdi-send' : undefined" @click:append="sendMessage" rows="1" label="Enter Message" auto-grow>
+        <v-textarea outlined :disabled="!match" v-model="draftMessage" @keypress="handleKeypress" :append-icon="draftMessage ? 'mdi-send' : undefined" @click:append="sendMessage" rows="1" label="Enter Message" auto-grow>
         </v-textarea>
       </v-container>
     </v-container>
@@ -36,6 +51,20 @@ export default {
     };
   },
   methods: {
+    formatDate: function(index) {
+      const date = new Date(Number(this.match.messages[index].timestamp));
+      if(index == 0) {
+        return date.toLocaleString();
+      }
+      const previous = new Date(Number(this.match.messages[index - 1].timestamp));
+      if(date.valueOf() - previous.valueOf() < 5 * 60 * 1000) {
+        return;
+      }
+      if(previous.toLocaleDateString() == date.toLocaleDateString()) {
+        return date.toLocaleTimeString();
+      }
+      return date.toLocaleString();
+    },
     handleKeypress: function(e) {
       if(e.keyCode == 13 && !e.shiftKey) {
         e.preventDefault();
