@@ -4,6 +4,7 @@ let { buildSchema } = require('graphql');
 
 // Construct a schema, using GraphQL schema language
 let schema = buildSchema(`
+    scalar Upload
     type User {
         user_id: String!,
         password: String!,
@@ -108,13 +109,12 @@ let schema = buildSchema(`
         event_id: Int,
     }
     input SetupUserInput {
-        user_id: String!,
         gender_id: Int,
         desiredGenders: [Int],
         biography: String,
         residence_id: Int,
         seriousness: Int,
-        photos: [String]
+        photos: [Upload]
     }
 `);
 

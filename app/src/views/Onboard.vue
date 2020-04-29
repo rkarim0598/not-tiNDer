@@ -137,14 +137,12 @@ export default {
         biography,
         gender,
         desiredGenders,
-        seriousness
+        seriousness,
+        profilePictures
       } = this.setupForm;
-      const photoData = this.photoData;
-
-      let user_id = 'rkarim@nd.edu';
 
       // input checking
-      if (!photoData || !residence || !biography || !gender || !desiredGenders || !seriousness ){
+      if (!profilePictures.length || !residence || !biography || !gender || !desiredGenders || !seriousness ){
         alert("One or more empty fields");
         return false;
       }
@@ -161,8 +159,7 @@ export default {
         `,
         variables: {
           input: {
-            user_id,
-            // photos: photoData,
+            photos: profilePictures,
             residence_id: Number(residence),
             biography,
             gender_id: Number(gender),

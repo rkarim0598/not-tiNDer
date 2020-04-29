@@ -8,10 +8,9 @@ oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
  * @param {String} query 
  * @param {String[]} bindList 
  */
-module.exports = async function run(query, bindList = []) {
-    let connection;
+module.exports = async function run(query, bindList = [], connection = undefined) {
     try {
-        connection = await oracledb.getConnection(dbConfig);
+        connection = connection || await oracledb.getConnection(dbConfig);
 
         const results = await connection.execute(
             query,

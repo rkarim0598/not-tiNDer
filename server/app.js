@@ -5,9 +5,11 @@ let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let cors = require('cors');
 let graphqlHTTP = require('express-graphql');
+const { graphqlUploadExpress: graphqlUpload } = require('graphql-upload')
 const exjwt = require('express-jwt');
 let schema = require('./schema');
 let root = require('./root');
+let Photo = require('./models/photo');
 require('dotenv').config();
 
 var app = express();
@@ -27,7 +29,7 @@ app.use(cookieParser());
 
 app.use(jwtMW);
 app.use(cors({origin: process.env.VUE_APP_DOMAIN, credentials: true}));
-app.use('/graphql', graphqlHTTP((req, res) => ({
+app.use('/graphql', graphqlUpload({ maxFileSize: 10000000, maxFiles: 10 }), graphqlHTTP((req, res) => ({
   schema: schema,
   rootValue: root,
   graphiql: true,
@@ -37,6 +39,11 @@ app.use('/graphql', graphqlHTTP((req, res) => ({
     user: !!req ? !!req.user ? req.user.id : undefined : undefined
   }
 })));
+
+app.get('/photo/:photo_id', async function (req, res) {
+  result = await Photo.findById(req.params.photo_id);
+  result.photo.pipe(res);
+})
 
 module.exports = app;
 

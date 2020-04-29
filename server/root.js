@@ -9,6 +9,7 @@ const Message = require('./models/message');
 const Residence = require('./models/residence');
 const Recommendation = require('./models/recommendation');
 const Event = require('./models/event');
+const Photo = require('./models/photo');
 
 /**
  * 
@@ -139,10 +140,15 @@ let mutations = {
     createBlock: async ({ input }, { user }) => {
         return await Block.create({ blockee: input.other_user_id, blocker: user });
     },
-    setupUser: async ({ input }) => {
+    setupUser: async ({input}, {user}) => {
+        checkUser(user);
+        await Promise.all(input.photos.map(async photo => {
+            // TODO is this the best way?
+            Photo.create({photo: photo.file.createReadStream(), user_id: user});
+        }));
         let results = await run(
-            'update users set gender_id = :gender, biography = :biography, residence_id = :residence where user_id = :id',
-            [input.gender_id, input.biography, input.residence_id, input.user_id]
+            'update users set gender_id = :gender, biography = :biography, residence_id = :residence where user_id = :user_id',
+            [input.gender_id, input.biography, input.residence_id, user]
         )
         return !results.error ? {
                 failure: false,

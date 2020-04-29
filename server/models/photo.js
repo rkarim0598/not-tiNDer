@@ -1,4 +1,6 @@
 const run = require('../db-query');
+const oracledb = require('oracledb');
+const dbConfig = require('../dbconfig');
 
 module.exports = class Photo {
     static fields = [
@@ -23,6 +25,31 @@ module.exports = class Photo {
         );
 
         return results.rows.map(dbObj => new Photo(dbObj));
+    }
+
+    static async create({photo, user_id}) {
+        let connection = await oracledb.getConnection(dbConfig);
+        const templob = await connection.createLob(oracledb.CLOB);
+        photo.pipe(templob);
+        await new Promise((success, reject) => {
+            templob.on('finish', success);
+            templob.on('error', reject);
+        });
+        let result = await run(
+            'insert into photos (photo, user_id)' +
+            'values (:photo, :user_id)',
+            [templob, user_id],
+            connection
+        );
+        templob.destroy();
+        if(result.error) {
+            throw result.error;
+        }
+        result = await run(
+            'select * from photos where rowid = :id',
+            [result.lastRowid]
+        );
+        return new Photo(result.rows[0]);
     }
 
     constructor(dbObj) {
