@@ -10,6 +10,8 @@ const exjwt = require('express-jwt');
 let schema = require('./schema');
 let root = require('./root');
 let Photo = require('./models/photo');
+const oracledb = require('oracledb');
+const dbConfig = require('./dbconfig');
 require('dotenv').config();
 
 var app = express();
@@ -41,8 +43,15 @@ app.use('/graphql', graphqlUpload({ maxFileSize: 10000000, maxFiles: 10 }), grap
 })));
 
 app.get('/photo/:photo_id', async function (req, res) {
-  result = await Photo.findById(req.params.photo_id);
-  result.photo.pipe(res);
+  let connection = await oracledb.getConnection(dbConfig);
+  const result = await Photo.findById(req.params.photo_id, connection);
+  res.set("Content-Type", result.mimetype);
+  res.set(200);
+  for await(let chunk of result.photo) {
+    res.write(chunk);
+  }
+  res.end();
+  await connection.close();
 })
 
 module.exports = app;

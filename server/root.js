@@ -10,6 +10,8 @@ const Residence = require('./models/residence');
 const Recommendation = require('./models/recommendation');
 const Event = require('./models/event');
 const Photo = require('./models/photo');
+const dbConfig = require('./dbconfig');
+const oracledb = require('oracledb');
 
 /**
  * 
@@ -142,9 +144,10 @@ let mutations = {
     },
     setupUser: async ({input}, {user}) => {
         checkUser(user);
+        let connection = await oracledb.getConnection(dbConfig);
         await Promise.all(input.photos.map(async photo => {
             // TODO is this the best way?
-            Photo.create({photo: photo.file.createReadStream(), user_id: user});
+            Photo.create({photo: photo.file.createReadStream(), mimetype: photo.file.mimetype, user_id: user}, connection);
         }));
         let results = await run(
             'update users set gender_id = :gender, biography = :biography, residence_id = :residence where user_id = :user_id',

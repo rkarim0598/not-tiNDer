@@ -9,7 +9,11 @@ oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
  * @param {String[]} bindList 
  */
 module.exports = async function run(query, bindList = [], connection = undefined) {
+    let shouldClose = true;
     try {
+        if(connection) {
+            shouldClose = false;
+        }
         connection = connection || await oracledb.getConnection(dbConfig);
 
         const results = await connection.execute(
@@ -23,7 +27,7 @@ module.exports = async function run(query, bindList = [], connection = undefined
         console.log(error);
         return { error }
     } finally {
-        if (connection) {
+        if (connection && shouldClose) {
             try {
                 await connection.close();
             } catch (err) {
