@@ -90,6 +90,7 @@ let queries = {
         return await Match.findAllByUserId(user);
     },
     findMatchById: async ({id}, {user}) => {
+        await new Promise(r => setTimeout(r, 500));
         checkUser(user);
         return await Match.findByMatchIdAndUser(id, user);
     }
@@ -119,6 +120,7 @@ let mutations = {
             }
     },
     createMessage: async ({input}, {user}) => {
+        checkUser(user);
         return await Message.create({...input, user_id: user});
     }
 }
