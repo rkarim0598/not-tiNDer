@@ -11,7 +11,7 @@ end;
 /
 
 create or replace function insert_return_match_for_event (user_id users.user_id%type, other_user_id users.user_id%type, event_id events.event_id%type)
-return match.match_id%type
+return matches.match_id%type
 is
     match_id matches.match_id%type;
 begin
