@@ -36,7 +36,7 @@ module.exports = class Match {
         let result = event_id ?
             await run(
                 `begin
-                    :ret := insert_return_match(:first_user, :second_user, :event_id);
+                    :ret := insert_return_match_for_event(:first_user, :second_user, :event_id);
                 end;`,
             { 
                 'first_user': user_id, 

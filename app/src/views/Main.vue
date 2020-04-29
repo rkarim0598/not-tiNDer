@@ -1,53 +1,64 @@
 <template>
   <v-container v-if="!matchMode" class="main-container" fill-height fluid align-center>
-    <v-row v-if="!recs.length" dense>
+    <v-row v-if="!recs[event_id].length" dense>
       <v-col>
         <p class="text-center headline white--text">Check back later for new recommendations!</p>
       </v-col>
     </v-row>
-    <v-row v-if="recs.length" dense>
+    <v-row v-if="recs[event_id].length" dense>
       <v-col cols="12">
-        <v-col>
-          <div light class="headline white--text">Recommended for you</div>
-        </v-col>
+        <div light class="headline white--text">Recommended for you</div>
         <v-card color="#385f73" dark @click="matchMode = true">
           <div class="d-flex flex-no-wrap justify-space-between">
             <div>
-              <v-card-title class="headline" v-text="`${recs[0].first_name} ${recs[0].last_name}`"></v-card-title>
-              <v-card-text v-text="`Personality: ${recs[0].personality_results || 'None'}`"></v-card-text>
-              <v-card-subtitle v-text="recs[0].residence_name || 'Hobo'"></v-card-subtitle>
+              <v-card-title
+                class="headline"
+                v-text="`${recs[event_id][0].first_name} ${recs[event_id][0].last_name}`"
+              ></v-card-title>
+              <v-card-text
+                v-text="`Personality: ${recs[event_id][0].personality_id || 'None'}`"
+              ></v-card-text>
+              <v-card-subtitle v-text="recs[event_id][0].residence_name || 'Hobo Hall'"></v-card-subtitle>
             </div>
-            <v-avatar class="ma-3" size="125" tile>
+            <!-- <v-avatar class="ma-3" size="125" tile>
               <v-img
-                :src="'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'"
+                :src="(recs[event_id][0].pics.length && recs[event_id][0].pics[0]) || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'"
               ></v-img>
-            </v-avatar>
+            </v-avatar>-->
           </div>
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-if="recs.length">
+    <v-row v-if="events.length">
       <v-col cols="12">
         <div light class="headline white--text">Events for you</div>
-        <v-card color="#385f73" dark>
+        <v-card color="#385f73" @click="matchForEvent(events[eventIndex].event_id)" dark>
           <div class="d-flex flex-no-wrap justify-space-between">
             <div>
-              <v-card-title class="headline" v-text="'here be a title'"></v-card-title>
-              <v-card-subtitle v-text="'here be sub'"></v-card-subtitle>
+              <v-card-title class="headline" v-text="events[eventIndex].event_name"></v-card-title>
+              <v-card-subtitle v-text="formattedDate(events[eventIndex].sdate)"></v-card-subtitle>
+              <v-card-subtitle class="white--text" v-text="events[eventIndex].location"></v-card-subtitle>
+              <v-card-subtitle class="white--text" v-text="events[eventIndex].event_description"></v-card-subtitle>
             </div>
-            <v-avatar class="ma-3" size="125" tile>
-              <v-img :src="'../assets/hand-holding.jpg'"></v-img>
-            </v-avatar>
           </div>
         </v-card>
+        <div class="button-container">
+          <v-btn outlined dark @click="eventIndex--" :disabled="eventIndex === 0">Last</v-btn>
+          <v-btn outlined dark @click="eventIndex++" :disabled="eventIndex === events.length - 1">Next</v-btn>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row v-else>
+      <v-col>
+        <div light class="headline white--text text-center">No events right now</div>
       </v-col>
     </v-row>
   </v-container>
   <v-container class="main-container" v-else fill-height fluid align-center>
-    <PeopleSwiper v-if="recs.length" :rec="recs[0]" @swiped="handleSwiped"></PeopleSwiper>
+    <PeopleSwiper v-if="recs[this.event_id].length" :rec="recs[this.event_id][0]" @swiped="handleSwiped"></PeopleSwiper>
     <div v-else light class="no-more headline white--text">No more recs</div>
     <v-layout class="back-container" align-end justify-end>
-      <a @click="matchMode = false" icon>
+      <a @click="exitMatchMode" icon>
         <v-icon color="blue">mdi-keyboard-backspace</v-icon>Back
       </a>
     </v-layout>
@@ -66,39 +77,86 @@ export default {
   data: function() {
     return {
       matchMode: false,
-      recs: [],
-      event_id: null,
-      user_id: 'mbuzar@nd.edu'
+      recs: { default: [] },
+      event_id: 'default',
+      events: [],
+      user_id: "mbuzar@nd.edu",
+      eventIndex: 0
     };
   },
   mounted: async function() {
-    let res = await this.$apollo.query({
-      query: gql`
-        query findRecommendations($id: String) {
-          findRecommendations(id: $id) {
-            user_id
-            first_name
-            last_name
-            gender_id
-            bio
-            nickname
-            residence_name
-            personality_id
-          }
-        }
-      `,
-      variables: {
-        id: this.user_id, /* TODO change to get from cache */
-      }
-    });
+    // fetch events
+    this.events = await this.getEvents();
 
-    console.log(res.data.findRecommendations);
+    // fetch recs, ignoring events
+    this.recs.default = await this.getRecommendations(null);
 
-    this.recs = res.data.findRecommendations || [];
+    // populate possible events
+    for (let key in this.events) {
+      this.recs[key] = [];
+    }
   },
   methods: {
+    formattedDate: function(timestamp) {
+      return new Date(Number(timestamp)).toLocaleString();
+    },
+    exitMatchMode: function() {
+      this.event_id = 'default';
+      this.matchMode = false;
+    },
+    matchForEvent: async function(event_id) {
+      this.event_id = event_id;
+
+      this.recs[event_id] = await this.getRecommendations(event_id);
+      this.matchMode = true;
+    },
+    getRecommendations: async function(event_id) {
+      let eid = event_id === 'default' ? null : event_id;
+
+      let res = await this.$apollo.query({
+        query: gql`
+          query findRecommendations($id: String, $event_id: Int) {
+            findRecommendations(id: $id, event_id: $event_id) {
+              user_id
+              first_name
+              last_name
+              gender_id
+              bio
+              nickname
+              residence_name
+              personality_id
+            }
+          }
+        `,
+        variables: {
+          id: this.user_id /* TODO change to get from cache */,
+          event_id: eid
+        }
+      });
+
+      return res.data.findRecommendations || [];
+    },
+    getEvents: async function() {
+      let res = await this.$apollo.query({
+        query: gql`
+          query findEvents {
+            findEvents {
+              event_id
+              event_name
+              user_id
+              location
+              sdate
+              event_description
+            }
+          }
+        `
+      });
+
+      return res.data.findEvents || [];
+    },
     handleSwiped: async function(val) {
       let res;
+      let eid = this.event_id === 'default' ? null : this.event_id;
 
       if (val === true) {
         res = await this.$apollo.mutate({
@@ -110,11 +168,11 @@ export default {
           variables: {
             input: {
               user_id: this.user_id,
-              other_user_id: this.recs[0].user_id,
-              event_id: this.event_id
+              other_user_id: this.recs[this.event_id][0].user_id,
+              event_id: eid
             }
           }
-        });  
+        });
       } else if (val === false) {
         res = await this.$apollo.mutate({
           mutation: gql`
@@ -125,18 +183,16 @@ export default {
           variables: {
             input: {
               user_id: this.user_id,
-              other_user_id: this.recs[0].user_id,
-              event_id: this.event_id
+              other_user_id: this.recs[this.event_id][0].user_id,
+              event_id: eid
             }
           }
-        }); 
+        });
       } else {
-        console.log('just passing for now');
+        console.log("just passing for now");
       }
 
-      console.log(res);
-
-      this.recs.splice(0, 1);
+      this.recs[this.event_id].splice(0, 1);
     }
   }
 };
@@ -160,5 +216,12 @@ export default {
 
 .back-container {
   height: 1px !important;
+}
+
+.button-container {
+  padding-top: 5px;
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
 }
 </style>

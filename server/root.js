@@ -8,6 +8,7 @@ const Match = require('./models/match');
 const Message = require('./models/message');
 const Residence = require('./models/residence');
 const Recommendation = require('./models/recommendation');
+const Event = require('./models/event');
 
 /**
  * 
@@ -90,6 +91,9 @@ let queries = {
     },
     findRecommendations: async ({ id, event_id }) => {
         return await Recommendation.findRecommendations(id, event_id);
+    },
+    findEvents: async() => {
+        return await Event.findAll();
     }
 }
 
