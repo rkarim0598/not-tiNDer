@@ -45,6 +45,10 @@ app.use('/graphql', graphqlUpload({ maxFileSize: 10000000, maxFiles: 10 }), grap
 app.get('/photo/:photo_id', async function (req, res) {
   let connection = await oracledb.getConnection(dbConfig);
   const result = await Photo.findById(req.params.photo_id, connection);
+  if(!result) {
+    res.set(400);
+    res.end();
+  }
   res.set("Content-Type", result.mimetype);
   res.set(200);
   for await(let chunk of result.photo) {

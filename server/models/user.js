@@ -48,6 +48,6 @@ module.exports = class User {
 
     async photos() {
         const Photo = require('./photo');
-        return await Photo.findAllByUserId(this.user_id);
+        return (await Photo.findAllByUserId(this.user_id)).map(photo => photo.photo_id);
     }
   }

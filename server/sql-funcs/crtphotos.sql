@@ -4,7 +4,7 @@ create table photos
  (
   photo_id number(10) primary key,
   user_id varchar2(30) not null,
-  photo clob not null,
+  photo blob not null,
   mimetype varchar2(30),
 	foreign key(user_id) references users(user_id)
   );

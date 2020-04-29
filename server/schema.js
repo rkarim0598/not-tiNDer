@@ -18,7 +18,7 @@ let schema = buildSchema(`
         gender: Gender,
         joined: String,
         matches: [Match!]!,
-        photos: [Photo!]!,
+        photos: [Int!]!,
         gender_interests: [Gender!],
         blocks: [User!],
         personality_id: String

@@ -147,6 +147,7 @@ let mutations = {
         let connection = await oracledb.getConnection(dbConfig);
         await Promise.all(input.photos.map(async photo => {
             // TODO is this the best way?
+            console.log(photo.file);
             Photo.create({photo: photo.file.createReadStream(), mimetype: photo.file.mimetype, user_id: user}, connection);
         }));
         let results = await run(

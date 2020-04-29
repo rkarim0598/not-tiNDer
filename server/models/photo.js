@@ -30,7 +30,7 @@ module.exports = class Photo {
     }
 
     static async create({photo, mimetype, user_id}, connection) {
-        const templob = await connection.createLob(oracledb.CLOB);
+        const templob = await connection.createLob(oracledb.BLOB);
         photo.pipe(templob);
         await new Promise((success, reject) => {
             templob.on('finish', success);
