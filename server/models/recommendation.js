@@ -19,7 +19,7 @@ module.exports = class Recommendation {
         }
     }
 
-    static async findRecommendations(id) {
+    static async findRecommendations(id, event_id) {
         let personality = await User.findById(id);
         personality = personality.personality_id;
 
@@ -50,9 +50,9 @@ module.exports = class Recommendation {
                         (select user_id from users where user_id = :id)) 
                 union 
                     (select users.user_id from users where users.user_id in 
-                        ((select matches.first_user as id from matches where matches.second_user = :id) 
+                        ((select matches.first_user as id from matches where matches.second_user = :id and matches.event_id = :event_id) 
                         minus 
-                        (select matches.second_user as id from matches where matches.first_user = :id)
+                        (select matches.second_user as id from matches where matches.first_user = :id and matches.event_id = :event_id)
                         )
                 ) minus 
                 (select matches.second_user from matches where matches.first_user = :id)
@@ -67,7 +67,7 @@ module.exports = class Recommendation {
                     else 4
                 end
             `,
-            [id, id, id, id, id, id, id, id, personality, personality, personality]
+            [id, id, id, id, id, id, event_id, id, event_id, id, personality, personality, personality]
         )
 
         /*

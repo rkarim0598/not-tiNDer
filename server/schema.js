@@ -74,7 +74,7 @@ let schema = buildSchema(`
         findResidences: [Residence!]!,
         findMatches: [Match!]!,
         findMatchById(id: Int!): Match,
-        findRecommendations(id: String): [Recommendation!]!
+        findRecommendations(id: String, event_id: String): [Recommendation!]!
     }
     type Mutation {
         createUser(input: NewUserInput): ReturnStruct
