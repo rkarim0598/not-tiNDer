@@ -30,8 +30,8 @@ module.exports = class Match {
         return results.rows.map(dbObj => new User(dbObj));
     }
 
-    static async create({ blocker, blockee }) {
-
+    static async create({ blockee, blocker }) {
+        console.log(blockee, blocker);
         let result = await run(
             `begin
                 :ret := insert_return_block(:blocker, :blockee);
