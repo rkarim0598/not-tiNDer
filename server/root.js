@@ -21,7 +21,7 @@ async function hasher(plaintext) {
     })
 }
 
-async function checkUser(user) {
+function checkUser(user) {
     if(!user) {
         throw new Error('Not logged in');
     }
@@ -119,7 +119,7 @@ let mutations = {
             }
     },
     createMessage: async ({input}, {user}) => {
-        return await Message.create({...input, ...user});
+        return await Message.create({...input, user_id: user});
     }
 }
 

@@ -1,23 +1,23 @@
 <template>
   <v-container class="messages-container" fill-height fluid align-center>
     <v-container fill-height fluid align-center justify-space-between>
-      MatchId: {{$route.params.matchId}}
-      Is loading: {{this.$apollo.queries.match.loading}}
-      User:
-      <div v-if="user">
-        {{user.user_id}}
-      </div>
-      <v-container style="max-height: 400px" class="overflow-y-auto">
-        <div  v-if="match">
+      <!-- Is loading: {{this.$apollo.queries.match.loading}} -->
+      <v-container dark style="max-height: 400px" class="overflow-y-auto">
+        <div v-if="match">
           <div v-for="message in match.messages" :key="message.message_id">
-            {{message}}
+            <v-card outline>
+              <v-card-text>
+                {{message.content}}
+                {{new Date(Number(message.timestamp))}}
+              </v-card-text>
+            </v-card>
+            <br>
           </div>
         </div>
       </v-container>
       <v-container>
-        <v-input outline append-icon="mdi-send" @click:prepend="sendMessage">
-          Enter Message
-        </v-input>
+        <v-textarea v-model="draftMessage" @keypress="handleKeypress" :append-icon="draftMessage ? 'mdi-send' : undefined" @click:append="sendMessage" rows="1" label="Enter Message" auto-grow>
+        </v-textarea>
       </v-container>
     </v-container>
   </v-container>
@@ -31,12 +31,42 @@ export default {
   data: function() {
     return {
       user: undefined,
-      match: undefined
+      match: undefined,
+      draftMessage: ''
     };
   },
   methods: {
-    sendMessage: function() {
-
+    handleKeypress: function(e) {
+      if(e.keyCode == 13 && !e.shiftKey) {
+        e.preventDefault();
+        this.sendMessage();
+      }
+    },
+    sendMessage: async function() {
+      if(!this.draftMessage) {
+        return;
+      }
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation($input: MessageInput) {
+              createMessage(input: $input) {
+                message_id
+              }
+            }
+          `,
+          variables: {
+            input: {
+              match_id: Number(this.$route.params.matchId),
+              content: this.draftMessage,
+            }
+          }
+        });
+      } catch (err) {
+        console.error(err);
+        return;
+      }
+      this.draftMessage = '';
     }
   },
   watch: {
@@ -64,7 +94,7 @@ export default {
           },
           messages {
             message_id,
-            message,
+            content,
             timestamp,
             sender {
               user_id
@@ -74,7 +104,7 @@ export default {
       }`,
       variables: function(){
         return {
-          id: Number(this.$route.params.matchId)
+          id: Number(this.$route.params.matchId),
         };
       },
       error: function(error) {

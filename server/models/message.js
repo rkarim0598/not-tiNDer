@@ -4,7 +4,7 @@ module.exports = class Message {
     static fields = [
         'message_id',
         'match_id',
-        'message',
+        'content',
         'timestamp',
         'user_id'
     ];
@@ -27,15 +27,19 @@ module.exports = class Message {
         return results.rows.map(dbObj => new Message(dbObj));
     }
 
-    static async create({match_id, message, user_id}) {
+    static async create({match_id, content, user_id}) {
         let result = await run(
-            'insert into messages (match_id, message, timestamp, user_id)' +
-            'values (:match_id, :message, :timestamp, :user_id)',
-            [match_id, message, new Date().getTime(), user_id]
+            'insert into messages (match_id, content, timestamp, user_id)' +
+            'values (:match_id, :content, :timestamp, :user_id)',
+            [match_id, content, new Date().getTime(), user_id]
         );
         if(result.error) {
             throw result.error;
         }
+        result = await run(
+            'select * from messages where rowid = :id',
+            [result.lastRowid]
+        );
         return new Message(result.rows[0]);
     }
 
@@ -43,6 +47,7 @@ module.exports = class Message {
         for(let field of Message.fields) {
             this[field] = dbObj[field.toUpperCase()];
         }
+        this.timestamp = this.timestamp + '';
     }
 
     async sender() {

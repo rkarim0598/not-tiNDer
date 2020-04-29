@@ -40,8 +40,8 @@ let schema = buildSchema(`
     type Message {
         message_id: Int!,
         match_id: Int!,
-        message: String!,
-        timestamp: Int!,
+        content: String!,
+        timestamp: String!,
         sender: User!
     }
     type Photo {
@@ -76,7 +76,7 @@ let schema = buildSchema(`
     }
     input MessageInput {
         match_id: Int!,
-        message: String!
+        content: String!
     }
 `);
 
