@@ -3,5 +3,6 @@ sqlldr guest/guest control=personalities.ctl
 sqlplus -s guest/guest @altpersonalities
 sqlldr guest/guest control=residences.ctl
 sqlldr guest/guest control=genders.ctl
-sqlplus -s guest/guest @plsqlFuncs
 node loadUsers.js
+sqlldr guest/guest control=events.ctl
+sqlplus -s guest/guest @plsqlFuncs
