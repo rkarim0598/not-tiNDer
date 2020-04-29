@@ -88,8 +88,8 @@ let queries = {
     findMatchById: async ({ id }, { user }) => {
         return await Match.findByMatchIdAndUser(id, user.id);
     },
-    findRecommendations: async ({ id }) => {
-        return await Recommendation.findRecommendations(id);
+    findRecommendations: async ({ id, event_id }) => {
+        return await Recommendation.findRecommendations(id, event_id);
     }
 }
 
