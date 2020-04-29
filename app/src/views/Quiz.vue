@@ -18,6 +18,9 @@
       <div v-else>
         <div class="title text">Your result is</div>
         <div class="display-3 text">{{ type }}</div>
+        <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
+          <div class="text-center" style="background-color: transparent">{{error}}</div>
+        </v-snackbar>
       </div>
       <v-btn
         v-if="current && current < questions.length"
@@ -42,7 +45,8 @@ export default {
       questions: quiz,
       answers: [],
       type: "",
-      current: 0
+      current: 0,
+      error: undefined
     };
   },
   methods: {
@@ -53,9 +57,10 @@ export default {
       if (this.current === this.questions.length) {
         this.computePersonalityType();
         let res = await this.sendResults();
-        
-        // perhaps some more robust handling to be done here
-        res.failure !== true && alert('Error submitting personality type');
+
+        if (res.failure) {
+          this.error = "Error submitting personality type";
+        }
       }
     },
     decrement: function() {
@@ -94,19 +99,25 @@ export default {
       this.type = type;
     },
     sendResults: async function() {
-      return await this.$apollo.mutate({
-        mutation: gql`
-          mutation($personality: String) {
-            addPersonality(personality: $personality) {
-              failure
-              message
+      try {
+        let res = await this.$apollo.mutate({
+          mutation: gql`
+            mutation($personality: String) {
+              addPersonality(personality: $personality) {
+                failure
+                message
+              }
             }
+          `,
+          variables: {
+            personality: this.type
           }
-        `,
-        variables: {
-          personality: this.type
-        }
-      });
+        });
+        return res;
+      } catch (error) {
+        this.error = error.message;
+        return;
+      }
     }
   },
   computed: {

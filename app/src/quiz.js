@@ -1,27 +1,27 @@
 export default [
     {
         prefix: 'Do you prefer',
-        options: ['Making Lists', 'Relying on memory']
+        options: ['making lists', 'relying on memory']
     },
     {
         prefix: 'Are you',
-        options: ['Skeptical', 'Wanting to believe']
+        options: ['skeptical', 'wanting to believe']
     },
     {
         prefix: 'During quarantine, do you find that you are',
-        options: ['Bored by time alone', 'Livin\' your best life']
+        options: ['bored by time alone', 'livin\' your best life']
     },
     {
         prefix: 'Do you tend to',
-        options: ['Accept things as they are', 'find yourself unsatisfied with the way things are']
+        options: ['accept things as they are', 'find yourself unsatisfied with the way things are']
     },
     {
         prefix: 'Does your room look like',
-        options: ['Your mom cleaned it', 'A tornado just swept through']
+        options: ['your mom cleaned it', 'a tornado just swept through']
     },
     {
         prefix: 'Do you',
-        options: ['prep everyday for the AI apocalypse', 'aspire to be as logical as Spock']
+        options: ['prep everyday for the AI apocalypse', 'aspire to be as logical as possible']
     },
     {
         prefix: 'Are you',
@@ -49,15 +49,15 @@ export default [
     },
     {
         prefix: 'Do you',
-        options: ['plan your week out ahead of time', 'pride yourself on finish that 5 page paper in 3 hours']
+        options: ['plan your week out ahead of time', 'go with the flow']
     },
     {
         prefix: 'Do you want',
-        options: ['people\'s respect', 'people\'s love']
+        options: ['respect', 'love']
     },
     {
-        prefix: 'At a party, do you',
-        options: ['go hide in a corner and hope no one talks to you', 'find yourself to be the life of the party']
+        prefix: 'At a party, are you',
+        options: ['hiding in a corner hoping no one talks to you', 'the life of the party']
     },
     {
         prefix: 'Do you',
@@ -93,7 +93,7 @@ export default [
     },
     {
         prefix: 'Do you want',
-        options: ['the big picture', 'the deets']
+        options: ['the big picture', 'the details']
     },
     {
         prefix: 'Do you',
@@ -102,8 +102,8 @@ export default [
     {
         prefix: 'You have the ability to kill anyone by writing down their name in a special notebook.  Do you',
         options: [
-            'use the DeathNote to carry out justice in the world',
-            'never use the DeathNote out of compassion for human life'
+            'use the notebook to carry out justice in the world',
+            'never use the notebook out of compassion for human life'
         ]
     },
     {
@@ -124,7 +124,7 @@ export default [
     },
     {
         prefix: 'When you have to give a presentation in class, do you',
-        options: ['feel pretty comfortable', 'feel your knees and voice shaking in unison']
+        options: ['feel pretty comfortable', 'feel your knees and voice shaking']
     },
     {
         prefix: 'Do you like to know',

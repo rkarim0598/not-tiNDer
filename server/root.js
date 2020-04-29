@@ -166,6 +166,8 @@ let mutations = {
         ;
     },
     addPersonality: async ({ personality }, { user }) => {
+        checkUser(user);
+        
         console.log(personality);
         console.log(user);
         // TODO: handle actually inserting data
