@@ -7,13 +7,20 @@ module.exports = class Match {
         'other_user_id'
     ];
 
-    static async findByIdAndUser(id, user) {
+    static async findByMatchIdAndUser(id, user) {
         let results = await run(
-            'select :query_user, second_user AS other_user, * from match_id where match_id = :id',
+            'select query_user_id, other_user_id, match_union.* from '
+            + '(select matches.*, first_user as query_user_id, second_user as other_user_id from matches union select matches.*, second_user as query_user_id, first_user as other_user_id from matches) match_union'
+            + ' where match_id = :match_id and query_user_id = :user_id',
             [id, user]
         );
-
-        return new Match(results.rows[0]);
+        if(results.error) {
+            throw results.error;
+        }
+        if(results.rows.length > 0) {
+            return new Match(results.rows[0]);
+        }
+        return null;
     }
 
     static async findAllByUserId(id) {
@@ -28,20 +35,23 @@ module.exports = class Match {
     }
 
     constructor(dbObj) {
-        for(let field of Photo.fields) {
+        for(let field of Match.fields) {
             this[field] = dbObj[field.toUpperCase()];
         }
     }
 
-    // async query_user() {
-    //     return await User.findById(this.query_user_id);
-    // }
+    async query_user() {
+        const User = require('./user');
+        return await User.findById(this.query_user_id);
+    }
 
     async other_user() {
+        const User = require('./user');
         return await User.findById(this.other_user_id);
     }
 
     async messages() {
+        const Message = require('./message');
         return await Message.findAllByMatchId(this.match_id);
     }
 }

@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('./models/user');
 const Gender = require('./models/gender');
+const Match = require('./models/match');
+const Message = require('./models/message');
 const Residence = require('./models/residence');
 
 /**
@@ -17,6 +19,12 @@ async function hasher(plaintext) {
             resolve(hash);
         })
     })
+}
+
+function checkUser(user) {
+    if(!user) {
+        throw new Error('Not logged in');
+    }
 }
 
 let queries = {
@@ -47,8 +55,7 @@ let queries = {
             }
 
             let token = jwt.sign({
-                id: email,
-                email: email,
+                id: email
             }, 'shouldchangethis', { expiresIn: 3600000 }) /// 60 is for 60 seconds, can enter 1w, 1y, 60 * 60, etc
 
             res.cookie('jwtAuth', token, {maxAge: 3600000, httpOnly: true}); //TODO secure: true
@@ -71,8 +78,21 @@ let queries = {
     findResidences: async () => {
         return await Residence.findAll();
     },
+    findUser: async ({}, {user}) => {
+        checkUser(user);
+        return await User.findById(user);
+    },
     findUserById: async ({id}) => {
         return await User.findById(id);
+    },
+    findMatches: async ({}, {user}) => {
+        checkUser(user);
+        return await Match.findAllByUserId(user);
+    },
+    findMatchById: async ({id}, {user}) => {
+        await new Promise(r => setTimeout(r, 500));
+        checkUser(user);
+        return await Match.findByMatchIdAndUser(id, user);
     }
 }
 
@@ -98,6 +118,10 @@ let mutations = {
                     :
                     results.error.message
             }
+    },
+    createMessage: async ({input}, {user}) => {
+        checkUser(user);
+        return await Message.create({...input, user_id: user});
     }
 }
 

@@ -40,7 +40,7 @@ let schema = buildSchema(`
     type Message {
         message_id: Int!,
         match_id: Int!,
-        message: String!,
+        content: String!,
         timestamp: String!,
         sender: User!
     }
@@ -57,18 +57,26 @@ let schema = buildSchema(`
     type Query {
         hello: ReturnStruct,
         login(email: String, password: String): ReturnStruct,
-        findUserById(id: String): User!,
+        findUser: User,
+        findUserById(id: String!): User,
         findGenders: [Gender!]!,
-        findResidences: [Residence!]!
+        findResidences: [Residence!]!,
+        findMatches: [Match!]!,
+        findMatchById(id: Int!): Match
     }
     type Mutation {
         createUser(input: NewUserInput): ReturnStruct
+        createMessage(input: MessageInput): Message
     }
     input NewUserInput {
         user_id: String,
         password: String,
         first_name: String,
         last_name: String
+    }
+    input MessageInput {
+        match_id: Int!,
+        content: String!
     }
 `);
 
