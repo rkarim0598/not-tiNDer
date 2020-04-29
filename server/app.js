@@ -5,9 +5,13 @@ let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let cors = require('cors');
 let graphqlHTTP = require('express-graphql');
+const { graphqlUploadExpress: graphqlUpload } = require('graphql-upload')
 const exjwt = require('express-jwt');
 let schema = require('./schema');
 let root = require('./root');
+let Photo = require('./models/photo');
+const oracledb = require('oracledb');
+const dbConfig = require('./dbconfig');
 require('dotenv').config();
 
 var app = express();
@@ -27,7 +31,7 @@ app.use(cookieParser());
 
 app.use(jwtMW);
 app.use(cors({origin: process.env.VUE_APP_DOMAIN, credentials: true}));
-app.use('/graphql', graphqlHTTP((req, res) => ({
+app.use('/graphql', graphqlUpload({ maxFileSize: 10000000, maxFiles: 10 }), graphqlHTTP((req, res) => ({
   schema: schema,
   rootValue: root,
   graphiql: true,
@@ -37,6 +41,22 @@ app.use('/graphql', graphqlHTTP((req, res) => ({
     user: !!req ? !!req.user ? req.user.id : undefined : undefined
   }
 })));
+
+app.get('/photo/:photo_id', async function (req, res) {
+  let connection = await oracledb.getConnection(dbConfig);
+  const result = await Photo.findById(req.params.photo_id, connection);
+  if(!result) {
+    res.set(400);
+    res.end();
+  }
+  res.set("Content-Type", result.mimetype);
+  res.set(200);
+  for await(let chunk of result.photo) {
+    res.write(chunk);
+  }
+  res.end();
+  await connection.close();
+})
 
 module.exports = app;
 

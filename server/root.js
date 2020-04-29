@@ -9,6 +9,9 @@ const Message = require('./models/message');
 const Residence = require('./models/residence');
 const Recommendation = require('./models/recommendation');
 const Event = require('./models/event');
+const Photo = require('./models/photo');
+const dbConfig = require('./dbconfig');
+const oracledb = require('oracledb');
 
 /**
  * 
@@ -111,7 +114,7 @@ let mutations = {
         // hash password
         let hash = await hasher(input.password);
         let results = await run(
-            'insert into users (user_id,password,first_name,last_name,gender_id,bio,nickname,confirmed_account,reset_token,dorm,joined)' +
+            'insert into users (user_id,password,first_name,last_name,gender_id,biography,nickname,confirmed_account,reset_token,residence_id,joined)' +
             'values (:id, :pw, :fn, :ln, null, null, null, null, null, null, null)',
             [input.user_id, hash, input.first_name, input.last_name]
         )
@@ -138,6 +141,29 @@ let mutations = {
     },
     createBlock: async ({ input }, { user }) => {
         return await Block.create({ blockee: input.other_user_id, blocker: user });
+    },
+    setupUser: async ({input}, {user}) => {
+        checkUser(user);
+        let connection = await oracledb.getConnection(dbConfig);
+        await Promise.all(input.photos.map(async photo => {
+            // TODO is this the best way?
+            console.log(photo.file);
+            Photo.create({photo: photo.file.createReadStream(), mimetype: photo.file.mimetype, user_id: user}, connection);
+        }));
+        let results = await run(
+            'update users set gender_id = :gender, biography = :biography, residence_id = :residence where user_id = :user_id',
+            [input.gender_id, input.biography, input.residence_id, user]
+        )
+        return !results.error ? {
+                failure: false,
+                message: `${input.user_id} has been updated`
+            } : {
+                failure: true,
+                message: results.error.errorNum === 1
+                    ? `${input.user_id} could not be updated`
+                    : results.error.message
+            }
+        ;
     }
 }
 

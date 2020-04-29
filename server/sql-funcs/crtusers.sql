@@ -7,7 +7,7 @@ create table users
   first_name varchar2(30) not null,
   last_name varchar2(30) not null,
   gender_id number(1),
-  bio varchar2(400),
+  biography varchar2(400),
   nickname varchar2(30),
   confirmed_account char(1),
   reset_token varchar2(50),

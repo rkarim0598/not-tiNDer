@@ -3,11 +3,11 @@ drop table events cascade constraints;
 create table events
  (
   event_id number(10) primary key,
-  event_name varchar2(30) not null,
+  name varchar2(30) not null,
   user_id varchar2(30) not null,
   location varchar2(30) not null,
   sdate number(15) not null,
-  event_description varchar2(100) not null,
+  description varchar2(100) not null,
   photo blob,
   foreign key(user_id) references users(user_id)
   );
