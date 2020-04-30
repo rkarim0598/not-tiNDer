@@ -84,6 +84,7 @@
           </div>
         </v-fade-transition>
       </v-container>
+      <bottom-nav :data="navData"></bottom-nav>
     </v-container>
   <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
     <div class="text-center" style="background-color: transparent">
@@ -95,13 +96,43 @@
 
 <script>
 import gql from "graphql-tag";
+import BottomNav from '../components/BottomNav';
 
 export default {
   name: "Matches",
+  components: {
+    BottomNav
+  },
   data: function() {
     return {
       matches: undefined,
-      error: undefined
+      error: undefined,
+      navData: {
+        activeIndex: 1,
+        tabs: [
+          {
+            title: "Explore",
+            icon: "mdi-card-search",
+            onClick: () => {
+              this.$router.push('main');
+            }
+          },
+          {
+            title: "Matches",
+            icon: "mdi-account-group",
+            onClick: () => {
+              console.log('clicked');
+            }
+          },
+          {
+            title: "Profile",
+            icon: "mdi-account-circle",
+            onClick: () => {
+              console.log('clicked');
+            }
+          }
+        ]
+      }
     };
   },
   methods: {

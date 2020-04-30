@@ -1,12 +1,11 @@
 <template>
   <v-container class="home-page-container">
     <div class="image-container">
-      <h1 class="text">Application Name</h1>
+      <h1 class="text">TiNDer</h1>
       <span class="text">
         Yadda yadda yadda something about meeting the love
-        of your life here. Press the subscribe button down
-        below. We are willing to sell this idea if you're looking
-        at this please take it from us.
+        of your life here. Our groundbreaking matching algorithm
+        will help you shoot your best shot!
       </span>
       <div class="button-container">
         <v-btn class="ma-2" block outlined color="success" to="/login">Log In</v-btn>

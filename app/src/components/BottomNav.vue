@@ -1,7 +1,7 @@
 <template>
   <v-layout class="bottom-nav" align-end justify-end>
     <v-bottom-navigation class="fill-width" :value="data.activeIndex" grow color="teal" dark>
-      <v-btn v-for="tab in data.tabs" :key="tab.title">
+      <v-btn v-for="tab in data.tabs" :key="tab.title" @click="tab.onClick">
         <span>{{ tab.title }}</span>
         <v-icon>{{ tab.icon }}</v-icon>
       </v-btn>
