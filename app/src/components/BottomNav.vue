@@ -1,28 +1,27 @@
 <template>
   <v-layout class="bottom-nav" align-end justify-end>
-    <v-bottom-navigation class="fill-width" :value="activeBtn" grow color="teal" dark>
-      <v-btn>
-        <span>Recents</span>
-        <v-icon>mdi-history</v-icon>
-      </v-btn>
-
-      <v-btn>
-        <span>Favorites</span>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-
-      <v-btn>
-        <span>Nearby</span>
-        <v-icon>mdi-map-marker</v-icon>
+    <v-bottom-navigation class="fill-width" :value="data.activeIndex" grow color="teal" dark>
+      <v-btn v-for="tab in data.tabs" :key="tab.title">
+        <span>{{ tab.title }}</span>
+        <v-icon>{{ tab.icon }}</v-icon>
       </v-btn>
     </v-bottom-navigation>
   </v-layout>
 </template>
 
+<script>
+export default {
+  name: "BottomNav",
+  props: {
+    data: Object
+  }
+}
+</script>
 <style lang="scss" scoped>
 .bottom-nav {
-    width: 100vw;
-    height: 56px;
-    align-self: flex-end;
+  display: flex;
+  align-self: flex-end;
+  width: 100%;
+  height: 56px !important;
 }
 </style>

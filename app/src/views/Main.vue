@@ -1,5 +1,12 @@
 <template>
-  <v-container v-if="!matchMode" class="main-container" fill-height fluid align-center>
+  <v-container
+    v-if="!matchMode"
+    class="main-container"
+    fill-height
+    fluid
+    align-center
+    justify-space-between
+  >
     <v-row v-if="!recs[event_id].length" dense>
       <v-col>
         <p
@@ -80,6 +87,7 @@
         <div light class="headline white--text text-center">No events right now</div>
       </v-col>
     </v-row>
+    <bottom-nav :data="navData"></bottom-nav>
   </v-container>
   <v-container class="main-container" v-else fill-height fluid align-center>
     <PeopleSwiper
@@ -111,12 +119,14 @@
 
 <script>
 import PeopleSwiper from "../components/PeopleSwiper";
+import BottomNav from "../components/BottomNav";
 import gql from "graphql-tag";
 
 export default {
   name: "Main",
   components: {
-    PeopleSwiper
+    PeopleSwiper,
+    BottomNav
   },
   data: function() {
     return {
@@ -126,7 +136,31 @@ export default {
       events: [],
       eventIndex: 0,
       loading: false,
-      defaultLoading: true
+      defaultLoading: true,
+      navData: {
+        activeIndex: 0,
+        tabs: [
+          {
+            title: "Explore",
+            icon: "mdi-card-search",
+            onClick: () => {}
+          },
+          {
+            title: "Matches",
+            icon: "mdi-account-group",
+            onClick: () => {
+              // this.$router.push('matches')
+            }
+          },
+          {
+            title: "Profile",
+            icon: "mdi-account-circle",
+            onClick: () => {
+              // this.$router.push('profile')
+            }
+          }
+        ]
+      }
     };
   },
   mounted: async function() {
@@ -223,7 +257,7 @@ export default {
     handleSwiped: async function(val) {
       let res;
       let eid = this.event_id === "default" ? null : this.event_id;
-      
+
       if (val === true) {
         try {
           res = await this.$apollo.mutate({
@@ -309,5 +343,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.align-to-bottom {
+  display: flex;
+  align-self: flex-end;
 }
 </style>
