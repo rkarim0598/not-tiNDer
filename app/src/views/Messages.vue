@@ -1,67 +1,74 @@
 <template>
   <v-container class="messages-container" fill-height fluid align-center>
-    <v-container fill-height fluid align-center justify-space-between class="flex-column">
-      <v-container dark class="flex-grow-1 overflow-y-auto" style="flex-basis: 0">
-        <v-fade-transition hide-on-leave>
-          <div v-if="match">
-            <div v-if="match.messages.length">
-              <div v-for="(message, index) of match.messages" :key="message.message_id">
-                <p class="caption text-center mb-0">
-                  {{formatDate(index)}}
-                </p>
-                <v-row class="d-flex align-center">
-                  <v-col xs="2" sm="1">
-                    <v-avatar color="indigo" v-if="message.sender.user_id != user.user_id">
-                      <v-icon dark>mdi-account-circle</v-icon>
-                    </v-avatar>
-                  </v-col>
-                  <v-col xs="8" sm="10" class="py-1">
-                    <v-card outlined :color="message.sender.user_id != user.user_id ? 'indigo' : undefined">
-                      <v-card-text>
-                        <pre class="body-2">{{message.content}}</pre>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                  <v-col xs="2" sm="1">
-                    <v-avatar color="grey" v-if="message.sender.user_id == user.user_id">
-                      <v-icon dark>mdi-account-circle</v-icon>
-                    </v-avatar>
-                  </v-col>
-                </v-row>
+    <v-container fill-height fluid align-center justify-space-between>
+      <v-container dark fill-height class="flex-column" style="width:100%">
+        <div class="pb-2" style="width:100%">
+          <h2 v-if="match">{{match.other_user.first_name}} {{match.other_user.last_name}}</h2>
+          <h2 v-else style="max-width: 100px"><v-skeleton-loader type="text"></v-skeleton-loader></h2>
+          <v-divider></v-divider>
+        </div>
+        <div class="flex-grow-1" style="width:100%; overflow-y: scroll; flex-basis: 0">
+          <v-fade-transition hide-on-leave>
+            <div v-if="match" class="px-2">
+              <div v-if="match.messages.length">
+                <div v-for="(message, index) of match.messages" :key="message.message_id">
+                  <p class="caption text-center mb-0">
+                    {{formatDate(index)}}
+                  </p>
+                  <v-row class="d-flex align-center">
+                    <v-col xs="2" sm="1">
+                      <v-avatar color="indigo" v-if="message.sender.user_id != user.user_id">
+                        <v-icon dark>mdi-account-circle</v-icon>
+                      </v-avatar>
+                    </v-col>
+                    <v-col xs="8" sm="10" class="py-1">
+                      <v-card outlined :color="message.sender.user_id != user.user_id ? 'indigo' : undefined">
+                        <v-card-text>
+                          <pre class="body-2">{{message.content}}</pre>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+                    <v-col xs="2" sm="1">
+                      <v-avatar color="grey" v-if="message.sender.user_id == user.user_id">
+                        <v-icon dark>mdi-account-circle</v-icon>
+                      </v-avatar>
+                    </v-col>
+                  </v-row>
+                </div>
+              </div>
+              <div v-else>
+                No messages here yet, why don't you strike up a conversation?
               </div>
             </div>
-            <div v-else>
-              No messages here yet, why don't you strike up a conversation?
-            </div>
-          </div>
-          <div v-else>
-            <div v-if="$apollo.queries.match.loading">
-              <div v-for="i in 5" :key="i">
-                <v-row class="d-flex align-center">
-                  <v-col xs="2" sm="1">
-                    <v-skeleton-loader v-if="i%3 == 1" type="avatar">
-                    </v-skeleton-loader>
-                  </v-col>
-                  <v-col xs="8" sm="10" class="py-1">
-                    <v-card outlined>
-                      <v-card-text>
-                        <v-skeleton-loader :type="i%2 == 0 ? 'sentences' : 'text'">
-                        </v-skeleton-loader>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                  <v-col xs="2" sm="1">
-                    <v-skeleton-loader v-if="i%3 != 1" type="avatar">
-                    </v-skeleton-loader>
-                  </v-col>
-                </v-row>
+            <div v-else class="px-2">
+              <div v-if="$apollo.queries.match.loading">
+                <div v-for="i in 5" :key="i">
+                  <v-row class="d-flex align-center">
+                    <v-col xs="2" sm="1">
+                      <v-skeleton-loader v-if="i%3 == 1" type="avatar">
+                      </v-skeleton-loader>
+                    </v-col>
+                    <v-col xs="8" sm="10" class="py-1">
+                      <v-card outlined>
+                        <v-card-text>
+                          <v-skeleton-loader :type="i%2 == 0 ? 'sentences' : 'text'">
+                          </v-skeleton-loader>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+                    <v-col xs="2" sm="1">
+                      <v-skeleton-loader v-if="i%3 != 1" type="avatar">
+                      </v-skeleton-loader>
+                    </v-col>
+                  </v-row>
+                </div>
+              </div>
+              <div v-else>
+                Could not load messages
               </div>
             </div>
-            <div v-else>
-              Could not load messages
-            </div>
-          </div>
-        </v-fade-transition>
+          </v-fade-transition>
+        </div>
       </v-container>
       <v-container style="flex-grow-0">
         <v-textarea outlined :disabled="!match" v-model="draftMessage" @keypress="handleKeypress" :append-icon="draftMessage ? 'mdi-send' : undefined" @click:append="sendMessage" rows="1" label="Enter Message" auto-grow>

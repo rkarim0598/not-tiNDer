@@ -1,13 +1,17 @@
 <template>
-  <v-container class="messages-container" fill-height fluid align-center>
-    <v-container fill-height fluid align-center justify-space-between class="flex-column">
+  <v-container dark class="messages-container" fill-height fluid align-center>
+    <v-container dark fill-height fluid align-center justify-space-between class="flex-column">
       <v-container dark>
+        <div class="pb-2">
+          <h2>Your Matches</h2>
+          <v-divider></v-divider>
+        </div>
         <v-fade-transition hide-on-leave>
-          <div v-if="matches">
+          <div v-if="matches" class="flex-grow-1 overflow-y-auto" style="flex-basis: 0">
             <div v-if="matches.length">
-              <div v-for="(match, index) of matches" :key="match.match_id" class="px-2 py-1">
+              <div v-for="(match, index) of matches" :key="match.match_id" class="py-1">
                 <v-hover v-slot:default="{ hover }">
-                  <v-card outlined @click="openMessages(match.other_user.user_id)" :elevation="hover ? 5 : 2">
+                  <v-card outlined @click="openMessages(match.other_user.user_id)" :elevation="hover ? 5 : 2" class=mb-2>
                     <div class="px-5">
                       <v-row class="d-flex">
                         <v-col style="flex-basis: 1; flex-grow: 0">
@@ -22,12 +26,15 @@
                               <p class="mb-0">{{match.other_user.first_name}} {{match.other_user.last_name}}</p>
                             </div>
                             <div class="py-1">
-                              <p class="caption mb-0">{{formatDate(index)}}</p>
+                              <p v-if="match.latest_message" class="caption mb-0">{{formatDate(index)}}</p>
                             </div>
                           </v-row>
                           <v-row class="d-flex">
-                            <div>
+                            <div v-if="match.latest_message">
                               <pre class="body-2 mb-0" :class="match.other_user.user_id == match.latest_message.user_id ? 'indigo--text font-weight-medium' : undefined">{{match.latest_message.content}}</pre>
+                            </div>
+                            <div v-else>
+                              <p class="mb-0">Get the conversation started!</p>
                             </div>
                             <!-- {{match.unread_messages}} -->
                           </v-row>
@@ -45,20 +52,30 @@
           <div v-else>
             <div v-if="$apollo.queries.matches.loading">
               <div v-for="i in 5" :key="i">
-                <v-row class="d-flex align-center">
-                  <v-col xs="2" sm="1">
-                    <v-skeleton-loader type="avatar">
-                    </v-skeleton-loader>
-                  </v-col>
-                  <v-col xs="8" sm="10" class="py-1">
-                    <v-card outlined>
-                      <v-card-text>
-                        <v-skeleton-loader :type="i%2 == 0 ? 'sentences' : 'text'">
+                <v-card outlined class="mb-2">
+                  <div class="px-5">
+                    <v-row class="d-flex">
+                      <v-col style="flex-basis: 1; flex-grow: 0">
+                        <v-skeleton-loader type="avatar">
                         </v-skeleton-loader>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
+                      </v-col>
+                      <v-col class="py-1">
+                        <v-row class="d-flex justify-space-between">
+                          <div class="py-1">
+                            <v-skeleton-loader type="text" style="min-width: 100px"></v-skeleton-loader>
+                          </div>
+                          <div class="py-1">
+                            <v-skeleton-loader type="text" style="min-width: 50px"></v-skeleton-loader>
+                          </div>
+                        </v-row>
+                        <v-row>
+                          <v-skeleton-loader style="min-width: 100%" type="sentences">
+                          </v-skeleton-loader>
+                        </v-row>
+                      </v-col>
+                    </v-row>
+                  </div>
+                </v-card>
               </div>
             </div>
             <div v-else>
