@@ -56,7 +56,7 @@
         >
           <div class="d-flex flex-no-wrap justify-space-between">
             <div>
-              <v-card-title class="headline" v-text="events[eventIndex].event_name"></v-card-title>
+              <v-card-title class="headline" v-text="events[eventIndex].name"></v-card-title>
               <v-card-subtitle v-text="formattedDate(events[eventIndex].sdate)"></v-card-subtitle>
               <v-card-subtitle class="white--text" v-text="events[eventIndex].location"></v-card-subtitle>
               <v-card-subtitle class="white--text" v-text="events[eventIndex].description"></v-card-subtitle>
@@ -119,12 +119,14 @@
 
 <script>
 import PeopleSwiper from "../components/PeopleSwiper";
+import BottomNav from '../components/BottomNav';
 import gql from "graphql-tag";
 
 export default {
   name: "Main",
   components: {
     PeopleSwiper,
+    BottomNav
   },
   data: function() {
     return {
@@ -147,7 +149,8 @@ export default {
             title: "Matches",
             icon: "mdi-account-group",
             onClick: () => {
-              // this.$router.push('matches')
+              console.log('clicked');
+              this.$router.push('matches')
             }
           },
           {
