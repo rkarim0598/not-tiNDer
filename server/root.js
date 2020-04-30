@@ -107,6 +107,14 @@ let queries = {
         checkUser(user);
         return await Match.findMatchWithUser(user, id);
     },
+    findUserOneWayMatches: async ({}, { user }) => {
+        checkUser(user);
+        return await Match.findUserOneWayMatches(user);
+    },
+    findOneWayMatchesWithUser: async({}, { user }) => {
+        checkUser(user);
+        return await Match.findOneWayMatchesWithUser(user);
+    },
     findRecommendations: async ({ event_id }, { user }) => {
         checkUser(user);
         return await Recommendation.findRecommendations({ event_id, user_id: user });
