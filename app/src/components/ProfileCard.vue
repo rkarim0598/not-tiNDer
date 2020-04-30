@@ -17,7 +17,7 @@
             >{{ rec.nickname }}</span>
           </div>
           <span class="text-left font-weight-regular">Bio</span>
-          <span class="bottom-padding text-left all-text white--text bio-text font-weight-light">{{ rec.bio }}</span>
+          <span class="bottom-padding text-left all-text white--text bio-text font-weight-light">{{ rec.biography }}</span>
         </div>
       </v-layout>
     </v-card>
