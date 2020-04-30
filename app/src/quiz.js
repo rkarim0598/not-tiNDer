@@ -13,7 +13,7 @@ export default [
     },
     {
         prefix: 'Do you tend to',
-        options: ['accept things as they are', 'find yourself unsatisfied with the way things are']
+        options: ['accept things as they are', 'be unsatisfied with the status quo']
     },
     {
         prefix: 'Does your room look like',
@@ -21,7 +21,7 @@ export default [
     },
     {
         prefix: 'Do you',
-        options: ['prep everyday for the AI apocalypse', 'aspire to be as logical as possible']
+        options: ['prep everyday for the AI apocalypse', 'aspire to be logical']
     },
     {
         prefix: 'Are you',
@@ -57,7 +57,7 @@ export default [
     },
     {
         prefix: 'At a party, are you',
-        options: ['hiding in a corner hoping no one talks to you', 'the life of the party']
+        options: ['hiding in a corner', 'the life of the party']
     },
     {
         prefix: 'Do you',
@@ -100,15 +100,15 @@ export default [
         options: ['improvise', 'prepare']
     },
     {
-        prefix: 'You have the ability to kill anyone by writing down their name in a special notebook.  Do you',
+        prefix: 'You can kill by writing down names in a special notebook.  Do you',
         options: [
-            'use the notebook to carry out justice in the world',
-            'never use the notebook out of compassion for human life'
+            'bring about justice in the world',
+            'destroy the notebook'
         ]
     },
     {
         prefix: 'When you shout out to a friend who\'s walking nearby, do you',
-        options: ['inevitably not get heard and hope no one else noticed', 'always get your friend\'s attention']
+        options: ['inevitably not get heard', 'always get your friend\'s attention']
     },
     {
         prefix: 'Do you prefer',

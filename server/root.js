@@ -151,8 +151,8 @@ let mutations = {
             Photo.create({photo: photo.file.createReadStream(), mimetype: photo.file.mimetype, user_id: user}, connection);
         }));
         let results = await run(
-            'update users set gender_id = :gender, biography = :biography, residence_id = :residence where user_id = :user_id',
-            [input.gender_id, input.biography, input.residence_id, user]
+            'update users set gender_id = :gender, biography = :biography, residence_id = :residence, personality_id = :personality_id where user_id = :user_id',
+            [input.gender_id, input.biography, input.residence_id, input.personality_id, user]
         )
         return !results.error ? {
                 failure: false,
@@ -164,17 +164,6 @@ let mutations = {
                     : results.error.message
             }
         ;
-    },
-    addPersonality: async ({ personality }, { user }) => {
-        checkUser(user);
-        
-        console.log(personality);
-        console.log(user);
-        // TODO: handle actually inserting data
-        return {
-            failure: false,
-            message: 'You did it'
-        }
     }
 }
 

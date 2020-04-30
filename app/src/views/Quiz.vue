@@ -1,8 +1,7 @@
 <template>
-  <v-container class="quiz-container" fill-height fluid align-center>
     <v-container class="inner-container" fill-height fluid align-center>
       <div>
-        <div class="display-2 font-weight-light text">{{ title }}</div>
+        <div class="display-1 font-weight-light text">{{ title }}</div>
         <v-progress-linear v-model="percentComplete"></v-progress-linear>
       </div>
       <div v-if="current < questions.length" class="question-container">
@@ -26,12 +25,11 @@
         v-if="current && current < questions.length"
         block
         outlined
-        color="primary"
+        dark
         @click="decrement"
       >Back</v-btn>
       <div v-else />
     </v-container>
-  </v-container>
 </template>
 
 <script>
@@ -56,11 +54,13 @@ export default {
 
       if (this.current === this.questions.length) {
         this.computePersonalityType();
-        let res = await this.sendResults();
+        this.$emit("complete", this.type); // emit value to parent
 
-        if (res.failure) {
-          this.error = "Error submitting personality type";
-        }
+        // let res = await this.sendResults();
+
+        // if (res.failure) {
+          // this.error = "Error submitting personality type";
+        // }
       }
     },
     decrement: function() {
@@ -126,7 +126,7 @@ export default {
     },
     title: function() {
       return this.current < this.questions.length
-        ? "Personality Quiz"
+        ? "Personality"
         : "Results";
     }
   }
@@ -134,11 +134,12 @@ export default {
 </script>
 
 <style lang="scss">
-.quiz-container {
-  background: rgba(0, 0, 0, 0) linear-gradient(rgb(111, 0, 0), rgb(32, 1, 34))
-    repeat scroll 0% 0%;
+// .quiz-container {
+//   height: 100%;
+//   width: 100%;
 
   .inner-container {
+    min-height: 440px;
     display: flex;
     flex-direction: column;
     align-items: space-evenly;
@@ -149,7 +150,7 @@ export default {
     height: 15%;
     max-height: 80px;
   }
-}
+// }
 
 .text {
   color: white;
@@ -168,7 +169,6 @@ export default {
     width: 100%;
     justify-content: space-evenly;
     padding-top: 5%;
-    padding-bottom: 5%;
   }
 }
 
