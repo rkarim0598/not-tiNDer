@@ -187,7 +187,7 @@ export default {
           name
         }
       }
-    `
+    }`
   },
   methods: {
     updatePersonality: async function(value) {

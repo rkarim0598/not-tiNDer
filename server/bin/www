@@ -29,6 +29,21 @@ console.log(`Running a GraphQL API server at http://localhost:${process.env.PORT
 // server.on('error', onError);
 // server.on('listening', onListening);
 
+const { SubscriptionServer } = require('subscriptions-transport-ws');
+const { execute, subscribe } = require('graphql');
+const schema = require('../schema');
+let root = require('../root');
+
+new SubscriptionServer({
+  execute,
+  subscribe,
+  schema,
+  rootValue: root,
+}, {
+  server: server,
+  path: '/subscriptions',
+});
+
 /**
  * Normalize a port into a number, string, or false.
  */

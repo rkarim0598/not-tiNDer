@@ -15,12 +15,14 @@
     "express-graphql": "^0.9.0",
     "express-jwt": "^5.3.3",
     "graphql": "^15.0.0",
+    "graphql-subscriptions": "^1.1.0",
     "graphql-upload": "^10.0.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.5.1",
     "lorem-ipsum": "^2.0.3",
     "morgan": "~1.9.1",
-    "oracledb": "^4.2.0"
+    "oracledb": "^4.2.0",
+    "subscriptions-transport-ws": "^0.9.16"
   }
 }

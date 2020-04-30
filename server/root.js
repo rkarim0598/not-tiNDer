@@ -12,6 +12,11 @@ const Event = require('./models/event');
 const Photo = require('./models/photo');
 const dbConfig = require('./dbconfig');
 const oracledb = require('oracledb');
+const graphqlsub = require('graphql-subscriptions');
+
+const pubsub = new graphqlsub.PubSub();
+const MESSAGES_TOPIC = 'messages';
+const MATCHES_TOPIC = 'matches';
 
 /**
  * 
@@ -96,10 +101,10 @@ let queries = {
         checkUser(user);
         return await Match.findAllByUserId(user);
     },
-    findMatchById: async ({ id }, { user }) => {
+    findMatchByUserId: async ({id}, {user}) => {
         await new Promise(r => setTimeout(r, 500));
         checkUser(user);
-        return await Match.findByMatchIdAndUser(id, user);
+        return await Match.findMatchWithUser(user, id);
     },
     findRecommendations: async ({ event_id }, { user }) => {
         checkUser(user);
@@ -135,7 +140,9 @@ let mutations = {
     },
     createMessage: async ({ input }, { user }) => {
         checkUser(user);
-        return await Message.create({ ...input, user_id: user });
+        const message = await Message.create({...input, sender_id: user});
+        pubsub.publish(MESSAGES_TOPIC, {message});
+        return message;
     },
     createMatch: async ({ input }, { user }) => {
         return await Match.create({ ...input, user_id: user });
@@ -187,4 +194,14 @@ let mutations = {
     }
 }
 
-module.exports = { ...queries, ...mutations };
+let subscriptions = {
+    // message: ({id}, {user}, y, z) => {
+    //     return pubsub.asyncIterator(MESSAGES_TOPIC);
+    // },
+    message: graphqlsub.withFilter(() => pubsub.asyncIterator(MESSAGES_TOPIC), ({message}, {id}, {user}) => {
+        //TODO check for proper user and id
+        return true;
+    }),
+};
+
+module.exports = { ...queries, ...mutations, ...subscriptions };

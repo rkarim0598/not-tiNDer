@@ -29,13 +29,15 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cookieParser());
 
+const subscriptionsEndpoint = `ws://localhost:${process.env.PORT}/subscriptions`;
 app.use(jwtMW);
 app.use(cors({origin: process.env.VUE_APP_DOMAIN, credentials: true}));
 app.use('/graphql', graphqlUpload({ maxFileSize: 10000000, maxFiles: 10 }), graphqlHTTP((req, res) => ({
   schema: schema,
   rootValue: root,
   graphiql: true,
-  context: { // theoretically should pass user info to server after logged in
+  subscriptionsEndpoint: subscriptionsEndpoint,
+  context: {
     req,
     res,
     user: !!req ? !!req.user ? req.user.id : undefined : undefined

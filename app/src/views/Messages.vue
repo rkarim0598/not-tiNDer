@@ -4,29 +4,34 @@
       <v-container dark class="flex-grow-1 overflow-y-auto" style="flex-basis: 0">
         <v-fade-transition hide-on-leave>
           <div v-if="match">
-            <div v-for="(message, index) of match.messages" :key="message.message_id">
-              <p class="caption text-center mb-0">
-                {{formatDate(index)}}
-              </p>
-              <v-row class="d-flex align-center">
-                <v-col xs="2" sm="1">
-                  <v-avatar color="indigo" v-if="message.sender.user_id != user.user_id">
-                    <v-icon dark>mdi-account-circle</v-icon>
-                  </v-avatar>
-                </v-col>
-                <v-col xs="8" sm="10" class="py-1">
-                  <v-card outlined :color="message.sender.user_id != user.user_id ? 'indigo' : undefined">
-                    <v-card-text>
-                      <pre class="body-2">{{message.content}}</pre>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col xs="2" sm="1">
-                  <v-avatar color="grey" v-if="message.sender.user_id == user.user_id">
-                    <v-icon dark>mdi-account-circle</v-icon>
-                  </v-avatar>
-                </v-col>
-              </v-row>
+            <div v-if="match.messages.length">
+              <div v-for="(message, index) of match.messages" :key="message.message_id">
+                <p class="caption text-center mb-0">
+                  {{formatDate(index)}}
+                </p>
+                <v-row class="d-flex align-center">
+                  <v-col xs="2" sm="1">
+                    <v-avatar color="indigo" v-if="message.sender.user_id != user.user_id">
+                      <v-icon dark>mdi-account-circle</v-icon>
+                    </v-avatar>
+                  </v-col>
+                  <v-col xs="8" sm="10" class="py-1">
+                    <v-card outlined :color="message.sender.user_id != user.user_id ? 'indigo' : undefined">
+                      <v-card-text>
+                        <pre class="body-2">{{message.content}}</pre>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                  <v-col xs="2" sm="1">
+                    <v-avatar color="grey" v-if="message.sender.user_id == user.user_id">
+                      <v-icon dark>mdi-account-circle</v-icon>
+                    </v-avatar>
+                  </v-col>
+                </v-row>
+              </div>
+            </div>
+            <div v-else>
+              No messages here yet, why don't you strike up a conversation?
             </div>
           </div>
           <div v-else>
@@ -120,7 +125,7 @@ export default {
           `,
           variables: {
             input: {
-              match_id: Number(this.$route.params.matchId),
+              receiver_id: this.$route.params.otherId,
               content: this.draftMessage,
             }
           }
@@ -135,7 +140,7 @@ export default {
   watch: {
     $route: function(to) {
       this.$apollo.queries.match.setVariables({
-        id: Number(to.params.matchId)
+        id: to.params.otherId
       });
     }
   },
@@ -152,8 +157,8 @@ export default {
       }
     },
     match: {
-      query: gql`query ($id: Int!){
-        match: findMatchById(id: $id) {
+      query: gql`query ($id: String!){
+        match: findMatchByUserId(id: $id) {
           match_id,
           other_user {
             user_id,
@@ -172,11 +177,36 @@ export default {
       }`,
       variables: function(){
         return {
-          id: Number(this.$route.params.matchId),
+          id: this.$route.params.otherId,
         };
       },
       error: function(err) {
         this.error = err.message;
+      },
+      subscribeToMore: {
+        document: gql`subscription message($id: String!) {
+          message(id: $id) {
+            message_id,
+            content,
+            timestamp,
+            sender {
+              user_id
+            },
+            receiver {
+              user_id
+            }
+          }
+        }`,
+        variables () {
+          return {
+            id: this.$route.params.otherId,
+          }
+        },
+        updateQuery: function({match}, { subscriptionData }) {
+          if(subscriptionData.data.message.sender.user_id == this.user.user_id && subscriptionData.data.message.receiver.user_id == match.other_user.user_id) {
+            match.messages.push(subscriptionData.data.message);
+          }
+        },
       }
     }
   }
