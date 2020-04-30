@@ -17,7 +17,7 @@ const httpEndpoint = process.env.VUE_APP_SERVER_ENDPOINT;
 // Files URL root
 export const filesRoot = process.env.VUE_APP_FILES_ROOT || httpEndpoint.substr(0, httpEndpoint.indexOf('/graphql'))
 
-const wsEndpoint = 'ws://34.238.200.26:8122/subscriptions';
+const wsEndpoint = `${process.env.VUE_APP_SUBSCRIPTIONS_ENDPOINT}/subscriptions`;
 
 Vue.prototype.$filesRoot = filesRoot
 

@@ -119,14 +119,12 @@
 
 <script>
 import PeopleSwiper from "../components/PeopleSwiper";
-import BottomNav from "../components/BottomNav";
 import gql from "graphql-tag";
 
 export default {
   name: "Main",
   components: {
     PeopleSwiper,
-    BottomNav
   },
   data: function() {
     return {
@@ -316,6 +314,7 @@ export default {
   justify-content: center;
   background: rgba(0, 0, 0, 0) linear-gradient(rgb(111, 0, 0), rgb(32, 1, 34))
     repeat scroll 0% 0%;
+  padding-bottom: 0px;
 }
 
 .no-more {
