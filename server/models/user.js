@@ -7,7 +7,7 @@ module.exports = class User {
         'first_name',
         'last_name',
         'gender_id',
-        'bio',
+        'biography',
         'nickname',
         'confirmed_account',
         'reset_token',

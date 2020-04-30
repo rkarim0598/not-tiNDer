@@ -7,7 +7,7 @@ module.exports = class Recommendation {
         'first_name',
         'last_name',
         'gender_id',
-        'bio',
+        'biography',
         'nickname',
         'residence_name',
         'personality_id'
@@ -24,7 +24,7 @@ module.exports = class Recommendation {
         personality = personality.personality_id;
 
         let results = await run(
-            `select users.user_id, users.first_name, users.last_name, users.gender_id, users.bio, users.nickname, users.personality_id, residences.name as residence_name 
+            `select users.user_id, users.first_name, users.last_name, users.gender_id, users.biography, users.nickname, users.personality_id, residences.name as residence_name 
             from users 
             left join residences on users.residence_id = residences.residence_id
             where users.user_id in (
