@@ -4,17 +4,15 @@ const oracledb = require('oracledb');
 module.exports = class Match {
     static fields = [
         'match_id',
-        'query_user',
-        'other_user',
+        'first_user',
+        'second_user',
         'event_id'
     ];
 
-    static async findByMatchIdAndUser(id, user) {
+    static async findMatchWithUser(user_id, other_id) {
         let results = await run(
-            'select query_user_id, other_user_id, match_union.* from '
-            + '(select matches.*, first_user as query_user_id, second_user as other_user_id from matches union select matches.*, second_user as query_user_id, first_user as other_user_id from matches) match_union'
-            + ' where match_id = :match_id and query_user_id = :user_id',
-            [id, user]
+            'select * from matches where first_user = :user_id and second_user = :other_id',
+            [user_id, other_id]
         );
         if(results.error) {
             throw results.error;
@@ -73,18 +71,17 @@ module.exports = class Match {
         }
     }
 
-    async query_user() {
-        const User = require('./user');
-        return await User.findById(this.query_user_id);
-    }
-
     async other_user() {
         const User = require('./user');
-        return await User.findById(this.other_user_id);
+        return await User.findById(this.second_user);
     }
 
     async messages() {
         const Message = require('./message');
-        return await Message.findAllByMatchId(this.match_id);
+        return await Message.findAllForUsers(this.first_user, this.second_user);
+    }
+    
+    async matched_back() {
+        return !!(await Match.findMatchWithUser(second_user, first_user));
     }
 }

@@ -37,14 +37,16 @@ let schema = buildSchema(`
     type Match {
         match_id: Int!,
         other_user: User!,
-        messages: [Message!]!
+        messages: [Message!]!,
+        matched_back: Boolean!
     }
     type Message {
         message_id: Int!,
         match_id: Int!,
         content: String!,
         timestamp: String!,
-        sender: User!
+        sender: User!,
+        receiver: User!
     }
     type Photo {
         photo_id: Int!,
@@ -83,7 +85,7 @@ let schema = buildSchema(`
         findGenders: [Gender!]!,
         findResidences: [Residence!]!,
         findMatches: [Match!]!,
-        findMatchById(id: Int!): Match,
+        findMatchByUserId(id: String!): Match,
         findRecommendations(event_id: Int): [Recommendation!]!,
         findEvents: [Event!]!
     }
@@ -94,6 +96,9 @@ let schema = buildSchema(`
         createBlock(input: MatchInput): Int
         setupUser(input: SetupUserInput): ReturnStruct,
     }
+    type Subscription {
+        message(id: String!): Message!
+    }
     input NewUserInput {
         user_id: String,
         password: String,
@@ -101,7 +106,7 @@ let schema = buildSchema(`
         last_name: String
     }
     input MessageInput {
-        match_id: Int!,
+        receiver_id: String!,
         content: String!
     }
     input MatchInput {
