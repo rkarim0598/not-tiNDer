@@ -1,5 +1,6 @@
 const run = require('../db-query');
 const oracledb = require('oracledb');
+const dbConfig = require('../dbconfig');
 
 module.exports = class Photo {
     static fields = [
@@ -21,7 +22,7 @@ module.exports = class Photo {
 
     static async findAllByUserId(id, connection = undefined) {
         let results = await run(
-            'select * from photos where user_id = :id',
+            'select photo_id, user_id, mimetype from photos where user_id = :id',
             [id],
             connection
         );

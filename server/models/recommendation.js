@@ -124,4 +124,9 @@ module.exports = class Recommendation {
         }
         return results.rows.map(dbObj => new Recommendation(dbObj));
     }
+
+    async avatar() {
+        const Photo = require('./photo');
+        return (await Photo.findAllByUserId(this.user_id))[0].photo_id || null;
+    }
 }
