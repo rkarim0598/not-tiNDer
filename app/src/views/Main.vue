@@ -119,14 +119,12 @@
 
 <script>
 import PeopleSwiper from "../components/PeopleSwiper";
-import BottomNav from "../components/BottomNav";
 import gql from "graphql-tag";
 
 export default {
   name: "Main",
   components: {
     PeopleSwiper,
-    BottomNav
   },
   data: function() {
     return {
