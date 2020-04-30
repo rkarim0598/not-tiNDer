@@ -244,7 +244,7 @@ export default {
             photos: profilePictures,
             residence_id: Number(residence),
             biography,
-            gender_id: Number(gender),
+            gender_id: Number(gender.gender_id),
             desiredGenders: desiredGenders.map(Number),
             seriousness: Number(seriousness),
             personality_id
@@ -252,6 +252,8 @@ export default {
         }
       });
       alert(res.data.setupUser.message);
+      
+      this.$router.push('main');
     }
   }
 };

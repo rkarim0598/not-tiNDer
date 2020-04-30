@@ -84,7 +84,7 @@ async function loadUsers() {
             let results = await run(
                 'insert into users (user_id,password,first_name,last_name,gender_id,biography,nickname,confirmed_account,reset_token,residence_id,joined,personality_id)' +
                 'values (:id, :pw, :fn, :ln, :gi, :b, :nn, :ca, :rt, :d, :j, :p)',
-                [user_id, hash, first, last, gender_id, bio, nickname,,, dorm,, personality]
+                [user_id, hash, first, last, gender_id, bio, nickname,,, dorm, 'Y', personality]
             )
 
             if (results.error) {

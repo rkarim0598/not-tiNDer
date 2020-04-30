@@ -54,7 +54,12 @@ export default {
         if (res.data.login.failure) {
           this.handleFailure(res.data.login.message);
         } else {
-          this.$router.push('main');
+          console.log(res.data.login.data);
+          if (res.data.login.data === 'Y') {
+            this.$router.push('main');
+          } else {
+            this.$router.push('onboard');
+          }
         }
       } catch (error) {
         this.handleFailure(error);
