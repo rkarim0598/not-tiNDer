@@ -92,7 +92,6 @@
     <PeopleSwiper
       v-if="!loading && recs[event_id].length"
       :rec="recs[event_id][0]"
-      :photos="recs[event_id].photos"
       @swiped="handleSwiped"
     ></PeopleSwiper>
     <div
@@ -211,6 +210,7 @@ export default {
                 residence_name
                 personality_id
                 avatar
+                photos
               }
             }
           `,

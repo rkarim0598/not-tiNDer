@@ -126,7 +126,11 @@ module.exports = class Recommendation {
     }
 
     async avatar() {
+        return ((await this.photos)[0] || {photo_id: null}).photo_id;
+    }
+
+    async photos() {
         const Photo = require('./photo');
-        return (await Photo.findAllByUserId(this.user_id))[0].photo_id || null;
+        return (await Photo.findAllByUserId(this.user_id)).map(photo => photo.photo_id);
     }
 }

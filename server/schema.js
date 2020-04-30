@@ -67,6 +67,7 @@ let schema = buildSchema(`
         residence_name: String,
         personality_id: String,
         avatar: Int
+        photos: [Int!]!
     }
     type Event {
         event_id: Int!,

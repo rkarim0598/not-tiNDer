@@ -1,7 +1,7 @@
 
 <template>
   <swiper class="swiper" ref="swiper" :options="swiperOption">
-    <swiper-slide v-if="!photos.length">
+    <swiper-slide v-if="!photos || !photos.length">
       <v-img
         height="100%"
         width="100%"

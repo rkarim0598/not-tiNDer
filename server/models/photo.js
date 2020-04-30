@@ -22,7 +22,7 @@ module.exports = class Photo {
 
     static async findAllByUserId(id, connection = undefined) {
         let results = await run(
-            'select photo_id, user_id, mimetype from photos where user_id = :id',
+            'select * from photos where user_id = :id',
             [id],
             connection
         );
