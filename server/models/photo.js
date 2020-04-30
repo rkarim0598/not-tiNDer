@@ -1,5 +1,6 @@
 const run = require('../db-query');
 const oracledb = require('oracledb');
+const dbConfig = require('../dbconfig');
 
 module.exports = class Photo {
     static fields = [

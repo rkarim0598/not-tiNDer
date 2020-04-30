@@ -37,9 +37,8 @@
               <v-card-subtitle v-text="recs[event_id][0].residence_name || 'Hobo Hall'"></v-card-subtitle>
             </div>
             <v-avatar class="ma-3" size="125" tile>
-              <v-img
-                :src="'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'"
-              ></v-img>
+              <img v-if="recs[event_id][0].avatar" :src="'/photo/' + message.sender.recs[event_id][0].avatar">
+              <v-icon v-else dark style="font-size: 6em">mdi-account-circle</v-icon>
             </v-avatar>
           </div>
         </v-card>
@@ -210,6 +209,8 @@ export default {
                 nickname
                 residence_name
                 personality_id
+                avatar
+                photos
               }
             }
           `,
