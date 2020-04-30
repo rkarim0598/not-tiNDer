@@ -38,6 +38,7 @@ let schema = buildSchema(`
     type Match {
         match_id: Int!,
         other_user: User!,
+        matched_with_user: String,
         messages: [Message!]!,
         matched_back: Boolean!,
         latest_message: Message
@@ -89,6 +90,8 @@ let schema = buildSchema(`
         findResidences: [Residence!]!,
         findMatches: [Match!]!,
         findMatchByUserId(id: String!): Match,
+        findUserOneWayMatches: Match,
+        findOneWayMatchesWithUser: Match
         findRecommendations(event_id: Int): [Recommendation!]!,
         findEvents: [Event!]!
     }
