@@ -24,6 +24,11 @@ Vue.use(VueRouter)
     component: () => import('../views/Signup.vue')
   },
   {
+    path: '/matches',
+    name: 'Matches',
+    component: () => import('../views/Matches.vue')
+  },
+  {
     path: '/messages/:otherId',
     name: 'Messages',
     component: () => import('../views/Messages.vue')

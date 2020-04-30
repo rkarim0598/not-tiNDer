@@ -9,7 +9,8 @@ const env = loadEnv([
 
 module.exports = {
   devServer: {
-    public: env.PUBLIC_HOST
+    public: env.PUBLIC_HOST,
+    proxy: env.PROXY
   },
   transpileDependencies: [
     'vuetify'

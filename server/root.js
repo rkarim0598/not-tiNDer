@@ -98,11 +98,12 @@ let queries = {
         return await User.findById(id);
     },
     findMatches: async ({ }, { user }) => {
+        await new Promise(r => setTimeout(r, 250));
         checkUser(user);
         return await Match.findAllByUserId(user);
     },
     findMatchByUserId: async ({id}, {user}) => {
-        await new Promise(r => setTimeout(r, 500));
+        await new Promise(r => setTimeout(r, 250));
         checkUser(user);
         return await Match.findMatchWithUser(user, id);
     },
@@ -145,7 +146,10 @@ let mutations = {
         return message;
     },
     createMatch: async ({ input }, { user }) => {
-        return await Match.create({ ...input, user_id: user });
+        checkUser(user);
+        const match = await Match.create({ ...input, user_id: user });
+        pubsub.publish(MATCHES_TOPIC, {match});
+        return match;
     },
     createBlock: async ({ input }, { user }) => {
         return await Block.create({ blockee: input.other_user_id, blocker: user });
@@ -199,6 +203,11 @@ let subscriptions = {
     //     return pubsub.asyncIterator(MESSAGES_TOPIC);
     // },
     message: graphqlsub.withFilter(() => pubsub.asyncIterator(MESSAGES_TOPIC), ({message}, {id}, {user}) => {
+        //TODO check for proper user and id
+        return true;
+    }),
+    
+    match: graphqlsub.withFilter(() => pubsub.asyncIterator(MATCHES_TOPIC), ({match}, {id}, {user}) => {
         //TODO check for proper user and id
         return true;
     }),

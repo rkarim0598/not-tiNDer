@@ -77,7 +77,7 @@
                 >
                   <template v-slot:selection="{ item }">
                     <v-chip>
-                      <span>{{ item }}</span>
+                      <span>{{ item.name }}</span>
                     </v-chip>
                   </template>
                 </v-combobox>
@@ -93,7 +93,7 @@
                 >
                   <template v-slot:selection="{ item }">
                     <v-chip>
-                      <span>{{ item }}</span>
+                      <span>{{ item.name }}</span>
                     </v-chip>
                   </template>
                 </v-select>
@@ -187,7 +187,7 @@ export default {
           name
         }
       }
-    }`
+    `
   },
   methods: {
     updatePersonality: async function(value) {
