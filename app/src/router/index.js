@@ -28,11 +28,6 @@ Vue.use(VueRouter)
     name: 'Messages',
     component: () => import('../views/Messages.vue')
   },
-  // {
-  //   path: '/quiz',
-  //   name: 'Quiz',
-  //   component: () => import('../views/Quiz.vue')
-  // },
   {
     path: '/main',
     name: 'Main',
@@ -42,6 +37,11 @@ Vue.use(VueRouter)
     path: '/onboard',
     name: 'Profile Set Up',
     component: () => import('../views/Onboard.vue')
+  },
+  {
+    path: '/quiz',
+    name: 'Quiz',
+    component: () => import('../views/Quiz.vue')
   }
 ]
 

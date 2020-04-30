@@ -54,7 +54,12 @@ export default {
         if (res.data.login.failure) {
           this.handleFailure(res.data.login.message);
         } else {
-          this.$router.push('main');
+          console.log(res.data.login.data);
+          if (res.data.login.data === 'Y') {
+            this.$router.push('main');
+          } else {
+            this.$router.push('onboard');
+          }
         }
       } catch (error) {
         this.handleFailure(error);
@@ -68,7 +73,7 @@ export default {
 .login-container {
   display: flex;
   justify-content: center;
-  background: linear-gradient(darkblue, black);
+  background: rgba(0,0,0,0) linear-gradient(rgb(111,0,0), rgb(32,1,34)) repeat scroll 0% 0%;
 }
 
 .v-form {

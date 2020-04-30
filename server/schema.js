@@ -92,7 +92,7 @@ let schema = buildSchema(`
         createMessage(input: MessageInput): Message,
         createMatch(input: MatchInput): Int,
         createBlock(input: MatchInput): Int
-        setupUser(input: SetupUserInput): ReturnStruct
+        setupUser(input: SetupUserInput): ReturnStruct,
     }
     input NewUserInput {
         user_id: String,
@@ -114,7 +114,8 @@ let schema = buildSchema(`
         biography: String,
         residence_id: Int,
         seriousness: Int,
-        photos: [Upload]
+        photos: [Upload],
+        personality_id: String
     }
 `);
 
