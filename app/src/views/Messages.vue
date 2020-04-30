@@ -207,6 +207,9 @@ export default {
             match.messages.push(subscriptionData.data.message);
           }
         },
+        error: function(err) {
+          this.error = err.message;
+        },
       }
     }
   }

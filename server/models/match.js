@@ -23,15 +23,13 @@ module.exports = class Match {
         return null;
     }
 
-    static async findAllByUserId(id) {
+    static async findAllByUserId(user_id) {
         let results = await run(
-            'select first_user as query_user_id, second_user AS other_user_id, * from matches where first_user = :id'
-            + ' union '
-            + 'select second_user as query_user_id, first_user AS other_user_id, * from matches where second_user = :id',
-            [id, id]
+            'select * from matches where first_user = :user_id',
+            [user_id]
         );
 
-        return results.rows.map(dbObj => new User(dbObj));
+        return results.rows.map(dbObj => new Match(dbObj));
     }
 
     static async create({ other_user_id, event_id = null, user_id }) {
@@ -83,5 +81,13 @@ module.exports = class Match {
     
     async matched_back() {
         return !!(await Match.findMatchWithUser(second_user, first_user));
+    }
+
+    async latest_message() {
+        const messages = await this.messages();
+        if(messages && messages.length) {
+            return messages[messages.length - 1];
+        }
+        return null;
     }
 }
