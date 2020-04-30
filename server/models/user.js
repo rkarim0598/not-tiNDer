@@ -53,6 +53,6 @@ module.exports = class User {
 
     async avatar() {
         const Photo = require('./photo');
-        return (await Photo.findAllByUserId(this.user_id))[0] || null;
+        return (await Photo.findAllByUserId(this.user_id))[0].photo_id || null;
     }
   }

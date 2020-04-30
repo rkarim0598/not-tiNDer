@@ -18,7 +18,8 @@
                   <v-row class="d-flex align-center">
                     <v-col xs="2" sm="1">
                       <v-avatar color="indigo" v-if="message.sender.user_id != user.user_id">
-                        <v-icon dark>mdi-account-circle</v-icon>
+                        <img v-if="message.sender.avatar" :src="'/photo/' + message.sender.avatar">
+                        <v-icon v-else dark>mdi-account-circle</v-icon>
                       </v-avatar>
                     </v-col>
                     <v-col xs="8" sm="10" class="py-1">
@@ -33,7 +34,8 @@
                     </v-col>
                     <v-col xs="2" sm="1">
                       <v-avatar color="grey" v-if="message.sender.user_id == user.user_id">
-                        <v-icon dark>mdi-account-circle</v-icon>
+                        <img v-if="user.avatar" :src="'/photo/' + user.avatar">
+                        <v-icon v-else dark>mdi-account-circle</v-icon>
                       </v-avatar>
                     </v-col>
                   </v-row>
@@ -163,6 +165,7 @@ export default {
           user: findUser {
             user_id
             nickname
+            avatar
           }
         }
       `,
