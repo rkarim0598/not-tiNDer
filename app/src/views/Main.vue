@@ -52,7 +52,7 @@
               <v-card-title class="headline" v-text="events[eventIndex].event_name"></v-card-title>
               <v-card-subtitle v-text="formattedDate(events[eventIndex].sdate)"></v-card-subtitle>
               <v-card-subtitle class="white--text" v-text="events[eventIndex].location"></v-card-subtitle>
-              <v-card-subtitle class="white--text" v-text="events[eventIndex].event_description"></v-card-subtitle>
+              <v-card-subtitle class="white--text" v-text="events[eventIndex].description"></v-card-subtitle>
             </div>
           </div>
         </v-card>
@@ -83,12 +83,12 @@
   </v-container>
   <v-container class="main-container" v-else fill-height fluid align-center>
     <PeopleSwiper
-      v-if="!loading && recs[this.event_id].length"
-      :rec="recs[this.event_id][0]"
+      v-if="!loading && recs[event_id].length"
+      :rec="recs[event_id][0]"
       @swiped="handleSwiped"
     ></PeopleSwiper>
     <div
-      v-else-if="!loading && !recs[this.event_id].length"
+      v-else-if="!loading && !recs[event_id].length"
       light
       class="no-more headline white--text"
     >No more recs</div>
@@ -171,7 +171,7 @@ export default {
                 first_name
                 last_name
                 gender_id
-                bio
+                biography
                 nickname
                 residence_name
                 personality_id
@@ -204,11 +204,11 @@ export default {
             query findEvents {
               findEvents {
                 event_id
-                event_name
+                name
                 user_id
                 location
                 sdate
-                event_description
+                description
               }
             }
           `
@@ -268,7 +268,9 @@ export default {
         console.log("just passing for now");
       }
 
+      console.log(this.recs[this.event_id][0]);
       this.recs[this.event_id].splice(0, 1);
+      console.log(this.recs[this.event_id][0]);
     }
   }
 };

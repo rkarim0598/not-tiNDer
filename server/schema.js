@@ -10,7 +10,7 @@ let schema = buildSchema(`
         password: String!,
         first_name: String,
         last_name: String,
-        bio: String,
+        biography: String,
         nickname: String,
         confirmed_account: String,
         reset_token: String,
@@ -56,18 +56,18 @@ let schema = buildSchema(`
         first_name: String!,
         last_name: String!,
         gender_id: String,
-        bio: String,
+        biography: String,
         nickname: String,
         residence_name: String,
         personality_id: String
     }
     type Event {
         event_id: Int!,
-        event_name: String!,
+        name: String!,
         user_id: String!,
         location: String!,
         sdate: String!,
-        event_description: String!,
+        description: String!,
         photo: String
     }
     type ReturnStruct {
