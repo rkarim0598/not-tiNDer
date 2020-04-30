@@ -6,13 +6,14 @@ module.exports = class Match {
         'match_id',
         'first_user',
         'second_user',
+        'other_user_id',
         'matched_with_user',
         'event_id'
     ];
 
     static async findMatchWithUser(user_id, other_id) {
         let results = await run(
-            'select * from matches where first_user = :user_id and second_user = :other_id ',
+            'select second_user as other_user, matches.* from matches where first_user = :user_id and second_user = :other_id ',
             [user_id, other_id]
         );
         if (results.error) {
@@ -27,19 +28,19 @@ module.exports = class Match {
     // two way matches
     static async findAllByUserId(id) {
         let results = await run(
-            'select first_user as query_user_id, second_user AS other_user_id, matches.* from matches where first_user = :id'
-            + ' union '
-            + 'select second_user as query_user_id, first_user AS other_user_id, matches.* from matches where second_user = :id',
-            [id, id]
+            'select second_user as other_user_id, matches.* from matches where first_user= :id and second_user in (' + 
+                'select second_user AS other_user_id from matches where first_user = :id' + 
+                ' intersect ' +
+                ' select first_user AS other_user_id from matches where second_user = :id)',
+            [id, id, id]
         );
-        let data = results.rows.map(dbObj => ({ ...dbObj, 'MATCHED_WITH_USER': dbObj['OTHER_USER_ID'] }));
-        return data.map(dbObj => new Match(dbObj));
+        return results.rows.map(dbObj => new Match(dbObj));
     }
 
     // one way matches where first_user is the instigator
     static async findUserOneWayMatches(id) {
         let results = await run(
-            'select second_user as other_user, matches.* from matches where first_user = :id and second_user in (' +
+            'select second_user as other_user_id, matches.* from matches where first_user = :id and second_user in (' +
                 'select second_user as other_user_id from matches where first_user = :id' +
                 ' minus ' +
                 'select first_user as other_user_id from matches where second_user = :id)',
@@ -53,14 +54,16 @@ module.exports = class Match {
     // one way matches where second_user is the instigator
     static async findOneWayMatchesWithUser(id) {
         let results = await run(
-            'select first_user as other_user, matches.* from matches where second_user = :id and first_user in (' +
+            'select first_user as other_user_id, matches.* from matches where second_user = :id and first_user in (' +
                 'select first_user as other_user_id from matches where second_user = :id' +
                 ' minus ' + 
                 'select second_user as other_user_id from matches where first_user = :id)',
             [id, id, id]
         );
-
-        return results.rows.map(dbObj => new Match(dbObj));
+        if (results.rows.length > 0) {
+            return results.rows.map(dbObj => new Match(dbObj));
+        }
+        return null;
     }
 
     static async create({ other_user_id, event_id = null, user_id }) {
@@ -102,7 +105,7 @@ module.exports = class Match {
 
     async other_user() {
         const User = require('./user');
-        return await User.findById(this.second_user);
+        return await User.findById(this.other_user_id);
     }
 
     async messages() {
