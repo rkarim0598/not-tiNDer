@@ -13,7 +13,7 @@ module.exports = class Match {
 
     static async findMatchWithUser(user_id, other_id) {
         let results = await run(
-            'select second_user as other_user, matches.* from matches where first_user = :user_id and second_user = :other_id ',
+            'select second_user as other_user_id, matches.* from matches where first_user = :user_id and second_user = :other_id ',
             [user_id, other_id]
         );
         if (results.error) {

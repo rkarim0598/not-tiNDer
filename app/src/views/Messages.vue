@@ -1,7 +1,7 @@
 <template>
   <v-container class="messages-container" fill-height fluid align-center>
     <v-container fill-height fluid align-center justify-space-between>
-      <v-container dark fill-height class="flex-column" style="width:100%">
+      <v-container dark fill-height class="flex-column" style="width:100%; height: 80%">
         <div class="pb-2" style="width:100%">
           <h2 v-if="match">{{match.other_user.first_name}} {{match.other_user.last_name}}</h2>
           <h2 v-else style="max-width: 100px"><v-skeleton-loader type="text"></v-skeleton-loader></h2>
@@ -210,7 +210,9 @@ export default {
           }
         },
         updateQuery: function({match}, { subscriptionData }) {
-          if(subscriptionData.data.message.sender.user_id == this.user.user_id && subscriptionData.data.message.receiver.user_id == match.other_user.user_id) {
+          if((subscriptionData.data.message.sender.user_id === this.user.user_id && subscriptionData.data.message.receiver.user_id === match.other_user.user_id) ||
+            (subscriptionData.data.message.sender.user_id === match.other_user.user_id && subscriptionData.data.message.receiver.user_id === this.user.user_id)
+          ) {
             match.messages.push(subscriptionData.data.message);
           }
         },
