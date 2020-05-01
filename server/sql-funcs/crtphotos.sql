@@ -9,6 +9,8 @@ create table photos
 	foreign key(user_id) references users(user_id)
   );
 
+create index photos_user_id_i on photos(user_id);
+
 drop sequence photos_id_sequence;
 create sequence photos_id_sequence start with 1;
 

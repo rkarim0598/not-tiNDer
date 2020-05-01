@@ -11,7 +11,7 @@ let schema = require('./schema');
 let root = require('./root');
 let Photo = require('./models/photo');
 const oracledb = require('oracledb');
-const dbConfig = require('./dbconfig');
+const dbConfig = require('./db/config');
 require('dotenv').config();
 
 var app = express();

@@ -33,7 +33,8 @@ export default {
       this.password = "";
       alert(message);
     },
-    performLogin: async function() {
+    performLogin: async function(e) {
+      e.preventDefault();
       try {
         let res = await this.$apollo.query({
           query: gql`
