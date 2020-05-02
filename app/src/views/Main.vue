@@ -7,85 +7,85 @@
     align-center
     justify-space-between
   >
-    <v-row v-if="!recs[event_id].length" dense>
-      <v-col>
-        <p
-          v-if="!defaultLoading"
-          class="text-center headline white--text"
-        >Check back later for new recommendations!</p>
-        <v-skeleton-loader
-          v-else
-          dark
-          type="article, list-item-two-line"
-          min-height="100%"
-          min-width="80%"
-          class="skeleton"
-        ></v-skeleton-loader>
-      </v-col>
-    </v-row>
-    <v-row v-if="recs[event_id].length" dense>
-      <v-col cols="12">
-        <div light class="headline white--text">Recommended for you</div>
-        <v-card color="#385f73" dark @click="matchMode = true">
-          <div class="d-flex flex-no-wrap justify-space-between">
-            <div>
-              <v-card-title
-                class="headline"
-                v-text="`${recs[event_id][0].first_name} ${recs[event_id][0].last_name}`"
-              ></v-card-title>
-              <v-card-text v-text="`Personality: ${recs[event_id][0].personality_id || 'None'}`"></v-card-text>
-              <v-card-subtitle v-text="recs[event_id][0].residence_name || 'Hobo Hall'"></v-card-subtitle>
-            </div>
-            <v-avatar class="ma-3" size="125" tile>
-              <img v-if="recs[event_id][0].avatar" :src="'/photo/' + message.sender.recs[event_id][0].avatar">
-              <v-icon v-else dark style="font-size: 6em">mdi-account-circle</v-icon>
-            </v-avatar>
-          </div>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row v-if="defaultLoading || events.length">
-      <v-col cols="12">
-        <div light class="headline white--text">Events for you</div>
-        <v-card
-          v-if="!defaultLoading"
-          color="#385f73"
-          @click="matchForEvent(events[eventIndex].event_id)"
-          dark
-        >
-          <div class="d-flex flex-no-wrap justify-space-between">
-            <div>
-              <v-card-title class="headline" v-text="events[eventIndex].name"></v-card-title>
-              <v-card-subtitle v-text="formattedDate(events[eventIndex].sdate)"></v-card-subtitle>
-              <v-card-subtitle class="white--text" v-text="events[eventIndex].location"></v-card-subtitle>
-              <v-card-subtitle class="white--text" v-text="events[eventIndex].description"></v-card-subtitle>
-            </div>
-          </div>
-        </v-card>
-        <v-skeleton-loader
-          v-else
-          dark
-          type="article, list-item-three-line"
-          min-height="100%"
-          min-width="80%"
-          class="skeleton"
-        ></v-skeleton-loader>
-        <div class="button-container">
-          <v-btn outlined dark @click="eventIndex--" :disabled="eventIndex === 0">Last</v-btn>
-          <v-btn
-            outlined
+    <v-container fill-height fluid align-center justify-space-between style="height: 90%; padding-left: 24px; padding-right: 24px;">
+      <v-row v-if="!recs[event_id].length" dense>
+        <v-col>
+          <p
+            v-if="!defaultLoading"
+            class="text-center headline white--text"
+          >Check back later for new recommendations!</p>
+          <v-skeleton-loader
+            v-else
             dark
-            @click="eventIndex++"
-            :disabled="eventIndex === events.length - 1"
-          >Next</v-btn>
-        </div>
-      </v-col>
-    </v-row>
-    <v-row v-else>
-      <v-col>
-        <div light class="headline white--text text-center">No events right now</div>
-      </v-col>
-    </v-row>
+            type="article, list-item-two-line"
+            min-height="100%"
+            min-width="80%"
+            class="skeleton"
+          ></v-skeleton-loader>
+        </v-col>
+      </v-row>
+      <v-row v-if="recs[event_id].length" dense>
+        <v-col cols="12">
+          <div light class="headline white--text">Recommended for you</div>
+          <v-card dark @click="matchMode = true">
+            <div class="d-flex flex-no-wrap justify-space-between">
+              <div>
+                <v-card-title
+                  class="headline"
+                  v-text="`${recs[event_id][0].first_name} ${recs[event_id][0].last_name}`"
+                ></v-card-title>
+                <v-card-text v-text="`Personality: ${recs[event_id][0].personality_id || 'None'}`"></v-card-text>
+                <v-card-subtitle v-text="recs[event_id][0].residence_name || 'Hobo Hall'"></v-card-subtitle>
+              </div>
+              <v-avatar class="ma-3" size="125" tile>
+                <img
+                  v-if="recs[event_id][0].avatar"
+                  :src="'/photo/' + message.sender.recs[event_id][0].avatar"
+                />
+                <v-icon v-else dark style="font-size: 6em">mdi-account-circle</v-icon>
+              </v-avatar>
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row v-if="defaultLoading || events.length">
+        <v-col cols="12">
+          <div light class="headline white--text">Events for you</div>
+          <v-card v-if="!defaultLoading" @click="matchForEvent(events[eventIndex].event_id)" dark>
+            <div class="d-flex flex-no-wrap justify-space-between">
+              <div>
+                <v-card-title class="headline" v-text="events[eventIndex].name"></v-card-title>
+                <v-card-subtitle v-text="formattedDate(events[eventIndex].sdate)"></v-card-subtitle>
+                <v-card-subtitle class="white--text" v-text="events[eventIndex].location"></v-card-subtitle>
+                <v-card-subtitle class="white--text" v-text="events[eventIndex].description"></v-card-subtitle>
+              </div>
+            </div>
+          </v-card>
+          <v-skeleton-loader
+            v-else
+            dark
+            type="article, list-item-three-line"
+            min-height="100%"
+            min-width="80%"
+            class="skeleton"
+          ></v-skeleton-loader>
+          <div class="button-container">
+            <v-btn outlined dark @click="eventIndex--" :disabled="eventIndex === 0">Last</v-btn>
+            <v-btn
+              outlined
+              dark
+              @click="eventIndex++"
+              :disabled="eventIndex === events.length - 1"
+            >Next</v-btn>
+          </div>
+        </v-col>
+      </v-row>
+      <v-row v-else>
+        <v-col>
+          <div light class="headline white--text text-center">No events right now</div>
+        </v-col>
+      </v-row>
+    </v-container>
     <bottom-nav :data="navData"></bottom-nav>
   </v-container>
   <v-container class="main-container" v-else fill-height fluid align-center>
@@ -118,7 +118,7 @@
 
 <script>
 import PeopleSwiper from "../components/PeopleSwiper";
-import BottomNav from '../components/BottomNav';
+import BottomNav from "../components/BottomNav";
 import gql from "graphql-tag";
 
 export default {
@@ -148,8 +148,8 @@ export default {
             title: "Matches",
             icon: "mdi-account-group",
             onClick: () => {
-              console.log('clicked');
-              this.$router.push('matches')
+              console.log("clicked");
+              this.$router.push("matches");
             }
           },
           {
@@ -319,6 +319,8 @@ export default {
   background: rgba(0, 0, 0, 0) linear-gradient(rgb(111, 0, 0), rgb(32, 1, 34))
     repeat scroll 0% 0%;
   padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .no-more {
