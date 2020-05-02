@@ -168,7 +168,7 @@ export default {
             title: "Profile",
             icon: "mdi-account-circle",
             onClick: () => {
-              // this.$router.push('profile')
+              this.$router.push('profile')
             }
           }
         ]

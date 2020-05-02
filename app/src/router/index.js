@@ -44,9 +44,9 @@ Vue.use(VueRouter)
     component: () => import('../views/Onboard.vue')
   },
   {
-    path: '/quiz',
-    name: 'Quiz',
-    component: () => import('../views/Quiz.vue')
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('../views/Profile.vue')
   }
 ]
 
