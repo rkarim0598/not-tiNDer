@@ -64,8 +64,7 @@ export default {
           this.handleFailure(res.data.login.message);
         } else {
           this.success = "Successfully logged in!";
-
-          if (res.data.login.data === "Y") {
+          if (res.data.login.joined === "Y") {
             setTimeout(() => this.$router.push("main"), 500);
           } else {
             setTimeout(() => this.$router.push("onboard"), 500);
