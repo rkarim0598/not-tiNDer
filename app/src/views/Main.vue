@@ -317,7 +317,9 @@ export default {
         console.log("just passing for now");
       }
 
+      // apparently has to be done this way for Vue to react to nested stuff
       this.recs[this.event_id].splice(0, 1);
+      this.recs = {...this.recs, [this.event_id]: this.recs[this.event_id]};
     }
   },
   watch: {
