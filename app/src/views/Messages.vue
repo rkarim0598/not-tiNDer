@@ -1,47 +1,50 @@
 <template>
   <v-container class="messages-container" fill-height fluid align-center>
-    <v-container fill-height fluid align-center justify-space-between>
-      <v-container dark fill-height class="flex-column" style="width:100%; height: 80%">
+    <v-container fill-height fluid align-center justify-space-between style="height: 90%">
+      <v-container dark fill-height class="flex-column" style="width:100%; height: 85%">
         <div class="pb-2" style="width:100%">
-          <h2 v-if="match">{{match.other_user.first_name}} {{match.other_user.last_name}}</h2>
+          <span
+            class="white--text display-1"
+            v-if="match"
+          >{{match.other_user.first_name}} {{match.other_user.last_name}}</span>
           <h2 v-else style="max-width: 100px">
-            <v-skeleton-loader type="text"></v-skeleton-loader>
+            <v-skeleton-loader dark type="text"></v-skeleton-loader>
           </h2>
-          <v-divider></v-divider>
+          <v-divider dark></v-divider>
         </div>
-        <div class="flex-grow-1" style="width:100%; overflow-y: scroll; flex-basis: 0">
+        <div class="flex-grow-1" style="width:100%; overflow-x: hidden; overflow-y: scroll; flex-basis: 0">
           <v-fade-transition hide-on-leave>
             <div v-if="match" class="px-2">
               <div v-if="match.messages.length">
                 <div v-for="(message, index) of match.messages" :key="message.message_id">
-                  <p class="caption text-center mb-0">{{formatDate(index)}}</p>
+                  <p class="white--text caption text-center mb-0">{{formatDate(index)}}</p>
                   <v-row class="d-flex align-center">
                     <v-col xs="2" sm="1">
                       <v-avatar color="indigo" v-if="message.sender.user_id != user.user_id">
-                        <img v-if="message.sender.avatar" :src="'/photo/' + message.sender.avatar">
+                        <img v-if="message.sender.avatar" :src="'/photo/' + message.sender.avatar" />
                         <v-icon v-else dark>mdi-account-circle</v-icon>
                       </v-avatar>
                     </v-col>
                     <v-col xs="8" sm="10" class="py-1">
                       <v-card
                         outlined
-                        :color="message.sender.user_id != user.user_id ? 'indigo' : undefined"
+                        :color="message.sender.user_id != user.user_id ? 'indigo' : 'grey'"
                       >
                         <v-card-text>
-                          <pre class="body-2">{{message.content}}</pre>
+                          <pre class="white--text body-2">{{message.content}}</pre>
                         </v-card-text>
                       </v-card>
                     </v-col>
                     <v-col xs="2" sm="1">
                       <v-avatar color="grey" v-if="message.sender.user_id == user.user_id">
-                        <img v-if="user.avatar" :src="'/photo/' + user.avatar">
+                        <img v-if="user.avatar" :src="'/photo/' + user.avatar" />
                         <v-icon v-else dark>mdi-account-circle</v-icon>
                       </v-avatar>
                     </v-col>
                   </v-row>
                 </div>
               </div>
-              <div v-else>No messages here yet, why don't you strike up a conversation?</div>
+              <div v-else class="white--text">No messages here yet, why don't you strike up a conversation?</div>
             </div>
             <div v-else class="px-2">
               <div v-if="$apollo.queries.match.loading">
@@ -51,7 +54,7 @@
                       <v-skeleton-loader v-if="i%3 == 1" type="avatar"></v-skeleton-loader>
                     </v-col>
                     <v-col xs="8" sm="10" class="py-1">
-                      <v-card outlined>
+                      <v-card outlined :color="i % 2 ? 'grey' : 'indigo'">
                         <v-card-text>
                           <v-skeleton-loader :type="i%2 == 0 ? 'sentences' : 'text'"></v-skeleton-loader>
                         </v-card-text>
@@ -63,7 +66,7 @@
                   </v-row>
                 </div>
               </div>
-              <div v-else>Could not load messages</div>
+              <div class="white--text" v-else>Could not load messages</div>
             </div>
           </v-fade-transition>
         </div>
@@ -71,6 +74,7 @@
       <v-container style="flex-grow-0">
         <v-textarea
           outlined
+          dark
           :disabled="!match"
           v-model="draftMessage"
           @keypress="handleKeypress"
@@ -78,10 +82,10 @@
           @click:append="sendMessage"
           rows="1"
           label="Enter Message"
-          auto-grow
         ></v-textarea>
       </v-container>
     </v-container>
+    <bottom-nav :data="navData"></bottom-nav>
     <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
       <div class="text-center" style="background-color: transparent">{{error}}</div>
     </v-snackbar>
@@ -90,15 +94,45 @@
 
 <script>
 import gql from "graphql-tag";
+import BottomNav from '../components/BottomNav';
 
 export default {
   name: "Messages",
+  components: {
+    BottomNav
+  },
   data: function() {
     return {
       user: undefined,
       match: undefined,
       draftMessage: "",
       error: undefined,
+      navData: {
+        activeIndex: 1,
+        tabs: [
+          {
+            title: "Explore",
+            icon: "mdi-card-search",
+            onClick: () => {
+              this.$router.push("/main");
+            }
+          },
+          {
+            title: "Matches",
+            icon: "mdi-account-group",
+            onClick: () => {
+              this.$router.push('/matches');
+            }
+          },
+          {
+            title: "Profile",
+            icon: "mdi-account-circle",
+            onClick: () => {
+              console.log("clicked");
+            }
+          }
+        ]
+      }
     };
   },
   methods: {
@@ -250,10 +284,11 @@ export default {
 .messages-container {
   display: flex;
   justify-content: center;
-  background: linear-gradient(darkblue, black);
-}
-.messages-container div {
-  background: white;
+  background: rgba(0, 0, 0, 0) linear-gradient(rgb(111, 0, 0), rgb(32, 1, 34))
+    repeat scroll 0% 0%;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .v-form {
