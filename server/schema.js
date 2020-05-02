@@ -20,7 +20,7 @@ let schema = buildSchema(`
         matches: [Match!]!,
         avatar: Int,
         photos: [Int!]!,
-        gender_interests: [Gender!],
+        gender_interest: [GenderInterest!],
         blocks: [User!],
         personality_id: String
     }
@@ -30,6 +30,12 @@ let schema = buildSchema(`
         on_campus: Int!,
         lat: Float,
         lng: Float
+    }
+    type GenderInterest {
+        gender_interest_id: String!,
+        user_id: String!,
+        name: String!,
+        gender_id: String!
     }
     type Gender {
         gender_id: String!,

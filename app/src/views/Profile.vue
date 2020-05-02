@@ -1,26 +1,88 @@
 <template>
   <v-container class="profile-page-container" fill-height fluid align-center justify-space-between>
-    <v-container class="profile-container" fill-height fluid align-center justify-space-between>
-        <div class="white--text">hi</div>
+    <v-container
+      v-if="user"
+      class="profile-container"
+      fill-height
+      fluid
+      align-center
+      justify-space-between
+    >
+      <v-row>
+        <v-col>
+          <div class="text--center white--text display-3">Profile</div>
+          <v-divider dark></v-divider>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <span class="white--text title">Your Pics</span>
+          <v-divider dark></v-divider>
+          <pic-swiper :width="'65%'" :height="'85%'" :recId="user.user_id" :photos="user.photos"></pic-swiper>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <span class="white--text title">Gender</span>
+          <v-divider dark></v-divider>
+          <span class="white--text subtitle">{{ user.gender.name }}</span>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <span class="white--text title">Nickname</span>
+          <v-divider dark></v-divider>
+          <span class="white--text subtitle">{{ user.nickname }}</span>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <span class="white--text title">Residence</span>
+          <v-divider dark></v-divider>
+          <span class="white--text subtitle">{{ user.residence.name }}</span>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <span class="white--text title">Biography</span>
+          <v-divider dark></v-divider>
+          <span class="white--text subtitle">{{ user.biography }}</span>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <span class="white--text title">Personality</span>
+          <v-divider dark></v-divider>
+          <span class="white--text subtitle">{{ user.personality_id }}</span>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <span class="white--text title">Interested In</span>
+          <v-divider dark></v-divider>
+          <span class="white--text subtitle">{{ user.gender_interest.map(g => g.name).join(', ') }}</span>
+        </v-col>
+      </v-row>
     </v-container>
     <bottom-nav :data="navData"></bottom-nav>
   </v-container>
 </template>
 
 <script>
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 import BottomNav from "../components/BottomNav";
+import PicSwiper from "../components/PicSwiper";
 
 export default {
   name: "Profile",
   components: {
-    // PicSwiper,
+    PicSwiper,
     BottomNav
   },
   data: function() {
     return {
-      error: '',
-      user: null,
+      error: "",
+      user: undefined,
       navData: {
         activeIndex: 2,
         tabs: [
@@ -51,20 +113,26 @@ export default {
     user: {
       query: gql`
         query {
-          matches: findUser {
+          user: findUser {
+            user_id
             first_name
             last_name
             photos
             biography
             nickname
+            gender {
+              gender_id
+              name
+            }
+            gender_interest {
+              gender_interest_id
+              name
+            }
             residence {
               name
             }
-            avatar
-            gender_interests {
-                name
-            }
             personality_id
+            avatar
           }
         }
       `,
@@ -78,15 +146,15 @@ export default {
 
 <style lang="scss" scoped>
 .profile-page-container {
-  padding-bottom: 0;
-  padding-left: 0;
-  padding-right: 0;
+  padding: 0;
   background: rgba(0, 0, 0, 0) linear-gradient(rgb(111, 0, 0), rgb(32, 1, 34))
     repeat scroll 0% 0%;
 }
 
 .profile-container {
-    padding-left: 24px;
-    padding-right: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  max-height: 88vh;
+  overflow-y: scroll;
 }
 </style>

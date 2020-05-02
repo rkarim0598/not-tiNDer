@@ -37,11 +37,15 @@
             <div class="d-flex flex-no-wrap justify-space-between">
               <div>
                 <v-card-title
-                  class="headline"
-                  v-text="`${recs[event_id][0].first_name} ${recs[event_id][0].last_name}`"
+                  class="headline pb-0"
+                  v-text="recs[event_id][0].first_name"
                 ></v-card-title>
-                <v-card-text v-text="`Personality: ${recs[event_id][0].personality_id || 'None'}`"></v-card-text>
-                <v-card-subtitle v-text="recs[event_id][0].residence_name || 'Hobo Hall'"></v-card-subtitle>
+                <v-card-title
+                  class="headline pt-0"
+                  v-text="recs[event_id][0].last_name"
+                ></v-card-title>
+                <v-card-text class="pb-0" v-text="`Personality: ${recs[event_id][0].personality_id || 'None'}`"></v-card-text>
+                <v-card-subtitle class="pt-0" v-text="recs[event_id][0].residence_name || 'Hobo Hall'"></v-card-subtitle>
               </div>
               <v-avatar class="ma-3" size="125" tile>
                 <img
@@ -62,8 +66,8 @@
               <div>
                 <v-card-title class="headline" v-text="events[eventIndex].name"></v-card-title>
                 <v-card-subtitle v-text="formattedDate(events[eventIndex].sdate)"></v-card-subtitle>
-                <v-card-subtitle class="white--text" v-text="events[eventIndex].location"></v-card-subtitle>
-                <v-card-subtitle class="white--text" v-text="events[eventIndex].description"></v-card-subtitle>
+                <v-card-subtitle class="white--text pb-0" v-text="events[eventIndex].location"></v-card-subtitle>
+                <v-card-subtitle class="white--text pt-0" v-text="events[eventIndex].description"></v-card-subtitle>
               </div>
             </div>
           </v-card>
@@ -241,7 +245,6 @@ export default {
                 residence_name
                 personality_id
                 avatar
-                photos
               }
             }
           `,

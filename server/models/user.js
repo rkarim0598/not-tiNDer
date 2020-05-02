@@ -36,6 +36,11 @@ module.exports = class User {
         return await Gender.findById(this.gender_id);
     }
 
+    async gender_interest() {
+        const GenderInterest = require('./genderInterest');
+        return await GenderInterest.findById(this.user_id);
+    }
+
     async residence() {
         const Residence = require('./residence');
         return await Residence.findById(this.residence_id);
