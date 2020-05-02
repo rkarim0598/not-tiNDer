@@ -190,6 +190,9 @@ export default {
       this.$apollo.queries.match.setVariables({
         id: to.params.otherId
       });
+    },
+    error: function(value) {
+      value.length && setTimeout(() => this.error = '', 1500);
     }
   },
   apollo: {

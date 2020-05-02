@@ -7,7 +7,13 @@
     align-center
     justify-space-between
   >
-    <v-container fill-height fluid align-center justify-space-between style="height: 90%; padding-left: 24px; padding-right: 24px;">
+    <v-container
+      fill-height
+      fluid
+      align-center
+      justify-space-between
+      style="height: 90%; padding-left: 24px; padding-right: 24px;"
+    >
       <v-row v-if="!recs[event_id].length" dense>
         <v-col>
           <p
@@ -24,7 +30,7 @@
           ></v-skeleton-loader>
         </v-col>
       </v-row>
-      <v-row v-if="recs[event_id].length" dense>
+      <v-row v-if="recs[event_id] && recs[event_id].length" dense>
         <v-col cols="12">
           <div light class="headline white--text">Recommended for you</div>
           <v-card dark @click="matchMode = true">
@@ -87,6 +93,9 @@
       </v-row>
     </v-container>
     <bottom-nav :data="navData"></bottom-nav>
+    <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
+      <div class="text-center" style="background-color: transparent">{{error}}</div>
+    </v-snackbar>
   </v-container>
   <v-container class="main-container" v-else fill-height fluid align-center>
     <PeopleSwiper
@@ -113,6 +122,9 @@
         <v-icon color="blue">mdi-keyboard-backspace</v-icon>Back
       </a>
     </v-layout>
+    <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
+      <div class="text-center" style="background-color: transparent">{{error}}</div>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -129,6 +141,7 @@ export default {
   },
   data: function() {
     return {
+      error: "",
       matchMode: false,
       recs: { default: [] },
       event_id: "default",
@@ -148,7 +161,6 @@ export default {
             title: "Matches",
             icon: "mdi-account-group",
             onClick: () => {
-              console.log("clicked");
               this.$router.push("matches");
             }
           },
@@ -178,6 +190,25 @@ export default {
     }
   },
   methods: {
+    /**
+     * return true if error is something besides login
+     */
+    handleError: function(error) {
+      try {
+        let message =
+          error["networkError"] &&
+          error["networkError"]["result"]["errors"][0].message;
+        if (message === "Not logged in") {
+          this.$router.push("login");
+        } else {
+          this.error = message;
+          return true;
+        }
+      } catch (error) {
+        this.error = "Could not connect";
+        return true;
+      }
+    },
     formattedDate: function(timestamp) {
       return new Date(Number(timestamp)).toLocaleString();
     },
@@ -218,19 +249,9 @@ export default {
             event_id: eid
           }
         });
-        console.log(res);
         return res.data.findRecommendations || [];
       } catch (error) {
-        console.log(error);
-        if (
-          error["networkError"]["result"]["errors"][0].message ===
-          "Not logged in"
-        ) {
-          this.$router.push("login");
-        } else {
-          alert("Something went wrong, please refresh and try again");
-          return [];
-        }
+        if (this.handleError(error)) return [];
       }
     },
     getEvents: async function() {
@@ -251,18 +272,14 @@ export default {
         });
         return res.data.findEvents || [];
       } catch (error) {
-        console.log(error);
-        alert("Something went wrong, please refresh and try again.");
-        return [];
+        if (this.handleError(error)) return [];
       }
     },
     handleSwiped: async function(val) {
-      let res;
       let eid = this.event_id === "default" ? null : this.event_id;
-
       if (val === true) {
         try {
-          res = await this.$apollo.mutate({
+          await this.$apollo.mutate({
             mutation: gql`
               mutation($input: MatchInput) {
                 createMatch(input: $input)
@@ -275,14 +292,12 @@ export default {
               }
             }
           });
-          console.log(res);
         } catch (error) {
-          console.log("error");
-          alert("Something went wrong, please refresh");
+          this.handleError(error);
         }
       } else if (val === false) {
         try {
-          res = await this.$apollo.mutate({
+          await this.$apollo.mutate({
             mutation: gql`
               mutation($input: MatchInput) {
                 createBlock(input: $input)
@@ -295,18 +310,19 @@ export default {
               }
             }
           });
-          console.log(res);
         } catch (error) {
-          console.log(error);
-          alert("Something went wrong, please refresh");
+          this.handleError(error);
         }
       } else {
         console.log("just passing for now");
       }
 
-      console.log(this.recs[this.event_id][0]);
       this.recs[this.event_id].splice(0, 1);
-      console.log(this.recs[this.event_id][0]);
+    }
+  },
+  watch: {
+    error: function(value) {
+      value.length && setTimeout(() => (this.error = ""), 1500);
     }
   }
 };

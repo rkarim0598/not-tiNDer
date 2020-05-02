@@ -13,6 +13,12 @@
         </v-row>
       </v-container>
     </v-form>
+    <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
+      <div class="text-center" style="background-color: transparent">{{error}}</div>
+    </v-snackbar>
+    <v-snackbar color="success" top :value="success ? 'visible' : undefined">
+      <div class="text-center" style="background-color: transparent">{{success}}</div>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -24,14 +30,17 @@ export default {
   data: function() {
     return {
       username: "",
-      password: ""
+      password: "",
+      error: "",
+      success: ""
     };
   },
   methods: {
     handleFailure: function(message) {
       this.username = "";
       this.password = "";
-      alert(message);
+      this.error = message;
+      setTimeout(() => (this.error = ""), 1500);
     },
     performLogin: async function(e) {
       e.preventDefault();
@@ -54,10 +63,12 @@ export default {
         if (res.data.login.failure) {
           this.handleFailure(res.data.login.message);
         } else {
-          if (res.data.login.joined === 'Y') {
-            this.$router.push('main');
+          this.success = "Successfully logged in!";
+
+          if (res.data.login.data === "Y") {
+            setTimeout(() => this.$router.push("main"), 500);
           } else {
-            this.$router.push('onboard');
+            setTimeout(() => this.$router.push("onboard"), 500);
           }
         }
       } catch (error) {
@@ -72,7 +83,8 @@ export default {
 .login-container {
   display: flex;
   justify-content: center;
-  background: rgba(0,0,0,0) linear-gradient(rgb(111,0,0), rgb(32,1,34)) repeat scroll 0% 0%;
+  background: rgba(0, 0, 0, 0) linear-gradient(rgb(111, 0, 0), rgb(32, 1, 34))
+    repeat scroll 0% 0%;
 }
 
 .v-form {

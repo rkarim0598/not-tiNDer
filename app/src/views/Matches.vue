@@ -61,7 +61,7 @@
               </v-hover>
             </div>
           </div>
-          <div v-else>No matches yet, get swiping!</div>
+          <div v-else class="white--text">No matches yet, get swiping!</div>
         </div>
         <div v-else>
           <div v-if="$apollo.queries.matches.loading">
@@ -90,7 +90,7 @@
               </v-card>
             </div>
           </div>
-          <div v-else>Could not load matches</div>
+          <div v-else class="white--text">Could not load matches</div>
         </div>
       </v-fade-transition>
     </v-container>
@@ -215,6 +215,11 @@ export default {
           this.error = err.message;
         }
       }
+    }
+  },
+  watch: {
+    error: function(value) {
+      value.length && setTimeout(() => this.error, 1500);
     }
   }
 };
