@@ -36,13 +36,12 @@ export default {
     performLogin: async function(e) {
       e.preventDefault();
       try {
-        let res = await this.$apollo.query({
-          query: gql`
-            query login($email: String, $password: String) {
+        let res = await this.$apollo.mutate({
+          mutation: gql`
+            mutation login($email: String, $password: String) {
               login(email: $email, password: $password) {
-                failure
-                message
-                data
+                user_id,
+                joined
               }
             }
           `,
@@ -55,8 +54,7 @@ export default {
         if (res.data.login.failure) {
           this.handleFailure(res.data.login.message);
         } else {
-          console.log(res.data.login.data);
-          if (res.data.login.data === 'Y') {
+          if (res.data.login.joined === 'Y') {
             this.$router.push('main');
           } else {
             this.$router.push('onboard');

@@ -37,51 +37,6 @@ function checkUser(user) {
 }
 
 let queries = {
-    hello: async () => {
-        let results = await run('select salpers_name from salesperson where salpers_name = \'Rodney Jones\'');
-        return {
-            failure: false,
-            message: 'Got hello query',
-            data: results.rows[0]['SALPERS_NAME']
-        }
-    },
-    login: async ({ email, password }, { req, res }) => { // can access user info through context
-        let results = await run(
-            'select password, joined from users where user_id = :email',
-            [email]
-        )
-
-        if (results.rows.length === 1) { // indicates we have at least one user with given username
-            // bcrypt's pwd hash contains the salt to has given password with, so can
-            // just use bcrypt.compare to see if entered password is correct
-            const valid = await bcrypt.compare(password, results.rows[0]['PASSWORD']);
-
-            if (!valid) { // indicates password mismatch
-                return {
-                    failure: true,
-                    message: 'Invalid username or password'
-                }
-            }
-
-            let token = jwt.sign({
-                id: email
-            }, 'shouldchangethis', { expiresIn: 3600000 }) /// 60 is for 60 seconds, can enter 1w, 1y, 60 * 60, etc
-
-            res.cookie('jwtAuth', token, { maxAge: 3600000, httpOnly: true }); //TODO secure: true
-
-            return {
-                failure: false,
-                data: results.rows[0]['JOINED'],
-                message: 'Successfully logged in'
-            };
-        }
-        else { // indicates nonexistent username
-            return {
-                failure: true,
-                message: 'Invalid username or password'
-            }
-        }
-    },
     findGenders: async () => {
         return await Gender.findAll();
     },
@@ -123,6 +78,29 @@ let queries = {
 }
 
 let mutations = {
+    login: async ({ email, password }, { req, res }) => { // can access user info through context
+        let results = await run(
+            'select password, joined from users where user_id = :email',
+            [email]
+        );
+
+        if (results.rows && results.rows.length === 1) { // indicates we have at least one user with given username
+            // bcrypt's pwd hash contains the salt to has given password with, so can
+            // just use bcrypt.compare to see if entered password is correct
+            const valid = await bcrypt.compare(password, results.rows[0]['PASSWORD']);
+
+            if (valid) { // passwords match
+                let token = jwt.sign({
+                    id: email
+                }, 'shouldchangethis', { expiresIn: 3600000 }) /// 60 is for 60 seconds, can enter 1w, 1y, 60 * 60, etc
+
+                res.cookie('jwtAuth', token, { maxAge: 3600000, httpOnly: true }); //TODO secure: true
+
+                return User.findById(email);
+            }
+        }
+        throw new Error('Invalid username or password');
+    },
     createUser: async ({ input }) => {
         // hash password
         let hash = await hasher(input.password);
