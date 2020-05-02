@@ -1,6 +1,6 @@
 const run = require('../db/query');
 const oracledb = require('oracledb');
-const dbConfig = require('../db/config');
+const getConnection = require('../db/pool');
 
 module.exports = class Photo {
     static fields = [
@@ -31,6 +31,7 @@ module.exports = class Photo {
     }
 
     static async create({photo, mimetype, user_id}, connection) {
+        connection = connection || getConnection();
         const templob = await connection.createLob(oracledb.BLOB);
         photo.pipe(templob);
         await new Promise((success, reject) => {
