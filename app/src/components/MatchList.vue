@@ -4,7 +4,7 @@
       <div v-if="matches.length">
         <div v-for="(match, index) of matches" :key="match.match_id" class="py-1">
           <v-hover v-slot:default="{ hover }">
-            <v-card outlined dark @click="openMessages(match.other_user.user_id)" :elevation="hover ? 5 : 2" class="mb-2">
+            <v-card outlined dark @click="openMessages(match.other_user.user_id)" :elevation="hover ? 5 : 2">
               <div class="px-5">
                 <v-row class="d-flex">
                   <v-col style="flex-basis: 1; flex-grow: 0">
@@ -44,12 +44,12 @@
           </v-hover>
         </div>
       </div>
-      <div v-else>No matches yet, get swiping!</div>
+      <div v-else><p class="white--text">No matches yet, get swiping!</p></div>
     </div>
     <div v-else>
       <div v-if="query.loading">
-        <div v-for="i in 5" :key="i">
-          <v-card dark outlined class="mb-2">
+        <div v-for="i in 5" :key="i" class="py-1">
+          <v-card dark outlined>
             <div class="px-5">
               <v-row class="d-flex">
                 <v-col style="flex-basis: 1; flex-grow: 0">
@@ -73,7 +73,7 @@
           </v-card>
         </div>
       </div>
-      <div v-else>Could not load matches</div>
+      <div v-else><p class="white--text">Could not load matches</p></div>
     </div>
   </v-fade-transition>
 </template>

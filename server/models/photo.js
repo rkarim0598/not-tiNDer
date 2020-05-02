@@ -31,29 +31,40 @@ module.exports = class Photo {
     }
 
     static async create({photo, mimetype, user_id}, connection) {
-        connection = connection || getConnection();
-        const templob = await connection.createLob(oracledb.BLOB);
-        photo.pipe(templob);
-        await new Promise((success, reject) => {
-            templob.on('finish', success);
-            templob.on('error', reject);
-        });
-        let result = await run(
-            'insert into photos (photo, mimetype, user_id)' +
-            'values (:photo, :mimetype, :user_id)',
-            [templob, mimetype, user_id],
-            connection
-        );
-        templob.destroy();
-        if(result.error) {
-            throw result.error;
+        const shouldClose = connection === undefined;
+        try {
+            connection = connection || getConnection();
+            const templob = await connection.createLob(oracledb.BLOB);
+            photo.pipe(templob);
+            await new Promise((success, reject) => {
+                templob.on('finish', success);
+                templob.on('error', reject);
+            });
+            let result = await run(
+                'insert into photos (photo, mimetype, user_id)' +
+                'values (:photo, :mimetype, :user_id)',
+                [templob, mimetype, user_id],
+                connection
+            );
+            templob.destroy();
+            if(result.error) {
+                throw result.error;
+            }
+            result = await run(
+                'select * from photos where rowid = :id',
+                [result.lastRowid],
+                connection
+            );
+            return new Photo(result.rows[0]);
+        } finally {
+            if(shouldClose) {
+                try {
+                    await connection.close();
+                } catch (err) {
+                    console.error(err);
+                }
+            }
         }
-        result = await run(
-            'select * from photos where rowid = :id',
-            [result.lastRowid],
-            connection
-        );
-        return new Photo(result.rows[0]);
     }
 
     constructor(dbObj) {
