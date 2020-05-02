@@ -1,4 +1,4 @@
-const run = require('../db-query');
+const run = require('../db/query');
 const oracledb = require('oracledb');
 
 module.exports = class Match {

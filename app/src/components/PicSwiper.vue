@@ -2,17 +2,13 @@
 <template>
   <swiper class="swiper" ref="swiper" :options="swiperOption">
     <swiper-slide v-if="!photos || !photos.length">
-      <v-img
-        height="100%"
-        width="100%"
-        :src="'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'"
-      ></v-img>
+      <v-icon style="font-size: 10em" dark>mdi-account-circle</v-icon>
     </swiper-slide>
     <swiper-slide v-else v-for="img in photos" :key="img">
       <img :src="'/photo/' + img" height="100%" width="100%" />
     </swiper-slide>
-    <div class="swiper-button-prev" slot="button-prev"></div>
-    <div class="swiper-button-next" slot="button-next"></div>
+    <div v-if="photos && photos.length > 1" class="swiper-button-prev" slot="button-prev"></div>
+    <div v-if="photos && photos.length > 1" class="swiper-button-next" slot="button-next"></div>
   </swiper>
 </template>
 

@@ -1,6 +1,6 @@
-const run = require('../db-query');
+const run = require('../db/query');
 const oracledb = require('oracledb');
-const dbConfig = require('../dbconfig');
+const getConnection = require('../db/pool');
 
 module.exports = class Photo {
     static fields = [
@@ -22,7 +22,7 @@ module.exports = class Photo {
 
     static async findAllByUserId(id, connection = undefined) {
         let results = await run(
-            'select * from photos where user_id = :id',
+            'select photo_id, user_id, mimetype from photos where user_id = :id',
             [id],
             connection
         );
@@ -31,6 +31,7 @@ module.exports = class Photo {
     }
 
     static async create({photo, mimetype, user_id}, connection) {
+        connection = connection || getConnection();
         const templob = await connection.createLob(oracledb.BLOB);
         photo.pipe(templob);
         await new Promise((success, reject) => {

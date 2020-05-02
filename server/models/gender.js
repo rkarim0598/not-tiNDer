@@ -1,4 +1,4 @@
-const run = require('../db-query');
+const run = require('../db/query');
 
 module.exports = class Gender {
     static fields = [

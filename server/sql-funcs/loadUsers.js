@@ -1,5 +1,5 @@
 const oracledb = require('oracledb');
-const dbConfig = require('../dbconfig');
+const dbConfig = require('../db/config');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const util = require('util');

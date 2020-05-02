@@ -1,4 +1,4 @@
-const run = require('./db-query');
+const run = require('./db/query');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('./models/user');
@@ -10,8 +10,6 @@ const Residence = require('./models/residence');
 const Recommendation = require('./models/recommendation');
 const Event = require('./models/event');
 const Photo = require('./models/photo');
-const dbConfig = require('./dbconfig');
-const oracledb = require('oracledb');
 const graphqlsub = require('graphql-subscriptions');
 
 const pubsub = new graphqlsub.PubSub();
@@ -164,11 +162,10 @@ let mutations = {
     },
     setupUser: async ({ input }, { user }) => {
         checkUser(user);
-        let connection = await oracledb.getConnection(dbConfig);
         await Promise.all(input.photos.map(async photo => {
             // TODO is this the best way?
             console.log(photo.file);
-            Photo.create({ photo: photo.file.createReadStream(), mimetype: photo.file.mimetype, user_id: user }, connection);
+            Photo.create({ photo: photo.file.createReadStream(), mimetype: photo.file.mimetype, user_id: user });
         }));
         let results = await run(
             'update users set gender_id = :gender, biography = :biography, residence_id = :residence, personality_id = :personality_id, joined = :joined where user_id = :user_id',

@@ -1,5 +1,5 @@
 const User = require('./user');
-const run = require('../db-query');
+const run = require('../db/query');
 
 module.exports = class Recommendation {
     static fields = [

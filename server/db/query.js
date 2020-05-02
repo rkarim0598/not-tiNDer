@@ -1,5 +1,5 @@
 const oracledb = require('oracledb');
-const dbConfig = require('./dbconfig');
+const getConnection = require('./pool');
 
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 
@@ -8,19 +8,18 @@ oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
  * @param {String} query 
  * @param {String[]} bindList 
  */
-module.exports = async function run(query, bindList = [], connection = undefined) {
-    let shouldClose = true;
+module.exports = async function query(query, bindList = [], connection = undefined) {
+    let shouldClose = connection == undefined;
     try {
-        if(connection) {
-            shouldClose = false;
-        }
-        connection = connection || await oracledb.getConnection(dbConfig);
-
+        connection = connection || await getConnection();
+        const start = new Date();
         const results = await connection.execute(
             query,
             bindList,
             { autoCommit: true } // necessary for changes to actually store in the db, set to false if you don't want changes to persist in db
         )
+        const end = new Date();
+        console.log('Query took ' + (end - start), query.replace(/\n/g, ' '));
 
         return results;
     } catch (error) {
