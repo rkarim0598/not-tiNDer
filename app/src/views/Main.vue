@@ -7,7 +7,7 @@
     align-center
     justify-space-between
   >
-    <v-container fill-height fluid align-center justify-space-between style="height: 90%;">
+    <v-container fill-height fluid align-center justify-space-between style="height: 90%; padding-left: 24px; padding-right: 24px;">
       <v-row v-if="!recs[event_id].length" dense>
         <v-col>
           <p
