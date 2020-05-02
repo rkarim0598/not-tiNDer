@@ -13,6 +13,7 @@ module.exports = async function query(query, bindList = [], connection = undefin
     try {
         connection = connection || await getConnection();
         const start = new Date();
+        console.log('Query started', query.replace(/\n/g, ' '));
         const results = await connection.execute(
             query,
             bindList,

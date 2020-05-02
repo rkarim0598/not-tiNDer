@@ -89,9 +89,9 @@ let schema = buildSchema(`
         findGenders: [Gender!]!,
         findResidences: [Residence!]!,
         findMatches: [Match!]!,
+        findUserOneWayMatches: [Match!]!,
+        findOneWayMatchesWithUser: [Match!]!,
         findMatchByUserId(id: String!): Match,
-        findUserOneWayMatches: Match,
-        findOneWayMatchesWithUser: Match
         findRecommendations(event_id: Int): [Recommendation!]!,
         findEvents: [Event!]!
     }
