@@ -181,13 +181,14 @@ let mutations = {
 }
 
 let subscriptions = {
-    // message: ({id}, {user}, y, z) => {
-    //     return pubsub.asyncIterator(MESSAGES_TOPIC);
-    // },
-    message: graphqlsub.withFilter(() => pubsub.asyncIterator(MESSAGES_TOPIC), ({message}, {id}, {user}) => {
+    message: ({id}, {user}) => {
+        console.log(id, user.id);
+        return pubsub.asyncIterator(MESSAGES_TOPIC);
+    },
+    // message: graphqlsub.withFilter(() => pubsub.asyncIterator(MESSAGES_TOPIC), ({message}, {id}, {user}) => {
         //TODO check for proper user and id
-        return true;
-    }),
+        // return true;
+    // }),
     
     match: graphqlsub.withFilter(() => pubsub.asyncIterator(MATCHES_TOPIC), ({match}, {id}, {user}) => {
         //TODO check for proper user and id

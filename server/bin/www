@@ -34,11 +34,23 @@ const { execute, subscribe } = require('graphql');
 const schema = require('../schema');
 let root = require('../root');
 
+const {jwtMW, cookieParser} = require('../middleware');
+
 new SubscriptionServer({
   execute,
   subscribe,
   schema,
   rootValue: root,
+  onConnect: async (connectionParams, webSocket, context) => {
+    let request = context.request;
+    return await new Promise((resolve) => {
+      cookieParser(request, null, () => {
+        jwtMW(request, null, () => {
+          resolve({user: request.user});
+        });
+      });
+    });
+  }
 }, {
   server: server,
   path: '/subscriptions',

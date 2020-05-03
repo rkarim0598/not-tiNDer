@@ -1,12 +1,12 @@
 let createError = require('http-errors');
 let express = require('express');
 let path = require('path');
-let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let cors = require('cors');
 let graphqlHTTP = require('express-graphql');
 const { graphqlUploadExpress: graphqlUpload } = require('graphql-upload')
-const exjwt = require('express-jwt');
+const {jwtMW, cookieParser} = require('./middleware');
+
 let schema = require('./schema');
 let root = require('./root');
 let Photo = require('./models/photo');
@@ -15,21 +15,14 @@ require('dotenv').config();
 
 var app = express();
 
-const jwtMW = exjwt({
-  secret: 'shouldchangethis',
-  credentialsRequired: false, // if set to true then EVERY query is authenticated
-  getToken: function getTokenFromCookie(req) {
-    return req.cookies['jwtAuth'];
-  }
-});
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(cookieParser());
+app.use(cookieParser);
+app.use(jwtMW);
 
 const subscriptionsEndpoint = `ws://localhost:${process.env.PORT}/subscriptions`;
-app.use(jwtMW);
+
 app.use(cors({origin: process.env.VUE_APP_DOMAIN, credentials: true}));
 app.use('/graphql', graphqlUpload({ maxFileSize: 10000000, maxFiles: 10 }), graphqlHTTP((req, res) => ({
   schema: schema,
