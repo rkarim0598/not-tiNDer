@@ -136,6 +136,12 @@
         </v-stepper-items>
       </v-stepper>
     </v-form>
+    <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
+      <div class="text-center" style="background-color: transparent">{{error}}</div>
+    </v-snackbar>
+    <v-snackbar color="success" top :value="success ? 'visible' : undefined">
+      <div class="text-center" style="background-color: transparent">{{success}}</div>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -162,7 +168,9 @@ export default {
         desiredGenders: [],
         seriousness: 0,
         personality: ""
-      }
+      },
+      error: "",
+      success: ""
     };
   },
   // Is there a better way of doing this?
@@ -225,7 +233,7 @@ export default {
         !seriousness ||
         !personality_id
       ) {
-        alert("One or more empty fields");
+        this.error = "One or more empty fields";
         return false;
       }
 
@@ -251,9 +259,14 @@ export default {
           }
         }
       });
-      alert(res.data.setupUser.message);
-      
-      this.$router.push('main');
+      this.success = res.data.setupUser.message;
+      setTimeout(() => this.$router.push("main"), 500);
+    }
+  },
+  watch: {
+    error: function(value) {
+      value.length &&
+        setTimeout(() => this.error = "", 1500);
     }
   }
 };

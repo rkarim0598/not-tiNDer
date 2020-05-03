@@ -34,6 +34,12 @@
         </v-row>
       </v-container>
     </v-form>
+    <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
+      <div class="text-center" style="background-color: transparent">{{error}}</div>
+    </v-snackbar>
+    <v-snackbar color="success" top :value="success ? 'visible' : undefined">
+      <div class="text-center" style="background-color: transparent">{{success}}</div>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -50,11 +56,15 @@ export default {
         username: "",
         password: "",
         confirmedPassword: ""
-      }
+      },
+      error: "",
+      success: ""
     };
   },
   methods: {
-    performSignup: async function() {
+    performSignup: async function(e) {
+      e.preventDefault();
+
       const {
         username,
         password,
@@ -65,12 +75,12 @@ export default {
 
       // input checking
       if (password !== confirmedPassword) {
-        alert("Passwords don't match");
+        this.error = "Passwords are not identical";
         return;
       } else if (
         Object.values(this.signup).filter(val => val.length === 0).length
       ) {
-        alert("One or more empty fields");
+        this.error = "One or more empty fields";
         return;
       }
 
@@ -93,11 +103,19 @@ export default {
           }
         }
       });
-			alert(res.data.createUser.message);
-			
-			if (!res.data.createUser.failure) {
-				this.$router.push('/login');
-			}
+
+      if (!res.data.createUser.failure) {
+        this.success = res.data.createUser.message;
+        setTimeout(() => this.success = '', 1000);
+        this.$router.push("/login");
+      } else {
+        this.error = res.data.createUser.message;
+      }
+    }
+  },
+  watch: {
+    error: function(value) {
+      value && setTimeout(() => (this.error = ""), 1500);
     }
   }
 };
@@ -108,7 +126,8 @@ export default {
 .signup-container {
   display: flex;
   justify-content: center;
-  background: rgba(0,0,0,0) linear-gradient(rgb(111,0,0), rgb(32,1,34)) repeat scroll 0% 0%;
+  background: rgba(0, 0, 0, 0) linear-gradient(rgb(111, 0, 0), rgb(32, 1, 34))
+    repeat scroll 0% 0%;
 }
 
 .v-form {

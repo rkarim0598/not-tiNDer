@@ -251,6 +251,11 @@ export default {
         }
       }
     }
+  },
+  watch: {
+    error: function(value) {
+      value.length && setTimeout(() => this.error, 1500);
+    }
   }
 };
 </script>
