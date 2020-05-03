@@ -7,7 +7,9 @@ module.exports = {
     // Alternatively use External Authentication so that no password is
     // needed.
     password: 'guest',
-
+    _enableStats: true,
+    poolMin: 4,
+    poolMax: 5
     // For information on connection strings see:
     // https://oracle.github.io/node-oracledb/doc/api.html#connectionstrings
     // connectString: process.env.NODE_ORACLEDB_CONNECTIONSTRING || "localhost/orclpdb1",
