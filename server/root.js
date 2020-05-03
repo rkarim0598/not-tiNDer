@@ -51,7 +51,6 @@ let queries = {
         return await User.findById(id);
     },
     findMatches: async ({ }, { user }) => {
-        await new Promise(r => setTimeout(r, 250));
         checkUser(user);
         return await Match.findAllByUserId(user);
     },

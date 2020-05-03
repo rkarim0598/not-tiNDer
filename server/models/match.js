@@ -45,9 +45,8 @@ module.exports = class Match {
                 ' minus ' +
                 'select first_user as other_user_id from matches where second_user = :id)',
             [id, id, id]
-        )
+        );
 
-        console.log(results.rows);
         return results.rows.map(dbObj => new Match(dbObj));
     }
 
@@ -60,10 +59,8 @@ module.exports = class Match {
                 'select second_user as other_user_id from matches where first_user = :id)',
             [id, id, id]
         );
-        if (results.rows.length > 0) {
-            return results.rows.map(dbObj => new Match(dbObj));
-        }
-        return null;
+        
+        return results.rows.map(dbObj => new Match(dbObj));
     }
 
     static async create({ other_user_id, event_id = null, user_id }) {

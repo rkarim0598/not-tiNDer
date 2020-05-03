@@ -44,19 +44,28 @@ app.use('/graphql', graphqlUpload({ maxFileSize: 10000000, maxFiles: 10 }), grap
 })));
 
 app.get('/photo/:photo_id', async function (req, res) {
-  let connection = await getConnection();
-  const result = await Photo.findById(req.params.photo_id, connection);
-  if(!result) {
-    res.set(400);
+  let connection;
+  try {
+    connection = await getConnection();
+    const result = await Photo.findById(req.params.photo_id, connection);
+    if(!result) {
+      res.set(400);
+      res.end();
+    }
+    res.set("Content-Type", result.mimetype);
+    res.set(200);
+    for await(let chunk of result.photo) {
+      res.write(chunk);
+    }
+    result.photo.destroy();
     res.end();
+  } finally {
+    try {
+        await connection.close();
+    } catch (err) {
+        console.error(err);
+    }
   }
-  res.set("Content-Type", result.mimetype);
-  res.set(200);
-  for await(let chunk of result.photo) {
-    res.write(chunk);
-  }
-  res.end();
-  await connection.close();
 })
 
 module.exports = app;

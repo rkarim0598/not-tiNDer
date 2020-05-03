@@ -36,7 +36,6 @@ async function run(query, bindList = []) {
             try {
                 await connection.close();
             } catch (err) {
-                console.error(err);
             }
         }
     }
