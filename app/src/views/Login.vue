@@ -10,6 +10,7 @@
         </v-row>
         <v-row align="center" justify="center">
           <v-btn outlined block color="success" type="submit">Log in</v-btn>
+          <v-btn text color="primary" @click="$router.push('signup')">Need an account?</v-btn>
         </v-row>
       </v-container>
     </v-form>

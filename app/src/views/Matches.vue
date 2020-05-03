@@ -7,8 +7,8 @@
       </div>
       <v-tabs dark v-model="tab" icons-and-text>
         <v-tab>Two way matches<v-icon>mdi-account-switch</v-icon></v-tab>
-        <v-tab>People who like you<v-icon>mdi-account-arrow-left</v-icon></v-tab>
-        <v-tab>People who you like<v-icon>mdi-account-arrow-right</v-icon></v-tab>
+        <v-tab>Liked by<v-icon>mdi-account-arrow-left</v-icon></v-tab>
+        <v-tab>You like<v-icon>mdi-account-arrow-right</v-icon></v-tab>
       </v-tabs>
       <v-tabs-items dark v-model="tab" style="width: 100%; background-color: transparent">
         <v-tab-item>
@@ -273,6 +273,7 @@ export default {
   .match-list-container {
     padding-left: 24px;
     padding-right: 24px;
+    max-width: 800px;
   }
 }
 

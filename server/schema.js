@@ -128,7 +128,8 @@ let schema = buildSchema(`
         residence_id: Int,
         seriousness: Int,
         photos: [Upload],
-        personality_id: String
+        personality_id: String,
+        nickname: String
     }
 `);
 

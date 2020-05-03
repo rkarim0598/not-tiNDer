@@ -145,8 +145,8 @@ let mutations = {
             Photo.create({ photo: photo.file.createReadStream(), mimetype: photo.file.mimetype, user_id: user });
         }));
         let results = await run(
-            'update users set gender_id = :gender, biography = :biography, residence_id = :residence, personality_id = :personality_id, joined = :joined where user_id = :user_id',
-            [input.gender_id, input.biography, input.residence_id, input.personality_id, 'Y', user]
+            'update users set gender_id = :gender, biography = :biography, residence_id = :residence, personality_id = :personality_id, joined = :joined, nickname = :nickname where user_id = :user_id',
+            [input.gender_id, input.biography, input.residence_id, input.personality_id, 'Y', input.nickname, user]
         )
 
         if (results.error) {

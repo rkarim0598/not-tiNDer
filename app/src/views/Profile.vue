@@ -16,9 +16,9 @@
       </v-row>
       <v-row>
         <v-col>
-          <span class="white--text title">Your Pics</span>
+          <span class="white--text title">Gallery</span>
           <v-divider dark></v-divider>
-          <pic-swiper :width="'65%'" :height="'85%'" :recId="user.user_id" :photos="user.photos"></pic-swiper>
+          <pic-swiper :width="'100%'" :height="'90%'" :recId="user.user_id" :photos="user.photos"></pic-swiper>
         </v-col>
       </v-row>
       <v-row>
@@ -196,6 +196,7 @@ export default {
   padding-left: 24px;
   padding-right: 24px;
   max-height: 88vh;
+  max-width: 800px;
   overflow-y: scroll;
 }
 </style>

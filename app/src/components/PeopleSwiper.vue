@@ -125,7 +125,8 @@ export default {
 }
 
 .button-container {
-  width: 65%;
+  width: 80%;
+  max-width: 400px;
 }
 
 .rotate {
