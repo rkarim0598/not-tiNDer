@@ -130,7 +130,7 @@ let schema = buildSchema(`
         seriousness: Int,
         photos: [Upload],
         personality_id: String,
-        nickname: String,
+        nickname: String
     }
 `);
 
