@@ -64,7 +64,44 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-container
+      v-else-if="$apollo.queries.user.loading"
+      class="profile-container"
+      fill-height
+      fluid
+      align-center
+      justify-space-between
+    >
+      <v-row>
+        <v-col>
+          <v-skeleton-loader type="image"></v-skeleton-loader>
+        </v-col>
+      </v-row>
+      <v-row v-for="i in 3" :key="i">
+        <v-col>
+          <v-skeleton-loader type="heading"></v-skeleton-loader>
+          <v-skeleton-loader type="text"></v-skeleton-loader>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container
+      v-else
+      class="profile-container"
+      fill-height
+      fluid
+      align-center
+      justify-space-between
+    >
+      <v-row>
+        <v-col>
+          <div class="text-center white--text title">Unable to load profile</div>
+        </v-col>
+      </v-row>
+    </v-container>
     <bottom-nav :data="navData"></bottom-nav>
+    <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
+      <div class="text-center" style="background-color: transparent">{{error}}</div>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -139,6 +176,11 @@ export default {
       error: function(err) {
         this.error = err.message;
       }
+    }
+  },
+  watch: {
+    error: function(value) {
+      value && setTimeout(() => (this.error = ""), 1500);
     }
   }
 };
