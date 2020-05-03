@@ -162,14 +162,13 @@ export default {
               name
             }
             gender_interest {
-              gender_interest_id
+              gender_id
               name
             }
             residence {
               name
             }
             personality_id
-            avatar
           }
         }
       `,

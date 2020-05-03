@@ -37,8 +37,8 @@ module.exports = class User {
     }
 
     async gender_interest() {
-        const GenderInterest = require('./genderInterest');
-        return await GenderInterest.findById(this.user_id);
+        const Gender = require('./gender');
+        return await Gender.findInterestsById(this.user_id);
     }
 
     async residence() {
