@@ -181,18 +181,15 @@ let mutations = {
 }
 
 let subscriptions = {
-    // message: ({id}, {user}, y, z) => {
-    //     return pubsub.asyncIterator(MESSAGES_TOPIC);
-    // },
-    message: graphqlsub.withFilter(() => pubsub.asyncIterator(MESSAGES_TOPIC), ({message}, {id}, {user}) => {
-        //TODO check for proper user and id
-        return true;
+    message: graphqlsub.withFilter(() => pubsub.asyncIterator(MESSAGES_TOPIC), ({message}, {user}, {variableValues: {id}}) => {
+        return !!user && (
+            (message.sender_id === user.id && message.receiver_id === id)
+         || (message.sender_id === id      && message.receiver_id === user.id)
+        );
     }),
-    
-    match: graphqlsub.withFilter(() => pubsub.asyncIterator(MATCHES_TOPIC), ({match}, {id}, {user}) => {
-        //TODO check for proper user and id
-        return true;
-    }),
+    match: graphqlsub.withFilter(() => pubsub.asyncIterator(MATCHES_TOPIC), ({match}, {user}) => {
+        return !!user && (match.first_user === user.id || match.second_user == user.id);
+    })
 };
 
 module.exports = { ...queries, ...mutations, ...subscriptions };
