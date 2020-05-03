@@ -15,7 +15,13 @@ module.exports = class Message {
             [id]
         );
 
-        return new Message(results.rows[0]);
+        if (results.error) {
+            throw results.error;
+        }
+        if (results.rows.length > 0) {
+            return new Message(results.rows[0]);
+        }
+        return null;
     }
 
     static async findAllForUsers(first_user, second_user) {
