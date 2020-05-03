@@ -33,7 +33,7 @@ module.exports = class Photo {
     static async create({photo, mimetype, user_id}, connection) {
         const shouldClose = connection === undefined;
         try {
-            connection = connection || getConnection();
+            connection = connection || await getConnection();
             const templob = await connection.createLob(oracledb.BLOB);
             photo.pipe(templob);
             await new Promise((success, reject) => {
