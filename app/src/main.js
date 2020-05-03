@@ -12,7 +12,6 @@ Vue.use(AsyncComputed);
 
 new Vue({
   router,
-  store,
   apolloProvider: createProvider(),
   vuetify,
   render: h => h(App)

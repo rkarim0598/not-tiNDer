@@ -12,24 +12,31 @@ const Event = require('./models/event');
 const Photo = require('./models/photo');
 const graphqlsub = require('graphql-subscriptions');
 
+/**
+ * Set-up the channels for subscriptions and live updating
+ */
 const pubsub = new graphqlsub.PubSub();
 const MESSAGES_TOPIC = 'messages';
 const MATCHES_TOPIC = 'matches';
 
 /**
- * 
- * @param {String} plaintext 
+ * Hashes the given text
+ * @param {String} text the input 
  */
-async function hasher(plaintext) {
+async function hasher(text) {
     // promisify the hash process so we can use async/await
     return await new Promise((resolve, reject) => {
-        bcrypt.hash(plaintext, 8, async (err, hash) => {
+        bcrypt.hash(text, 8, async (err, hash) => {
             if (err) reject(err);
             resolve(hash);
         })
     })
 }
 
+/**
+ * Simple function checking if the user is logged in throwing a consistent error
+ * @param {Object} user the user object passed in context
+ */
 function checkUser(user) {
     if (!user) {
         throw new Error('Not logged in');
@@ -83,15 +90,16 @@ let mutations = {
             [email]
         );
 
-        if (results.rows && results.rows.length === 1) { // indicates we have at least one user with given username
+        if (results.rows && results.rows.length === 1) {
             // bcrypt's pwd hash contains the salt to has given password with, so can
             // just use bcrypt.compare to see if entered password is correct
             const valid = await bcrypt.compare(password, results.rows[0]['PASSWORD']);
 
-            if (valid) { // passwords match
+            if (valid) {
+                // passwords match
                 let token = jwt.sign({
                     id: email
-                }, 'shouldchangethis', { expiresIn: 3600000 }) /// 60 is for 60 seconds, can enter 1w, 1y, 60 * 60, etc
+                }, process.env.JWT_SECRET, { expiresIn: 3600000 });
 
                 res.cookie('jwtAuth', token, { maxAge: 3600000, httpOnly: true }); //TODO secure: true
 
@@ -150,8 +158,6 @@ let mutations = {
     setupUser: async ({ input }, { user }) => {
         checkUser(user);
         await Promise.all(input.photos.map(async photo => {
-            // TODO is this the best way?
-            console.log(photo.file);
             Photo.create({ photo: photo.file.createReadStream(), mimetype: photo.file.mimetype, user_id: user });
         }));
         let results = await run(
