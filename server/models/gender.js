@@ -21,6 +21,14 @@ module.exports = class Gender {
         return results.rows.map(dbObj => new Gender(dbObj));
     }
 
+    static async findInterestsById(id) {
+        let results = await run(
+            'select * from genders natural join (select * from gender_interests where user_id = :id)',
+            [id]
+        );
+        return results.rows.map(dbObj => new Gender(dbObj));
+    }
+
     constructor(dbObj) {
         for(let field of Gender.fields) {
             this[field] = dbObj[field.toUpperCase()];

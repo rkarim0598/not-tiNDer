@@ -30,6 +30,7 @@ module.exports = async function query(query, bindList = [], connection = undefin
         if (connection && shouldClose) {
             try {
                 await connection.close();
+                console.log('closed');
             } catch (err) {
                 console.error(err);
             }

@@ -20,7 +20,6 @@ module.exports = class Recommendation {
     }
 
     static async findRecommendations({ event_id, user_id }) {
-        console.log(user_id);
         let personality = await User.findById(user_id);
         personality = personality.personality_id;
         console.log(event_id);

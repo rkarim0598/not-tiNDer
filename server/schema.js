@@ -20,7 +20,7 @@ let schema = buildSchema(`
         matches: [Match!]!,
         avatar: Int,
         photos: [Int!]!,
-        gender_interests: [Gender!],
+        gender_interest: [Gender!],
         blocks: [User!],
         personality_id: String
     }

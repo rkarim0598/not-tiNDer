@@ -1,6 +1,6 @@
 
 <template>
-  <swiper class="swiper" ref="swiper" :options="swiperOption">
+  <swiper class="swiper" ref="swiper" :options="swiperOption" :style="swiperStyle">
     <swiper-slide v-if="!photos || !photos.length">
       <v-icon style="font-size: 10em" dark>mdi-account-circle</v-icon>
     </swiper-slide>
@@ -24,7 +24,9 @@ export default {
   },
   props: {
     recId: String,
-    photos: Array
+    photos: Array,
+    height: String,
+    width: String
   },
   data() {
     return {
@@ -43,6 +45,11 @@ export default {
   computed: {
     swiper() {
       return this.$refs.swiper.swiperInstance;
+    },
+    swiperStyle() {
+      let str = this.height ? `height: ${this.height};` : '';
+      str += this.width ? `width: ${this.width}` : '';
+      return str;
     }
   },
   watch: {
