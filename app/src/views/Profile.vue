@@ -12,7 +12,7 @@
         <v-col>
           <div class="text--center white--text display-3">Profile</div>
           <v-divider dark></v-divider>
-          <v-btn text @click="logOut">Log Out</v-btn>
+          <v-btn text color="primary" @click="logOut">Log Out</v-btn>
         </v-col>
       </v-row>
       <v-row>
@@ -171,7 +171,7 @@ export default {
       } catch (err) {
         console.log(err);
       } finally {
-        this.$router.push("home");
+        this.$router.push("/");
       }
     }
   },
