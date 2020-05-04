@@ -1,14 +1,30 @@
 <template>
-  <v-container dark fill-height fluid align-center justify-space-between class="messages-container flex-column">
+  <v-container
+    dark
+    fill-height
+    fluid
+    align-center
+    justify-space-between
+    class="messages-container flex-column"
+  >
     <v-container dark class="match-list-container">
       <div class="pb-2">
         <div class="white--text display-1">Your Matches</div>
         <v-divider dark></v-divider>
       </div>
       <v-tabs dark v-model="tab" icons-and-text>
-        <v-tab>Two way matches<v-icon>mdi-account-switch</v-icon></v-tab>
-        <v-tab>Liked by<v-icon>mdi-account-arrow-left</v-icon></v-tab>
-        <v-tab>You like<v-icon>mdi-account-arrow-right</v-icon></v-tab>
+        <v-tab>
+          Two way matches
+          <v-icon>mdi-account-switch</v-icon>
+        </v-tab>
+        <v-tab>
+          Liked by
+          <v-icon>mdi-account-arrow-left</v-icon>
+        </v-tab>
+        <v-tab>
+          You like
+          <v-icon>mdi-account-arrow-right</v-icon>
+        </v-tab>
       </v-tabs>
       <v-tabs-items dark v-model="tab" style="width: 100%; background-color: transparent">
         <v-tab-item>
@@ -66,12 +82,29 @@ export default {
             title: "Profile",
             icon: "mdi-account-circle",
             onClick: () => {
-              this.$router.push('profile');
+              this.$router.push("profile");
             }
           }
         ]
       }
     };
+  },
+  methods: {
+    handleNotLoggedIn: function(error) {
+      try {
+        let message =
+          error["networkError"] &&
+          error["networkError"]["result"]["errors"][0].message;
+        if (message === "Not logged in") {
+          this.$router.push("login");
+        } else {
+          this.error = message;
+          return true;
+        }
+      } catch (error) {
+        return true;
+      }
+    }
   },
   apollo: {
     matches: {
@@ -102,6 +135,7 @@ export default {
       },
       error: function(err) {
         this.error = err.message;
+        this.handleNotLoggedIn(err);
       },
       subscribeToMore: {
         document: gql`
@@ -130,6 +164,7 @@ export default {
         },
         error: function(err) {
           this.error = err.message;
+          this.handleNotLoggedIn(err);
         }
       }
     },
@@ -161,6 +196,7 @@ export default {
       },
       error: function(err) {
         this.error = err.message;
+        this.handleNotLoggedIn(err);
       },
       subscribeToMore: {
         document: gql`
@@ -189,6 +225,7 @@ export default {
         },
         error: function(err) {
           this.error = err.message;
+          this.handleNotLoggedIn(err);
         }
       }
     },
@@ -220,6 +257,7 @@ export default {
       },
       error: function(err) {
         this.error = err.message;
+        this.handleNotLoggedIn(err);
       },
       subscribeToMore: {
         document: gql`
@@ -248,6 +286,7 @@ export default {
         },
         error: function(err) {
           this.error = err.message;
+          this.handleNotLoggedIn(err);
         }
       }
     }

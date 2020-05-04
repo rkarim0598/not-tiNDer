@@ -12,6 +12,7 @@
         <v-col>
           <div class="text--center white--text display-3">Profile</div>
           <v-divider dark></v-divider>
+          <v-btn text @click="logOut">Log Out</v-btn>
         </v-col>
       </v-row>
       <v-row>
@@ -116,6 +117,7 @@
 import gql from "graphql-tag";
 import BottomNav from "../components/BottomNav";
 import PicSwiper from "../components/PicSwiper";
+import mixin from "../mixin";
 
 export default {
   name: "Profile",
@@ -123,6 +125,7 @@ export default {
     PicSwiper,
     BottomNav
   },
+  mixins: [mixin],
   data: function() {
     return {
       error: "",
@@ -152,6 +155,25 @@ export default {
         ]
       }
     };
+  },
+  methods: {
+    logOut: async function() {
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation logout {
+              logout {
+                failure
+              }
+            }
+          `
+        });
+      } catch (err) {
+        console.log(err);
+      } finally {
+        this.$router.push("home");
+      }
+    }
   },
   apollo: {
     user: {
@@ -188,6 +210,7 @@ export default {
   watch: {
     error: function(value) {
       value && setTimeout(() => (this.error = ""), 1500);
+      if (this.checkLoggedIn(value)) this.$router.push("login");
     }
   }
 };

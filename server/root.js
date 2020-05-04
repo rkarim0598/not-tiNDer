@@ -100,6 +100,18 @@ let mutations = {
         }
         throw new Error('Invalid username or password');
     },
+    logout: async ({}, { req, res }) => {
+        checkUser(req.user);
+        let token = jwt.sign({
+            id: req.user.id
+        }, 'shouldchangethis', { expiresIn: 0 });
+        res.cookie('jwtAuth', token, { maxAge: 0, httpOnly: true });
+
+        return {
+            failure: false,
+            message: 'Logged out!'
+        }
+    },
     createUser: async ({ input }) => {
         // hash password
         let hash = await hasher(input.password);
