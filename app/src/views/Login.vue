@@ -89,5 +89,6 @@ export default {
 
 .v-form {
   height: 80%;
+  width: 80%;
 }
 </style>

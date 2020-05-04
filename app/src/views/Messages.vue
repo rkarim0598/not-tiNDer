@@ -95,12 +95,14 @@
 <script>
 import gql from "graphql-tag";
 import BottomNav from '../components/BottomNav';
+import mixin from '../mixin';
 
 export default {
   name: "Messages",
   components: {
     BottomNav
   },
+  mixins: [mixin],
   data: function() {
     return {
       user: undefined,
@@ -193,6 +195,7 @@ export default {
     },
     error: function(value) {
       value.length && setTimeout(() => this.error = '', 1500);
+      if (this.checkLoggedIn(value)) this.$router.push('/login');
     }
   },
   apollo: {

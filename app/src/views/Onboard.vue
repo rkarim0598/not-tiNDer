@@ -161,12 +161,14 @@
 <script>
 import Quiz from "../components/Quiz";
 import gql from "graphql-tag";
+import mixin from '../mixin';
 
 export default {
   name: "ProfileSetUp",
   components: {
     Quiz
   },
+  mixins: [mixin],
   data: function() {
     return {
       page: 1,
@@ -272,7 +274,7 @@ export default {
             desiredGenders: desiredGenders.map(Number),
             seriousness: Number(seriousness),
             personality_id,
-            nickname,
+            nickname
           }
         }
       });
@@ -282,6 +284,7 @@ export default {
   },
   watch: {
     error: function(value) {
+      if (this.checkLoggedIn(value)) this.$router.push('login');
       value.length && setTimeout(() => (this.error = ""), 1500);
     }
   }

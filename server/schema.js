@@ -98,6 +98,7 @@ let schema = buildSchema(`
     }
     type Mutation {
         login(email: String, password: String): User,
+        logout: ReturnStruct
         createUser(input: NewUserInput): ReturnStruct,
         createMessage(input: MessageInput): Message,
         createMatch(input: MatchInput): Int,
@@ -130,7 +131,7 @@ let schema = buildSchema(`
         seriousness: Int,
         photos: [Upload],
         personality_id: String,
-        nickname: String,
+        nickname: String
     }
 `);
 
