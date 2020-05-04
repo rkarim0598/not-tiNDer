@@ -149,9 +149,7 @@
         </v-stepper-items>
       </v-stepper>
     </v-form>
-    <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
-      <div class="text-center" style="background-color: transparent">{{error}}</div>
-    </v-snackbar>
+    <error-snackbar :error="error"></error-snackbar>
     <v-snackbar color="success" top :value="success ? 'visible' : undefined">
       <div class="text-center" style="background-color: transparent">{{success}}</div>
     </v-snackbar>

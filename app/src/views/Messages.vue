@@ -86,9 +86,7 @@
       </v-container>
     </v-container>
     <bottom-nav :data="navData"></bottom-nav>
-    <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
-      <div class="text-center" style="background-color: transparent">{{error}}</div>
-    </v-snackbar>
+    <error-snackbar :error="error"></error-snackbar>
   </v-container>
 </template>
 
