@@ -102,9 +102,7 @@ let mutations = {
     },
     logout: async ({}, { req, res }) => {
         checkUser(req.user);
-        let token = jwt.sign({
-            id: req.user.id
-        }, 'shouldchangethis', { expiresIn: 0 });
+        let token = jwt.sign({}, 'shouldchangethis', { expiresIn: 0 });
         res.cookie('jwtAuth', token, { maxAge: 0, httpOnly: true });
 
         return {
