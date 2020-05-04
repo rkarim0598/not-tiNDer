@@ -14,6 +14,7 @@ create table users
   residence_id number(2),
   joined char(1),
   personality_id varchar2(4),
+  seriousness number(1),
   foreign key(residence_id) references residences(residence_id),
   foreign key(gender_id) references genders(gender_id),
   foreign key(personality_id) references personalities(personality_id)

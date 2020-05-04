@@ -272,7 +272,7 @@ export default {
             desiredGenders: desiredGenders.map(Number),
             seriousness: Number(seriousness),
             personality_id,
-            nickname
+            nickname,
           }
         }
       });

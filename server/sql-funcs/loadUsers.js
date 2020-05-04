@@ -79,15 +79,16 @@ async function loadUsers() {
             let user_id = (nickname + '@nd.edu').toLowerCase();
             let bio = lorem.generateSentences(2);
             let hash = bcrypt.hashSync('password', 8);
+            let seriousness = j % 5 + 1;
 
             let results = await run(
-                'insert into users (user_id,password,first_name,last_name,gender_id,biography,nickname,confirmed_account,reset_token,residence_id,joined,personality_id)' +
-                'values (:id, :pw, :fn, :ln, :gi, :b, :nn, :ca, :rt, :d, :j, :p)',
-                [user_id, hash, first, last, gender_id, bio, nickname,,, dorm, 'Y', personality]
+                'insert into users (user_id,password,first_name,last_name,gender_id,biography,nickname,confirmed_account,reset_token,residence_id,joined,personality_id, seriousness)' +
+                'values (:id, :pw, :fn, :ln, :gi, :b, :nn, :ca, :rt, :d, :j, :p, :s)',
+                [user_id, hash, first, last, gender_id, bio, nickname,,, dorm, 'Y', personality, seriousness]
             )
 
             if (results.error) {
-                console.log([user_id, hash, first, last, gender_id, bio, nickname, dorm, personality])
+                console.log([user_id, hash, first, last, gender_id, bio, nickname, dorm, personality, seriousness])
                 return;
             }
 

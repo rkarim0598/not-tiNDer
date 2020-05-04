@@ -63,6 +63,13 @@
           <span class="white--text subtitle">{{ user.gender_interest.map(g => g.name).join(', ') }}</span>
         </v-col>
       </v-row>
+            <v-row>
+        <v-col>
+          <span class="white--text title">Seriousness</span>
+          <v-divider dark></v-divider>
+          <span class="white--text subtitle">{{ user.seriousness }}</span>
+        </v-col>
+      </v-row>
     </v-container>
     <v-container
       v-else-if="$apollo.queries.user.loading"
@@ -169,6 +176,7 @@ export default {
               name
             }
             personality_id
+            seriousness
           }
         }
       `,
