@@ -31,6 +31,7 @@
         </v-row>
         <v-row align="center" justify="center">
           <v-btn outlined block color="success" type="submit">Join</v-btn>
+          <v-btn text color="primary" @click="$router.push('login')">Already have an account?</v-btn>
         </v-row>
       </v-container>
     </v-form>

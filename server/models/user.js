@@ -13,7 +13,8 @@ module.exports = class User {
         'reset_token',
         'residence_id',
         'joined',
-        'personality_id'
+        'personality_id',
+        'seriousness'
     ];
 
     static async findById(id) {

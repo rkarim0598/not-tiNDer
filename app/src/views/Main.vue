@@ -12,7 +12,7 @@
       fluid
       align-center
       justify-space-between
-      style="height: 90%; padding-left: 24px; padding-right: 24px;"
+      style="height: 90%; max-width: 800px; padding-left: 24px; padding-right: 24px;"
     >
       <v-row v-if="!recs[event_id].length" dense>
         <v-col>
@@ -342,6 +342,7 @@ export default {
   padding-bottom: 0px;
   padding-left: 0px;
   padding-right: 0px;
+  flex-direction: column;
 }
 
 .no-more {
@@ -353,7 +354,9 @@ export default {
 }
 
 .back-container {
+  align-self: flex-end;
   height: 1px !important;
+  padding-right: 10px;
 }
 
 .button-container {
@@ -366,6 +369,7 @@ export default {
 .skeleton-container {
   width: 100%;
   height: 99%;
+  max-width: 500px;
   display: flex;
   justify-content: center;
   align-items: center;

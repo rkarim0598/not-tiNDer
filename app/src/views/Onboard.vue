@@ -20,14 +20,14 @@
                   v-model="setupForm.profilePictures"
                   accept="image/*"
                   placeholder="Upload your pictures"
-                  label="Pictures"
+                  label="Pictures (ctrl-click for multiple)"
                   multiple
                   prepend-icon="mdi-camera"
                 >
                   <template v-slot:selection="{ index, text }">
                     <v-chip small label color="primary">
                       <div v-if="photoData[index]">
-                        <img :src="photoData[index]" />
+                        <img :src="photoData[index]" width="50px" />
                       </div>
                       <div v-else>{{ text }}</div>
                     </v-chip>
@@ -48,13 +48,26 @@
                   single-line
                 ></v-select>
               </v-row>
-              <v-row align="center" justify="center" class="mt-10">
+              <v-row align="center" justify="center">
+                <v-text-field
+                  label="Nickname"
+                  placeholder="Nickname"
+                  class="mt-5"
+                  maxlength="30"
+                  counter="30"
+                  v-model="setupForm.nickname"
+                ></v-text-field>
+              </v-row>
+              <v-row align="center" justify="center">
                 <v-textarea
                   dark
                   outlined
                   name="biography"
                   label="Biography"
+                  class="mt-5"
                   v-model="setupForm.biography"
+                  counter="400"
+                  maxlength="400"
                 ></v-textarea>
               </v-row>
               <v-row align="center" justify="center">
@@ -146,7 +159,7 @@
 </template>
 
 <script>
-import Quiz from "./Quiz";
+import Quiz from "../components/Quiz";
 import gql from "graphql-tag";
 
 export default {
@@ -167,7 +180,8 @@ export default {
         gender: "",
         desiredGenders: [],
         seriousness: 0,
-        personality: ""
+        personality: "",
+        nickname: ""
       },
       error: "",
       success: ""
@@ -220,7 +234,8 @@ export default {
         desiredGenders,
         seriousness,
         profilePictures,
-        personality_id
+        personality_id,
+        nickname
       } = this.setupForm;
 
       // input checking
@@ -231,7 +246,8 @@ export default {
         !gender ||
         !desiredGenders ||
         !seriousness ||
-        !personality_id
+        !personality_id ||
+        !nickname
       ) {
         this.error = "One or more empty fields";
         return false;
@@ -255,7 +271,8 @@ export default {
             gender_id: Number(gender.gender_id),
             desiredGenders: desiredGenders.map(Number),
             seriousness: Number(seriousness),
-            personality_id
+            personality_id,
+            nickname,
           }
         }
       });
@@ -265,8 +282,7 @@ export default {
   },
   watch: {
     error: function(value) {
-      value.length &&
-        setTimeout(() => this.error = "", 1500);
+      value.length && setTimeout(() => (this.error = ""), 1500);
     }
   }
 };

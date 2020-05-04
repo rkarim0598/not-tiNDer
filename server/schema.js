@@ -23,6 +23,7 @@ let schema = buildSchema(`
         gender_interest: [Gender!],
         blocks: [User!],
         personality_id: String
+        seriousness: Int
     }
     type Residence {
         residence_id: String!,
@@ -128,7 +129,8 @@ let schema = buildSchema(`
         residence_id: Int,
         seriousness: Int,
         photos: [Upload],
-        personality_id: String
+        personality_id: String,
+        nickname: String,
     }
 `);
 
