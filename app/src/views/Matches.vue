@@ -48,12 +48,14 @@
 import gql from "graphql-tag";
 import BottomNav from "../components/BottomNav";
 import MatchList from "../components/MatchList";
+import ErrorSnackbar from "../components/ErrorSnackbar"
 
 export default {
   name: "Matches",
   components: {
     BottomNav,
-    MatchList
+    MatchList,
+    ErrorSnackbar
   },
   data: function() {
     return {

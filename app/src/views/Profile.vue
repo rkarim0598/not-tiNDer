@@ -116,12 +116,14 @@ import gql from "graphql-tag";
 import BottomNav from "../components/BottomNav";
 import PicSwiper from "../components/PicSwiper";
 import mixin from "../mixin";
+import ErrorSnackbar from "../components/ErrorSnackbar"
 
 export default {
   name: "Profile",
   components: {
     PicSwiper,
-    BottomNav
+    BottomNav,
+    ErrorSnackbar
   },
   mixins: [mixin],
   data: function() {

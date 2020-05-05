@@ -94,11 +94,13 @@
 import gql from "graphql-tag";
 import BottomNav from '../components/BottomNav';
 import mixin from '../mixin';
+import ErrorSnackbar from "../components/ErrorSnackbar"
 
 export default {
   name: "Messages",
   components: {
-    BottomNav
+    BottomNav,
+    ErrorSnackbar
   },
   mixins: [mixin],
   data: function() {

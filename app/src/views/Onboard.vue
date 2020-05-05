@@ -160,11 +160,13 @@
 import Quiz from "../components/Quiz";
 import gql from "graphql-tag";
 import mixin from '../mixin';
+import ErrorSnackbar from "../components/ErrorSnackbar"
 
 export default {
   name: "ProfileSetUp",
   components: {
-    Quiz
+    Quiz,
+    ErrorSnackbar
   },
   mixins: [mixin],
   data: function() {

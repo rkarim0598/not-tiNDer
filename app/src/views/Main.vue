@@ -134,12 +134,14 @@
 import PeopleSwiper from "../components/PeopleSwiper";
 import BottomNav from "../components/BottomNav";
 import gql from "graphql-tag";
+import ErrorSnackbar from "../components/ErrorSnackbar"
 
 export default {
   name: "Main",
   components: {
     PeopleSwiper,
-    BottomNav
+    BottomNav,
+    ErrorSnackbar
   },
   data: function() {
     return {

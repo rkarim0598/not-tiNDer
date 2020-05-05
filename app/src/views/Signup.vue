@@ -44,9 +44,13 @@
 
 <script>
 import gql from "graphql-tag";
+import ErrorSnackbar from "../components/ErrorSnackbar"
 
 export default {
   name: "Signup",
+  components: {
+    ErrorSnackbar
+  },
   data: function() {
     return {
       signup: {
