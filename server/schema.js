@@ -125,11 +125,17 @@ let schema = buildSchema(`
         other_user_id: String!,
         event_id: Int,
     }
+    input BoxedInt {
+        value: Int!
+    }
+    input BoxedString {
+        value: String!
+    }
     input SetupUserInput {
-        gender_id: Int,
+        gender: String,
         desiredGenders: [Int],
         biography: String,
-        residence_id: Int,
+        residence: String,
         seriousness: Int,
         photos: [Upload],
         personality_id: String,

@@ -20,22 +20,24 @@
                   v-model="setupForm.profilePictures"
                   accept="image/*"
                   placeholder="Upload your pictures"
-                  label="Pictures (ctrl-click for multiple)"
+                  label="Pictures"
+                  hint="Ctrl-click for multiple"
+                  persistent-hint
                   multiple
                   prepend-icon="mdi-camera"
                 >
                   <template v-slot:selection="{ index, text }">
-                    <v-chip small label color="primary">
                       <div v-if="photoData[index]">
-                        <img :src="photoData[index]" width="50px" />
+                        <v-card outlined>
+                          <img :src="photoData[index]" height="100px" />
+                        </v-card>
                       </div>
-                      <div v-else>{{ text }}</div>
-                    </v-chip>
+                      <div v-else><v-chip small label color="primary">{{ text }}</v-chip></div>
                   </template>
                 </v-file-input>
               </v-row>
               <v-row align="center" justify="center">
-                <v-select
+                <v-combobox
                   dark
                   v-model="setupForm.residence"
                   :items="residences"
@@ -43,10 +45,14 @@
                   item-text="name"
                   menu-props="auto"
                   label="Residence"
-                  hide-details
+                  hint="Type out your building if you don't see it"
+                  persistent-hint
                   prepend-icon="mdi-home"
                   single-line
-                ></v-select>
+                  maxlength="30"
+                  counter="30"
+                  :rules="[checkValue]"
+                ></v-combobox>
               </v-row>
               <v-row align="center" justify="center">
                 <v-text-field
@@ -87,13 +93,10 @@
                   item-value="gender_id"
                   item-text="name"
                   label="Your gender"
-                >
-                  <template v-slot:selection="{ item }">
-                    <v-chip>
-                      <span>{{ item.name }}</span>
-                    </v-chip>
-                  </template>
-                </v-combobox>
+                  hint="Type out your gender if you don't see it"
+                  persistent-hint
+                  :rules="[checkValue]"
+                ></v-combobox>
               </v-row>
               <v-row align="center" justify="center">
                 <v-select
@@ -214,6 +217,10 @@ export default {
     `
   },
   methods: {
+    checkValue: function(value) {
+      console.log(value);
+      return Number.isNaN(Number(value));
+    },
     updatePersonality: async function(value) {
       this.setupForm.personality_id = value;
 
@@ -268,9 +275,9 @@ export default {
         variables: {
           input: {
             photos: profilePictures,
-            residence_id: Number(residence),
+            residence: residence.residence_id || residence,
             biography,
-            gender_id: Number(gender.gender_id),
+            gender: gender.gender_id || gender,
             desiredGenders: desiredGenders.map(Number),
             seriousness: Number(seriousness),
             personality_id,
