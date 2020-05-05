@@ -9,6 +9,8 @@ create table gender_interests
   foreign key(gender_id) references genders(gender_id)
   );
 
+create index gender_interests_user_id_i on gender_interests(user_id);
+
 drop sequence gender_interests_id_sequence;
 create sequence gender_interests_id_sequence start with 1;
 

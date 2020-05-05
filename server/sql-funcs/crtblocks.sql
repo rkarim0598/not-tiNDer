@@ -9,6 +9,9 @@ create table blocks
   foreign key(blockee_id) references users(user_id)
   );
 
+create index blocks_blocker_id_i on blocks(blocker_id);
+create index blocks_blockee_id_i on blocks(blockee_id);
+
 drop sequence blocks_id_sequence;
 create sequence blocks_id_sequence start with 1;
 

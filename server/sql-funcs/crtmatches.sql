@@ -11,6 +11,9 @@ create table matches
   foreign key(event_id) references events(event_id)
   );
 
+create index matches_first_user_i on matches(first_user);
+create index matches_second_user_i on matches(second_user);
+
 drop sequence matches_id_sequence;
 create sequence matches_id_sequence start with 1;
 
