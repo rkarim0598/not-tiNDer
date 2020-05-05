@@ -34,6 +34,22 @@ module.exports = class Gender {
         return results.rows.map(dbObj => new Gender(dbObj));
     }
 
+    static async create({name}) {
+        let result = await run(
+            'insert into genders (name)' +
+            'values (:name)',
+            [name]
+        );
+        if(result.error) {
+            throw result.error;
+        }
+        result = await run(
+            'select * from genders where rowid = :id',
+            [result.lastRowid]
+        );
+        return new Gender(result.rows[0]);
+    }
+
     constructor(dbObj) {
         for(let field of Gender.fields) {
             this[field] = dbObj[field.toUpperCase()];

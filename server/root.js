@@ -158,11 +158,18 @@ let mutations = {
     setupUser: async ({ input }, { user }) => {
         checkUser(user);
         await Promise.all(input.photos.map(async photo => {
+            await photo.promise;
             Photo.create({ photo: photo.file.createReadStream(), mimetype: photo.file.mimetype, user_id: user });
         }));
+        if(Number.isNaN(Number(input.residence))) {
+            input.residence = (await Residence.create({name: input.residence, on_campus: false})).residence_id;
+        }
+        if(Number.isNaN(Number(input.gender))) {
+            input.gender = (await Gender.create({name: input.gender})).gender_id;
+        }
         let results = await run(
             'update users set gender_id = :gender, biography = :biography, residence_id = :residence, personality_id = :personality_id, joined = :joined, nickname = :nickname, seriousness = :seriousness where user_id = :user_id',
-            [input.gender_id, input.biography, input.residence_id, input.personality_id, 'Y', input.nickname, input.seriousness, user]
+            [input.gender, input.biography, input.residence, input.personality_id, 'Y', input.nickname, input.seriousness, user]
         )
 
         if (results.error) {
