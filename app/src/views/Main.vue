@@ -126,9 +126,7 @@
         <v-icon color="blue">mdi-keyboard-backspace</v-icon>Back
       </a>
     </v-layout>
-    <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
-      <div class="text-center" style="background-color: transparent">{{error}}</div>
-    </v-snackbar>
+    <error-snackbar :error="error"></error-snackbar>
   </v-container>
 </template>
 
@@ -136,12 +134,14 @@
 import PeopleSwiper from "../components/PeopleSwiper";
 import BottomNav from "../components/BottomNav";
 import gql from "graphql-tag";
+import ErrorSnackbar from "../components/ErrorSnackbar"
 
 export default {
   name: "Main",
   components: {
     PeopleSwiper,
-    BottomNav
+    BottomNav,
+    ErrorSnackbar
   },
   data: function() {
     return {

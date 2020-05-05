@@ -39,9 +39,8 @@
       </v-tabs-items>
     </v-container>
     <bottom-nav :data="navData"></bottom-nav>
-    <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
-      <div class="text-center" style="background-color: transparent">{{error}}</div>
-    </v-snackbar>
+    
+    <error-snackbar :error="error"></error-snackbar>
   </v-container>
 </template>
 
@@ -49,12 +48,14 @@
 import gql from "graphql-tag";
 import BottomNav from "../components/BottomNav";
 import MatchList from "../components/MatchList";
+import ErrorSnackbar from "../components/ErrorSnackbar"
 
 export default {
   name: "Matches",
   components: {
     BottomNav,
-    MatchList
+    MatchList,
+    ErrorSnackbar
   },
   data: function() {
     return {

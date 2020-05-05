@@ -86,9 +86,7 @@
       </v-container>
     </v-container>
     <bottom-nav :data="navData"></bottom-nav>
-    <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
-      <div class="text-center" style="background-color: transparent">{{error}}</div>
-    </v-snackbar>
+    <error-snackbar :error="error"></error-snackbar>
   </v-container>
 </template>
 
@@ -96,11 +94,13 @@
 import gql from "graphql-tag";
 import BottomNav from '../components/BottomNav';
 import mixin from '../mixin';
+import ErrorSnackbar from "../components/ErrorSnackbar"
 
 export default {
   name: "Messages",
   components: {
-    BottomNav
+    BottomNav,
+    ErrorSnackbar
   },
   mixins: [mixin],
   data: function() {

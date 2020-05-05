@@ -11,8 +11,13 @@ module.exports = class Gender {
             'select * from genders where gender_id = :id',
             [id]
         );
-
-        return new Gender(results.rows[0]);
+        if (results.error) {
+            throw results.error;
+        }
+        if (results.rows.length > 0) {
+            return new Gender(results.rows[0]);
+        }
+        return null;
     }
 
     static async findAll() {

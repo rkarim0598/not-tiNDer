@@ -2,7 +2,9 @@ let { buildSchema } = require('graphql');
 
 //TODO should move towards something like in https://blog.logrocket.com/handling-graphql-errors-like-a-champ-with-unions-and-interfaces/
 
-// Construct a schema, using GraphQL schema language
+/**
+ * GraphQL schema declaration
+ */
 let schema = buildSchema(`
     scalar Upload
     type User {

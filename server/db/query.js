@@ -4,9 +4,10 @@ const getConnection = require('./pool');
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 
 /**
- * 
- * @param {String} query 
- * @param {String[]} bindList 
+ * Runs a query against the database
+ * @param {String} query the query
+ * @param {String[]} bindList the parameters to bind
+ * @param {Object} connection the connection to use, otherwise one will be allocated and closed upon completion of query
  */
 module.exports = async function query(query, bindList = [], connection = undefined) {
     let shouldClose = connection === undefined;
@@ -17,7 +18,8 @@ module.exports = async function query(query, bindList = [], connection = undefin
         const results = await connection.execute(
             query,
             bindList,
-            { autoCommit: true } // necessary for changes to actually store in the db, set to false if you don't want changes to persist in db
+            { autoCommit: true }
+            // necessary for persistence in db, set to false if you don't want changes to persist in db
         )
         const end = new Date();
         console.log('Query took ' + (end - start), query.replace(/\n/g, ' '));

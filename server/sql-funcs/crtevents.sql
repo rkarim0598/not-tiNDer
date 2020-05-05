@@ -12,6 +12,8 @@ create table events
   foreign key(user_id) references users(user_id)
   );
 
+create index events_user_id_i on events(user_id);
+
 drop sequence events_id_sequence;
 create sequence events_id_sequence start with 1;
 

@@ -14,9 +14,7 @@
         </v-row>
       </v-container>
     </v-form>
-    <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
-      <div class="text-center" style="background-color: transparent">{{error}}</div>
-    </v-snackbar>
+    <error-snackbar :error="error"></error-snackbar>
     <v-snackbar color="success" top :value="success ? 'visible' : undefined">
       <div class="text-center" style="background-color: transparent">{{success}}</div>
     </v-snackbar>
@@ -25,9 +23,11 @@
 
 <script>
 import gql from "graphql-tag";
+import ErrorSnackbar from "../components/ErrorSnackbar"
 
 export default {
   name: "Login",
+  components: { ErrorSnackbar },
   data: function() {
     return {
       username: "",
@@ -61,18 +61,14 @@ export default {
           }
         });
 
-        if (res.data.login.failure) {
-          this.handleFailure(res.data.login.message);
+        this.success = "Successfully logged in!";
+        if (res.data.login.joined === "Y") {
+          setTimeout(() => this.$router.push("main"), 500);
         } else {
-          this.success = "Successfully logged in!";
-          if (res.data.login.joined === "Y") {
-            setTimeout(() => this.$router.push("main"), 500);
-          } else {
-            setTimeout(() => this.$router.push("onboard"), 500);
-          }
+          setTimeout(() => this.$router.push("onboard"), 500);
         }
       } catch (error) {
-        this.handleFailure(error);
+        this.handleFailure(error); 
       }
     }
   }

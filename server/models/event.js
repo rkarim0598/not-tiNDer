@@ -17,7 +17,13 @@ module.exports = class Event {
             [id]
         );
 
-        return new Event(results.rows[0]);
+        if (results.error) {
+            throw results.error;
+        }
+        if (results.rows.length > 0) {
+            return new Event(results.rows[0]);
+        }
+        return null;
     }
 
     static async findAll() {

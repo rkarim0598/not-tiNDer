@@ -11,6 +11,9 @@ create table messages
   foreign key(receiver_id) references users(user_id)
   );
 
+create index messages_sender_id_i on messages(sender_id);
+create index messages_receiver_id_i on messages(receiver_id);
+
 drop sequence messages_id_sequence;
 create sequence messages_id_sequence start with 1;
 

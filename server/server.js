@@ -1,41 +1,77 @@
-require('dotenv').config();
-let express = require('express');
-let cors = require('cors');
-let graphqlHTTP = require('express-graphql');
-let { buildSchema } = require('graphql');
+#!/usr/bin/env node
 
-//let whitelist = ['35.173.0.116:8121'];
-let corsOptions = {
-    origin: function(origin, callback) {
-	if (whitelist.indexOf(origin) !== -1) {
-	    callback(null, true);
-	} else {
-	    callback(new Error('Not allowed by CORS'));
-	}
-    }
-}
+/**
+ * Module dependencies.
+ */
+var app = require('./app');
+var debug = require('debug')('test-dir:server');
+var http = require('http');
 
-// Construct a schema, using GraphQL schema language
-let schema = buildSchema(`
-  type Query {
-    hello: String
-  }
-`);
+/**
+ * Get port from environment and store in Express.
+ */
+var port = normalizePort(process.env.PORT);
+app.set('port', port);
 
-// The root provides a resolver function for each API endpoint
-let root = {
-  hello: () => {
-    return 'Hello world!';
-  },
-};
+/**
+ * Create HTTP server.
+ */
+var server = http.createServer(app);
 
-let app = express();
-app.use(cors());
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+server.listen(port);
+console.log(`Serving at http://localhost:${process.env.PORT}`);
 
-app.use('/graphql', graphqlHTTP({
-  schema: schema,
+/**
+ * Subscription dependencies
+ */
+const { SubscriptionServer } = require('subscriptions-transport-ws');
+const { execute, subscribe } = require('graphql');
+const schema = require('./schema');
+const root = require('./root');
+const {jwtMW, cookieParser} = require('./security');
+
+/**
+ * Subscriptions set-up
+ */
+new SubscriptionServer({
+  execute,
+  subscribe,
+  schema,
   rootValue: root,
-  graphiql: true,
-}));
-app.listen(process.env.PORT); // this should be your port number, set in .env file
-console.log(`Running a GraphQL API server at http://localhost:${process.env.PORT}/graphql`);
+  onConnect: async (connectionParams, webSocket, context) => {
+    let request = context.request;
+    // resolve jwt token and pass along to subscription resolvers
+    return await new Promise((resolve) => {
+      cookieParser(request, null, () => {
+        jwtMW(request, null, () => {
+          resolve({user: request.user});
+        });
+      });
+    });
+  }
+}, {
+  server: server,
+  path: '/subscriptions',
+});
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}

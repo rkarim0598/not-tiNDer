@@ -38,17 +38,19 @@
     <v-snackbar color="error" bottom :value="error ? 'visible' : undefined">
       <div class="text-center" style="background-color: transparent">{{error}}</div>
     </v-snackbar>
-    <v-snackbar color="success" top :value="success ? 'visible' : undefined">
-      <div class="text-center" style="background-color: transparent">{{success}}</div>
-    </v-snackbar>
+    <error-snackbar :error="error"></error-snackbar>
   </v-container>
 </template>
 
 <script>
 import gql from "graphql-tag";
+import ErrorSnackbar from "../components/ErrorSnackbar"
 
 export default {
   name: "Signup",
+  components: {
+    ErrorSnackbar
+  },
   data: function() {
     return {
       signup: {

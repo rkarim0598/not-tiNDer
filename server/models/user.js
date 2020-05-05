@@ -23,7 +23,13 @@ module.exports = class User {
             [id]
         );
 
-        return new User(results.rows[0]);
+        if (results.error) {
+            throw results.error;
+        }
+        if (results.rows.length > 0) {
+            return new User(results.rows[0]);
+        }
+        return null;
     }
 
     constructor(dbObj) {

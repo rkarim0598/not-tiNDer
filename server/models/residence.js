@@ -14,8 +14,13 @@ module.exports = class Residence {
             'select * from residences where residence_id = :id',
             [id]
         );
-
-        return new Residence(results.rows[0]);
+        if (results.error) {
+            throw results.error;
+        }
+        if (results.rows.length > 0) {
+            return new Residence(results.rows[0]);
+        }
+        return null;
     }
 
     static async findAll() {

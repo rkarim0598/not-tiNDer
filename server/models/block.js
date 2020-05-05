@@ -1,7 +1,7 @@
 const run = require('../db/query');
 const oracledb = require('oracledb');
 
-module.exports = class Match {
+module.exports = class Block {
     static fields = [
         'block_id',
         'blocker_id',
@@ -16,7 +16,13 @@ module.exports = class Match {
             [id, user]
         );
 
-        return new Match(results.rows[0]);
+        if (results.error) {
+            throw results.error;
+        }
+        if (results.rows.length > 0) {
+            return new Block(results.rows[0]);
+        }
+        return null;
     }
 
     static async findAllByUserId(id) {
@@ -54,15 +60,7 @@ module.exports = class Match {
         }
     }
 
-    // async query_user() {
-    //     return await User.findById(this.query_user_id);
-    // }
-
     async other_user() {
         return await User.findById(this.other_user_id);
-    }
-
-    async messages() {
-        return await Message.findAllByMatchId(this.match_id);
     }
 }
