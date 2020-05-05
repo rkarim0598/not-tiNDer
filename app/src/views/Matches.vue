@@ -159,9 +159,8 @@ export default {
             }
           }
         `,
-        updateQuery: function({ matches }, { subscriptionData }) {
-          console.log(matches, subscriptionData);
-          // TODO match.messages.push(subscriptionData.data.message);
+        updateQuery: function({ }, { }) {
+          this.$apollo.queries.matches.refresh();
         },
         error: function(err) {
           this.error = err.message;
@@ -220,9 +219,8 @@ export default {
             }
           }
         `,
-        updateQuery: function({ matches }, { subscriptionData }) {
-          console.log(matches, subscriptionData);
-          // TODO match.messages.push(subscriptionData.data.message);
+        updateQuery: function({ }, { }) {
+          this.$apollo.queries.withYou.refresh();
         },
         error: function(err) {
           this.error = err.message;
@@ -281,9 +279,8 @@ export default {
             }
           }
         `,
-        updateQuery: function({ matches }, { subscriptionData }) {
-          console.log(matches, subscriptionData);
-          // TODO match.messages.push(subscriptionData.data.message);
+        updateQuery: function({ }, { }) {
+          this.$apollo.queries.fromYou.refresh();
         },
         error: function(err) {
           this.error = err.message;
