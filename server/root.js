@@ -119,6 +119,13 @@ let mutations = {
         }
     },
     createUser: async ({ input }) => {
+        if (!/\S+@(nd|saintmarys|hcc-nd).edu/.test(input.user_id)) {
+            return {
+                failure: true,
+                message: 'Invalid email: must be ND/SMC/HC domain'
+            }
+        }
+
         // hash password
         let hash = await hasher(input.password);
         let results = await run(

@@ -3,10 +3,10 @@
     <v-form ref="login-form" @submit="performLogin">
       <v-container fill-height fluid align-center justify-space-between>
         <v-row align="center" justify="center">
-          <v-text-field dark v-model="username" label="Email" required />
+          <v-text-field dark v-model="username" maxlength="20" counter="20" label="Email" required />
         </v-row>
         <v-row align="center" justify="center">
-          <v-text-field dark v-model="password" label="Password" :type="'password'" required />
+          <v-text-field dark v-model="password" maxlength="60" counter="60" label="Password" :type="'password'" required />
         </v-row>
         <v-row align="center" justify="center">
           <v-btn outlined block color="success" type="submit">Log in</v-btn>
@@ -33,7 +33,7 @@ export default {
       username: "",
       password: "",
       error: "",
-      success: ""
+      success: "",
     };
   },
   methods: {
@@ -50,7 +50,7 @@ export default {
           mutation: gql`
             mutation login($email: String, $password: String) {
               login(email: $email, password: $password) {
-                user_id,
+                user_id
                 joined
               }
             }
