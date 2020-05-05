@@ -3,13 +3,13 @@
     <v-form ref="signup-form" @submit="performSignup">
       <v-container fill-height fluid align-center justify-space-between>
         <v-row align="center" justify="center">
-          <v-text-field dark v-model="signup.firstName" label="First name" required />
+          <v-text-field dark v-model="signup.firstName" maxlength="30" counter="30" label="First name" required />
         </v-row>
         <v-row align="center" justify="center">
-          <v-text-field dark v-model="signup.lastName" label="Last name" required />
+          <v-text-field dark v-model="signup.lastName" maxlength="30" counter="30" label="Last name" required />
         </v-row>
         <v-row align="center" justify="center">
-          <v-text-field dark v-model="signup.username" label="Email" required />
+          <v-text-field dark :rules="rules" maxlength="20" counter="20" v-model="signup.username" label="Email" required />
         </v-row>
         <v-row align="center" justify="center">
           <v-text-field
@@ -18,6 +18,8 @@
             label="Password"
             :type="'password'"
             required
+            maxlength="60"
+            counter="60"
           />
         </v-row>
         <v-row align="center" justify="center">
@@ -27,6 +29,8 @@
             label="Confirm password"
             :type="'password'"
             required
+            maxlength="60"
+            counter="60"
           />
         </v-row>
         <v-row align="center" justify="center">
@@ -61,7 +65,8 @@ export default {
         confirmedPassword: ""
       },
       error: "",
-      success: ""
+      success: "",
+      rules: [v => /\S+@(nd|saintmarys|hcc-nd).edu/.test(v) || 'Email must be under nd.edu, saintmarys.edu, or hcc-nd.edu']
     };
   },
   methods: {
