@@ -159,7 +159,7 @@ export default {
             }
           }
         `,
-        updateQuery: function({ }, { }) {
+        updateQuery: function() {
           this.$apollo.queries.matches.refresh();
         },
         error: function(err) {
@@ -219,7 +219,7 @@ export default {
             }
           }
         `,
-        updateQuery: function({ }, { }) {
+        updateQuery: function() {
           this.$apollo.queries.withYou.refresh();
         },
         error: function(err) {
@@ -279,7 +279,7 @@ export default {
             }
           }
         `,
-        updateQuery: function({ }, { }) {
+        updateQuery: function() {
           this.$apollo.queries.fromYou.refresh();
         },
         error: function(err) {
