@@ -1,6 +1,7 @@
 const app = require('./app');
 const Photo = require('./models/photo');
 const getConnection = require('./db/pool');
+const express = require('express');
 
 /**
  * Set-up the end point for serving the photos we have stored in the database
@@ -35,3 +36,8 @@ app.get('/photo/:photo_id', async function (req, res) {
     }
   }
 });
+
+/**
+ * This allows for the frontend to optionally be served through the node server as well
+ */
+app.use('/client', express.static('client'));
